@@ -1,0 +1,759 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="css/mui.min.css" rel="stylesheet" />
+
+
+		<style type="text/css">
+			.mui-card .mui-control-content {
+				padding: 10px;
+			}
+
+			.mui-control-content {
+				height: 510px;
+			}
+
+			.xuanxiangka {
+				height: 100%;
+			}
+
+			.searchkuang {
+				padding-top: 7.5px;
+				padding-left: 3px;
+				display: -webkit-box;
+				-webkit-box-orient: horizontal;
+			}
+
+			.shaixuan {
+				padding-top: 1px;
+				padding-left: 3px;
+				display: -webkit-box;
+				-webkit-box-orient: horizontal;
+			}
+
+			.searchleft {
+				-webkit-box-flex: 3.2;
+			}
+
+			.twotab {
+				-webkit-box-flex: 2.5;
+			}
+
+			.searchbtn {
+				margin-left: 2px;
+				-webkit-box-flex: 0.7;
+
+			}
+
+			.shaixuanbtn {
+				margin-left: 4px;
+				-webkit-box-flex: 0.1;
+				/* height: 100%; */
+			}
+
+			.mui-media-body2 {
+				font-size: 16px;
+				font-weight: 500;
+				line-height: 30px;
+				margin-bottom: 0;
+				margin-left: 44px;
+				padding-left: 50px;
+				color: #333
+			}
+
+			.mui-media-object2 {
+				line-height: 80px;
+				max-width: 80px;
+				height: 80px
+			}
+
+			.imagecss {
+				height: 180px;
+				width: 120px;
+				/* text-align: center; */
+				background-color: #C4C4C4;
+			}
+
+			.divimagecss {
+
+
+				padding-top: 15px;
+
+			}
+		</style>
+	</head>
+
+
+	<script src="js/mui.min.js"></script>
+	<script src="js/jquery-3.3.1.min.js"></script>
+	<script src="js/configurl.js"></script>
+	<body>
+
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">添加课程评价</h1>
+		</header>
+		<div class="mui-content">
+			<div style="text-align: center;margin-top: 6px;">
+				<span>点击下方添加或更换图片</span>
+			</div>
+			<div align="center" class="divimagecss">
+				<img src="" id="hint" class="imagecss" onclick="choosePhoto(this)" name="file" />
+				<img src="" id="hint2" class="imagecss" name="file" />
+			</div>
+
+
+
+			<div class="mui-content-padded">
+				<button id='submit' class="mui-btn mui-btn-block mui-btn-primary">提交</button>
+			</div>
+			<!-- 			<div class="mui-content-padded">
+				<button id='one' class="mui-btn mui-btn-block mui-btn-primary">创建和查找</button>
+			</div> -->
+			<div class="mui-content-padded">
+				<button id='two' class="mui-btn mui-btn-block mui-btn-primary">查询</button>
+			</div>
+
+			<div class="mui-content-padded">
+				<button id='catch' class="mui-btn mui-btn-block mui-btn-primary">对比</button>
+			</div>
+
+		</div>
+
+
+
+
+		<script>
+			mui.init();
+			var myToken = null;
+			$(function() {
+				function CreateAddFaceSet(uniquename, imgtoken) {
+					var url = "https://api-cn.faceplusplus.com/facepp/v3/faceset/create";
+					mui.ajax(url, {
+						data: {
+							api_key: "CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA",
+							api_secret: "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3",
+							outer_id: uniquename,
+							face_tokens: imgtoken,
+							force_merge: 1
+						},
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							mui.toast('上传成功');
+						},
+						error: function(xhr, type, errorThrown) {
+							console.log(type);
+							console.log(errorThrown);
+						}
+					});
+
+
+				}
+
+
+
+
+
+
+
+			})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			document.getElementById('two').addEventListener("tap", function() {
+
+				// queryFaceSet("userId-01");
+
+
+			});
+
+			document.getElementById("submit").addEventListener("tap", function() {
+				var imgPath = $("img").attr("src");
+				console.log(imgPath);
+				if (imgPath == '') {
+
+					mui.alert('上传图片不能为空');
+
+				} else {
+					// console.log("进来了");
+
+					SingleFaceDetect(imgPath);
+					// FaceDetectAdd(imgPath, "userId-01");
+
+
+
+				}
+
+
+
+			})
+
+
+
+			function detectImg(imgPath, event) {
+				//选中图片之后，头像当前的照片变为选择的照片
+				var mainImg = event;
+				mainImg.src = imgPath;
+
+
+				// $("img").attr("src")
+				// var mypath = $("img").attr("src");
+				var myimage = new Image();
+				// console.log(imgPath);
+				myimage.src = imgPath;
+				myimage.onload = function() {
+					var imgbase64 = getBase64Image(myimage);
+					var url = "https://api-cn.faceplusplus.com/facepp/v3/detect";
+					mui.ajax(url, {
+						data: {
+							api_key: "CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA",
+							api_secret: "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3",
+							image_base64: imgbase64
+							// 				return_landmark:"1",
+							// 				return_attributes:"gender,age,smiling,headpose,facequality,blur,eyestatus,emotion,ethnicity,beauty,mouthstatus,eyegaze,skinstatus"
+						},
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						success: function(data) {
+							console.log('成功！');
+
+							console.log(JSON.stringify(data));
+							if (data.faces.length == 0) {
+								mui.alert('该图片无法识别出人脸，请更换图片或重试');
+
+							} else {
+								// document.getElementById('tm').innerText = data.faces[0].face_token;
+								myToken = data.faces[0].face_token;
+
+								mui.alert('识别出存在人脸');
+
+
+
+							}
+
+
+
+						},
+						error: function(xhr, type, errorThrown) {
+							console.log(xhr);
+							console.log(type);
+							console.log(typeof type);
+							console.log(errorThrown);
+						}
+					});
+
+
+				}
+
+
+
+
+			}
+
+
+
+			function choosePhoto2(event) {
+				mui.plusReady(function() {
+					var mobileCamera = plus.camera.getCamera();
+					mobileCamera.captureImage(function(e) {
+						plus.io.resolveLocalFileSystemURL(e, function(entry) {
+							var path = entry.toLocalURL() + '?version=' + new Date().getTime();
+							console.log(path);
+							detectImg(path, event);
+						}, function(err) {
+							console.log("读取拍照文件错误");
+						});
+					}, function(e) {
+						console.log("er", e);
+					}, function() {
+						filename: '_doc/head.png'
+					});
+
+
+
+				})
+			}
+
+			document.getElementById('hint2').addEventListener("tap", function() {
+				// console.log(this);
+				choosePhoto2(this);
+			});
+
+
+
+
+
+
+
+
+			document.getElementById("catch").addEventListener("tap", function() {
+				var tokens = queryFaceSet("userId-01").face_tokens;
+				// console.log(JSON.stringify(queryFaceSet("userId-01").face_tokens));
+				console.log(typeof tokens);
+				console.log(tokens.length);
+				if (tokens.length > 0) {
+
+					console.log(myToken);
+					compareFace(myToken, tokens);
+				}
+
+			})
+
+
+			function queryFaceSet(uniqueName) {
+				var myData = {};
+				var url = "https://api-cn.faceplusplus.com/facepp/v3/faceset/getdetail";
+				mui.ajax(url, {
+					data: {
+						api_key: "CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA",
+						api_secret: "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3",
+						outer_id: uniqueName
+					},
+					async: false,
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					success: function(data) {
+						console.log(typeof data.face_tokens);
+						// console.log(JSON.stringify(data.face_tokens));
+						myData = data;
+						return myData;
+
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(type);
+						console.log(errorThrown);
+						return null;
+					}
+				});
+
+				return myData;
+			}
+
+			function compareFace(face_token1, tokens) {
+				var flag = false;
+				var url = "https://api-cn.faceplusplus.com/facepp/v3/compare";
+				for (var i = 0; i < tokens.length; i++) {
+
+					mui.ajax(url, {
+						data: {
+							api_key: "CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA",
+							api_secret: "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3",
+							face_token1: face_token1,
+							face_token2: tokens[i]
+						},
+						async: false,
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							var judgeData = data.confidence;
+							if (judgeData > 80) {
+
+								mui.alert("能判断为同一个人， 置信值为 " + judgeData);
+								flag = true;
+							} else {
+								flag = false;
+								mui.alert("不能判断为同一个人， 置信值为 " + judgeData);
+							}
+							// mui.alert(data.confidence);
+
+
+
+							// mui.toast('上传成功');
+						},
+						error: function(xhr, type, errorThrown) {
+							if (type == "timeout") {
+								mui.alert("请求超时，请重试");
+							} else {
+								mui.alert("未知网络错误");
+							}
+							console.log(type);
+							console.log(errorThrown);
+						}
+					});
+
+					if (flag) {
+						break;
+					} else {
+						flag = false;
+					}
+
+				}
+
+			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			function choosePhoto(event) {
+				if (mui.os.plus) {
+					var a = [{
+						title: '拍照'
+					}, {
+						title: '从手机相册选择'
+					}];
+					plus.nativeUI.actionSheet({
+						cancel: '取消',
+						buttons: a
+					}, function(b) {
+						switch (b.index) {
+							case 0:
+								break;
+
+							case 1:
+								//拍照  
+								getImages(event)
+								break;
+
+							case 2:
+								//打开相册  
+								galleryImages(event);
+								break;
+
+							default:
+								break;
+						}
+					}, false);
+
+				}
+			}
+
+			//拍照  
+			function getImages(event) {
+				var mobileCamera = plus.camera.getCamera();
+				mobileCamera.captureImage(function(e) {
+					plus.io.resolveLocalFileSystemURL(e, function(entry) {
+						var path = entry.toLocalURL() + '?version=' + new Date().getTime();
+						uploadHeadImg(path, event);
+						// console.log(path);
+					}, function(err) {
+						console.log("读取拍照文件错误");
+					});
+				}, function(e) {
+					console.log("er", err);
+				}, function() {
+					filename: '_doc/head.png';
+				});
+			}
+
+			//本地相册选择   
+			function galleryImages(event) {
+				console.log("你选择了从相册选择");
+				plus.gallery.pick(function(a) {
+					plus.io.resolveLocalFileSystemURL(a, function(entry) {
+						plus.io.resolveLocalFileSystemURL('_doc/', function(root) {
+							root.getFile('head.png', {}, function(file) {
+								//文件已经存在
+								file.remove(function() {
+									console.log("文件移除成功");
+									entry.copyTo(root, 'head.png', function(e) {
+										var path = e.fullPath + '?version=' + new Date().getTime();
+										uploadHeadImg(path, event);
+									}, function(err) {
+										console.log("copy image fail: ", err);
+									});
+								}, function(err) {
+									console.log("删除图片失败：（" + JSON.stringify(err) + ")");
+								});
+							}, function(err) {
+								//打开文件失败
+								entry.copyTo(root, 'head.png', function(e) {
+									var path = e.fullPath + '?version=' + new Date().getTime();
+									uploadHeadImg(path, event);
+								}, function(err) {
+									console.log("上传图片失败：（" + JSON.stringify(err) + ")");
+								});
+							});
+						}, function(e) {
+							console.log("读取文件夹失败：（" + JSON.stringify(err) + ")");
+						});
+					});
+				}, function(err) {
+					console.log("读取拍照文件失败: ", err);
+				}, {
+					filter: 'image'
+				});
+			};
+
+			//上传图片
+			function uploadHeadImg(imgPath, event) {
+				var hint = document.getElementById('hint');
+				hint.style.display = "inline-block";
+				hint.innerHTML = '上传中...';
+				hint.style.color = "#778899";
+
+				//选中图片之后，头像当前的照片变为选择的照片
+				var mainImg = event;
+				mainImg.src = imgPath;
+
+
+			}
+
+
+
+
+
+
+			function FaceDetectAdd(path, faceSetname) {
+				var image = new Image();
+				image.src = path;
+				// console.log(typeof image);
+				var imgbase64 = getBase64Image(image);
+				var url = "https://api-cn.faceplusplus.com/facepp/v3/detect";
+				mui.ajax(url, {
+					data: {
+						api_key: "CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA",
+						api_secret: "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3",
+						image_base64: imgbase64
+						// 				return_landmark:"1",
+						// 				return_attributes:"gender,age,smiling,headpose,facequality,blur,eyestatus,emotion,ethnicity,beauty,mouthstatus,eyegaze,skinstatus"
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					success: function(data) {
+						console.log('成功！');
+
+						console.log(JSON.stringify(data));
+						if (data.faces.length == 0) {
+							mui.alert('该图片无法识别出人脸，请更换图片或重试');
+
+						} else {
+							document.getElementById('tm').innerText = data.image_id;
+
+							var fk = data.faces[0].face_token;
+							CreateAddFaceSet(faceSetname, fk);
+
+							mui.alert('识别出存在人脸');
+
+
+
+
+
+						}
+
+
+
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(type);
+						console.log(errorThrown);
+					}
+				});
+			}
+
+
+
+			function SingleFaceDetect(path) {
+				var image = new Image();
+				image.src = path;
+				// console.log(typeof image);
+				var imgbase64 = getBase64Image(image);
+				var url = "https://api-cn.faceplusplus.com/facepp/v3/detect";
+				mui.ajax(url, {
+					data: {
+						api_key: "CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA",
+						api_secret: "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3",
+						image_base64: imgbase64
+						// 				return_landmark:"1",
+						// 				return_attributes:"gender,age,smiling,headpose,facequality,blur,eyestatus,emotion,ethnicity,beauty,mouthstatus,eyegaze,skinstatus"
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					success: function(data) {
+						console.log('成功！');
+
+						console.log(JSON.stringify(data));
+						if (data.faces.length == 0) {
+							mui.alert('该图片无法识别出人脸，请更换图片或重试');
+
+						} else {
+							document.getElementById('tm').innerText = data.faces[0].face_token;
+							mui.alert('识别出存在人脸');
+
+
+
+
+
+						}
+
+
+
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(type);
+						console.log(errorThrown);
+					}
+				});
+			}
+
+
+
+
+
+
+			//压缩图片转成base64
+			function getBase64Image(img) {
+				var w = 200
+				imgWidth = img.width;
+				imgHeight = img.height;
+				var canvas = document.createElement("canvas");
+				var ctx = canvas.getContext("2d");
+				if (Math.max(imgWidth, imgHeight) > w) {
+					if (imgWidth > imgHeight) {
+						canvas.width = w;
+						canvas.height = w * imgHeight / imgWidth;
+					} else {
+						canvas.height = w;
+						canvas.width = w * imgWidth / imgHeight;
+					}
+				} else {
+					canvas.width = imgWidth;
+					canvas.height = imgHeight;
+				}
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+				var dataUrl = canvas.toDataURL("image/png", 0.8);
+				return dataUrl;
+			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			function uploadMessage(file) {
+
+				mui.plusReady(function() {
+					var wait = plus.nativeUI.showWaiting("正在上传");
+
+					var url = "https://api-cn.faceplusplus.com/facepp/v3/detect";
+					var task = plus.uploader.createUpload(url, {
+						method: "POST"
+					}, function(t, status) {
+						console.log(status);
+						console.log(typeof t.responseText);
+						console.log(JSON.stringify(t.responseText));
+						if (status == 200) {
+							document.getElementById('tm').innerText = t.responseText;
+							mui.alert('上传成功');
+							wait.close();
+
+							// 							if(t.responseText=="success"){
+							// 								console.log("上传成功：" + t.responseText);
+							// 								mui.alert('上传成功');
+							// 								wait.close();
+							// 								// mui.back();
+							// 							}else if(t.responseText=="failed"){
+							// 				
+							// 								mui.alert('上传失败');
+							// 								wait.close();
+							// 							}else{
+							// 								mui.alert('未知原因');
+							// 							}
+
+						} else {
+							console.log("上传失败：" + status);
+							wait.close();
+							mui.alert('服务器连接失败');
+						}
+
+
+
+					});
+
+
+					var code = getRandomCode(10);
+					// ("mymessage", message);
+					("api_key", "CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA");
+					("api_secret", "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3");
+					("return_landmark", "1");
+					("return_attributes",
+						"gender,age,smiling,headpose,facequality,blur,eyestatus,emotion,ethnicity,beauty,mouthstatus,eyegaze,skinstatus"
+					);
+					task.addFile(file, {
+						key: "image_file",
+						mime: "image/png"
+					});
+					task.start();
+
+				})
+			}
+
+			function getRandomCode(length) {
+				if (length > 0) {
+					var data = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+						"K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f",
+						"g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
+					];
+					var nums = "";
+					for (var i = 0; i < length; i++) {
+						var r = parseInt(Math.random() * 61);
+						nums += data[r];
+					}
+					return nums;
+				} else {
+					return false;
+				}
+			}
+		</script>
+
+
+
+
+
+
+	</body>
+
+</html>

@@ -1,0 +1,310 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+
+
+		<style type="text/css">
+			.mui-card .mui-control-content {
+				padding: 10px;
+			}
+
+			.mui-control-content {
+				height: 510px;
+			}
+
+			.xuanxiangka {
+				height: 100%;
+			}
+
+			.searchkuang {
+				padding-top: 7.5px;
+				padding-left: 3px;
+				display: -webkit-box;
+				-webkit-box-orient: horizontal;
+			}
+
+			.shaixuan {
+				padding-top: 1px;
+				padding-left: 3px;
+				display: -webkit-box;
+				-webkit-box-orient: horizontal;
+			}
+
+			.searchleft {
+				-webkit-box-flex: 3.2;
+			}
+
+			.twotab {
+				-webkit-box-flex: 2.5;
+			}
+
+			.searchbtn {
+				margin-left: 2px;
+				-webkit-box-flex: 0.7;
+
+			}
+
+			.shaixuanbtn {
+				margin-left: 4px;
+				-webkit-box-flex: 0.1;
+				/* height: 100%; */
+			}
+
+			.mui-media-body2 {
+				font-size: 16px;
+				font-weight: 500;
+				line-height: 30px;
+				margin-bottom: 0;
+				margin-left: 44px;
+				padding-left: 50px;
+				color: #333
+			}
+
+			.mui-media-object2 {
+				line-height: 80px;
+				max-width: 80px;
+				height: 80px
+			}
+
+			.imagecss {
+				height: 180px;
+				width: 120px;
+				/* text-align: center; */
+				background-color: #C4C4C4;
+			}
+
+			.divimagecss {
+
+
+				padding-top: 15px;
+
+			}
+		</style>
+	</head>
+
+
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/jquery-3.3.1.min.js"></script>
+	<script src="../js/configurl.js"></script>
+	<body>
+
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">完善个人信息</h1>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group" style="margin: 10px;">
+				<div class="mui-input-row">
+					<label>你的学号</label>
+					<input id='number' type="text" class="mui-input-clear mui-input" placeholder="请输入你的学号(必填)">
+				</div>
+				<div class="mui-input-row">
+					<label>你的姓名</label>
+					<input id='studentName' type="text" class="mui-input-clear mui-input" placeholder="请输入你的名字(必填)">
+				</div>
+				<div class="mui-input-row">
+					<label>你的班级</label>
+					<input id='className' type="text" class="mui-input-clear mui-input" placeholder="请输入所在班级(可不填)">
+				</div>
+			</form>
+			<div class="mui-content-padded">
+				<button id='submit' class="mui-btn mui-btn-block mui-btn-primary">提交</button>
+			</div>
+		</div>
+
+
+
+
+		<script>
+			mui.init();
+
+
+			var old_back = mui.back;
+			mui.back = function() {
+				if (judgeStudentExists()) {
+					mui.alert("请先完善你的学号和姓名");
+				} else {
+					//继续当前页面原有返回逻辑
+					old_back();
+				}
+
+			}
+
+		
+
+
+
+
+			var that = this;
+
+			function judgeStudentExists() {
+
+				var existStudent = false;
+				var url = getport() + '/student/findByOpenid';
+				var personInfoStr = localStorage.getItem('person');
+				if (personInfoStr != null) {
+					var personInfo = JSON.parse(personInfoStr);
+					console.log(personInfo.openid);
+
+					mui.ajax(url, {
+						data: {
+							openid: personInfo.openid
+						},
+						async: false,
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							if (data.message.number == null || data.message.name == null || data.message.number == '' || data.message.name ==
+								'') {
+								existStudent = true;
+								that.flag = true;
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							if (type == "timeout") {
+								mui.alert("请求超时，请检查网络或重试");
+							} else {
+								mui.alert("未知网络错误");
+							}
+							console.log(type);
+							console.log(errorThrown);
+						}
+					});
+
+				}
+				return existStudent;
+			}
+
+
+
+
+
+
+
+
+
+			//jQ
+			$(function() {
+
+				function check6(str) {
+					// var pattern = /\d{6}/;
+					var reg = new RegExp(/^\d{6}$/);
+					if (!reg.test(str)) {
+						// alert('不是6位数字');
+						return true;
+					} else {
+						// alert('是6位数字');
+						return false;
+					}
+				}
+
+
+
+				document.getElementById("submit").addEventListener("tap", function() {
+
+
+					// console.log($('#number').val());
+					// console.log($('#studentName').val());
+					// console.log($('#className').val());
+
+					var number = $('#number').val();
+					var student_name = $('#studentName').val();
+					var class_name = $('#className').val();
+
+					// console.log(check6(number));
+					if (student_name == '' || number == '') {
+						mui.alert('姓名学号不能为空');
+					} else if (check6(number)) {
+						mui.alert('学号必须是6位');
+					} else {
+						var personInfoStr = localStorage.getItem('person');
+						if (personInfoStr != null) {
+							var personInfo = JSON.parse(personInfoStr);
+							// console.log(personInfo.openid);
+
+							insertMessage(number, student_name, class_name, personInfo.openid);
+
+
+
+
+						} else {
+							console.log("openid为空");
+						}
+
+
+					}
+
+				}, false);
+
+
+				function insertMessage(MyNumber, MyName, MyClass, MyOpenid) {
+
+					var myurl = getport() + '/student/updateMessage';
+					// var Student = new Object();
+					// // Student.id = null;
+					// Student.number = MyNumber;
+					// Student.classes = MyClass;
+					// Student.name = MyName;
+					// Student.openid = MyOpenid;
+					var student = {
+						"id": null,
+						"number": MyNumber,
+						"classes": MyClass,
+						"name": MyName,
+						"openid": MyOpenid
+					}
+					// console.log(typeof student);
+					mui.ajax(myurl, {
+						contentType: "application/json",
+						data: JSON.stringify(student),
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							// messageCode = data.code;
+
+							if (data.code == 120) {
+								mui.alert('学号已存在,请重新输入');
+							} else if (data.code == 000) {
+								mui.toast('个人信息更新失败');
+							} else if (data.code == 200) {
+								mui.toast('个人信息已完善');
+								mui.fire(plus.webview.getWebviewById('bottomtab/me.html'), 'refresh');
+								plus.webview.currentWebview().close(); //本窗口关闭
+							}
+
+						},
+						error: function(xhr, type, errorThrown) {
+							if (type == "timeout") {
+								mui.alert("请求超时，请检查网络或重试");
+							} else {
+								mui.alert("未知网络错误");
+							}
+							console.log(type);
+							// console.log(errorThrown);
+						}
+					});
+
+				}
+
+			});
+		</script>
+
+
+
+
+
+
+	</body>
+
+</html>

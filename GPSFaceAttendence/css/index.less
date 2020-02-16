@@ -1,0 +1,147 @@
+html,body{
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+a{
+  text-decoration: none;
+  color: black;
+  &:hover{
+    text-decoration: none;
+    color: black;
+  }
+}
+.navbar{
+  margin-bottom: 2px;
+  min-width: 800px;
+}
+.container-fluid{
+  .navbar-brand{
+    color: white!important;
+  }
+  .dropdown-menu{
+    min-width: 100px;
+  }
+}
+.list-group-item{
+  &:hover{
+    background-color: #e1e1e8;
+  }
+}
+.center{
+  margin-top: -20px;
+}
+#nav-left{
+  left: -15px;
+  padding-right:0px;
+}
+#nav-right{
+  border-right: 1px solid rgb(229, 229, 229);
+  position: absolute;
+  top:50px;
+  bottom: 1px;
+  right: 0px;
+  padding: 15px 0px;
+}
+.glyphicon{
+    margin: 2px 5px 0 0;
+}
+.form-group{
+  margin-right: 15px;
+}
+#user{
+  height: 200px;
+  padding-left: 20px;
+  margin-bottom: 40px;
+  margin-top: 30px;
+  .use{
+    margin: 20px 15px;
+    label{
+      margin-right: 15px;
+    }
+  }
+}
+#pass{
+  height: 240px;
+  padding-left: 20px;
+  margin-bottom: 40px;
+  margin-top: 30px;
+  .use{
+    margin: 20px 15px;
+    label{
+      margin-right: 15px;
+    }
+    input{
+
+    }
+  }
+  .repeat{
+    margin-left: -14px;
+  }
+}
+#file{
+
+}
+#list{
+  td{
+    vertical-align: middle;
+  }
+}
+.pagination{
+  margin: 0px 5px 0 5px;
+}
+.modal-backdrop.in{
+  opacity: 0;
+}
+.modal-footer{
+  padding: 8px;
+}
+.myPage{
+  width: 500px;
+  margin: 0  auto;
+  span{
+    position: relative;
+    top: -10px;
+    display: inline-block;
+    height: 26px;
+    input{
+      width:30px;
+      margin: 0 10px 0 10px;
+      text-align: center;
+    }
+    button{
+      padding: 5px 8px;
+      margin-left: 10px;
+    }
+  }
+}
+#showUrl{
+  position: fixed;
+  height: 310px;
+  width: 310px;
+  background:url("../images/qrcode.jpg") center no-repeat;
+  border-radius: 5px;
+  top:200px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+}
+.show-qr{
+  display: none;
+}
+
+
+
+
+@media only screen and (max-width: 768px) {
+  #nav-right{
+    top:150px;
+  }
+}
+@media only screen and (min-width: 768px) {
+  .modal-dialog{
+    width: 360px;
+    margin-top: 100px;
+  }
+}

@@ -1,0 +1,653 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
+
+		<style type="text/css">
+			.mui-card .mui-control-content {
+				padding: 10px;
+			}
+
+			.mui-control-content {
+				height: 510px;
+			}
+
+			.xuanxiangka {
+				height: 100%;
+			}
+
+			.searchkuang {
+				padding-top: 7.5px;
+				padding-left: 3px;
+				display: -webkit-box;
+				-webkit-box-orient: horizontal;
+			}
+
+			.shaixuan {
+				padding-top: 1px;
+				padding-left: 3px;
+				display: -webkit-box;
+				-webkit-box-orient: horizontal;
+			}
+
+			.searchleft {
+				-webkit-box-flex: 3.2;
+			}
+
+			.twotab {
+				-webkit-box-flex: 2.5;
+			}
+
+			.searchbtn {
+				margin-left: 2px;
+				-webkit-box-flex: 0.7;
+
+			}
+
+			.shaixuanbtn {
+				margin-left: 4px;
+				-webkit-box-flex: 0.1;
+				/* height: 100%; */
+			}
+
+			.mui-media-body2 {
+				font-size: 16px;
+				font-weight: 500;
+				line-height: 30px;
+				margin-bottom: 0;
+				margin-left: 44px;
+				padding-left: 50px;
+				color: #333
+			}
+
+			.mui-media-object2 {
+				line-height: 80px;
+				max-width: 80px;
+				height: 80px
+			}
+
+			.imagecss {
+				height: 180px;
+				width: 120px;
+				/* text-align: center; */
+				background-color: #C4C4C4;
+			}
+
+			.divimagecss {
+				padding-top: 10px;
+			}
+
+			.divtimecss {
+				/* padding-top: 20px; */
+				padding: 3px 10px
+			}
+
+			.component {
+				padding: 10px;
+			}
+
+			.mui-btn2 {
+				font-size: 9pt;
+				padding: 8px 10px
+			}
+
+			.color {
+				background: #0062CC;
+			}
+
+			.oneLine {
+				display: inline-block;
+			}
+
+			.location {
+				float: right;
+				width: 70%;
+				margin-bottom: 0;
+				padding-left: 0;
+				border: 0;
+				display: flex;
+				/*设置为弹性容器*/
+				align-items: center;
+				/*定义div1的元素垂直居中*/
+				justify-content: center;
+				/*定义div1的里的元素水平居中*/
+			}
+
+			.mui-input-row label {
+				font-family: 'Helvetica Neue', Helvetica, sans-serif;
+				line-height: 1.1;
+				float: left;
+				width: 30%;
+				padding: 11px 10px;
+			}
+
+			.dataSize {
+				font-size: 16px;
+			}
+		</style>
+	</head>
+
+
+
+	<body>
+
+
+
+
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-3.3.1.min.js"></script>
+		<script src="../js/configurl.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+
+
+		<script type="text/javascript">
+			function submit(){
+				var btnArray = ['确认', '取消'];
+				mui.confirm(' ', '确认添加课程吗？', btnArray, function(e) {
+					if (e.index == 0) {
+						//ajax网络请求 预约
+						submitCourse();
+					} else {
+						// mui.toast('取消');
+					}
+				})
+			}
+			
+			
+			function submitCourse() {
+				getGeocode();
+				// console.log(document.getElementById('result0').getAttribute("value"));
+				var imgPath = document.getElementById('courseImg').getAttribute("src");
+				console.log(imgPath);
+				var c_name = document.getElementById("cname").value;
+				var t_name = document.getElementById("tname").value;
+				var r_name = document.getElementById("rname").value;
+
+				var longitude = document.getElementById('longitude').innerText;
+				var latitude = document.getElementById('latitude').innerText
+				var start_time = document.getElementById('result0').getAttribute("value");
+				var end_time = document.getElementById('result1').getAttribute("value");
+				console.log(start_time);
+				if (c_name == '' || t_name == '' || r_name == '' || start_time == null || end_time == null) {
+					mui.alert('信息不能为空');
+				} else if (CompareDate(start_time, end_time)) {
+					mui.alert('结束时间不能大于等于开始时间');
+				} 
+				// else if (imgPath == '') {
+
+				// 	mui.alert('上传图片不能为空');
+
+				// } 
+				else {
+
+					// uploadMessage(imgPath, c_name, t_name, r_name, longitude, latitude, startTime, endTime);
+                               uploadBaseMessage(c_name, t_name, r_name, longitude, latitude, start_time, end_time);
+
+				}
+			}
+
+			function CompareDate(t1, t2) {
+				var date = new Date();
+				var a = t1.split(":");
+				var b = t2.split(":");
+				return date.setHours(a[0], a[1]) >= date.setHours(b[0], b[1]);
+			}
+
+			function geoInf(position) {
+				var str = "";
+				str += "地址：" + position.addresses + "\n"; //获取地址信息
+				str += "坐标类型：" + position.coordsType + "\n";
+				var timeflag = position.timestamp; //获取到地理位置信息的时间戳；一个毫秒数；
+				str += "时间戳：" + timeflag + "\n";
+				var codns = position.coords; //获取地理坐标信息；
+				var lat = codns.latitude; //获取到当前位置的纬度；
+				str += "纬度：" + lat + "\n";
+				var longt = codns.longitude; //获取到当前位置的经度
+				str += "经度：" + longt + "\n";
+
+				document.getElementById('longitude').innerText = longt;
+				document.getElementById('latitude').innerText = lat;
+				mui.toast('位置在'+position.addresses);
+
+				// var alt = codns.altitude; //获取到当前位置的海拔信息；
+				// str += "海拔：" + alt + "\n";
+				// var accu = codns.accuracy; //地理坐标信息精确度信息；
+				// str += "精确度：" + accu + "\n";
+				// var altAcc = codns.altitudeAccuracy; //获取海拔信息的精确度；
+				// str += "海拔精确度：" + altAcc + "\n";
+				// var head = codns.heading; //获取设备的移动方向；
+				// str += "移动方向：" + head + "\n";
+				// var sped = codns.speed; //获取设备的移动速度；
+				// str += "移动速度：" + sped;
+				console.log(JSON.stringify(position));
+				// outLine(str);
+			}
+
+			function getGeocode() {
+				mui.plusReady(function() {
+					// outSet("获取定位位置信息:");
+					plus.geolocation.getCurrentPosition(geoInf, function(e) {
+						outSet("获取定位位置信息失败：" + e.message);
+					}, {
+						geocode: true
+					});
+
+
+				})
+
+			}
+
+
+
+
+
+
+			function choosePhoto(event) {
+				if (mui.os.plus) {
+					var a = [{
+						title: '拍照'
+					}, {
+						title: '从手机相册选择'
+					}];
+					plus.nativeUI.actionSheet({
+						cancel: '取消',
+						buttons: a
+					}, function(b) {
+						switch (b.index) {
+							case 0:
+								break;
+
+							case 1:
+								//拍照  
+								getImages(event);
+								break;
+
+							case 2:
+								//打开相册  
+								galleryImages(event);
+								break;
+
+							default:
+								break;
+						}
+					}, false);
+
+				}
+			}
+
+			//拍照  
+			function getImages(event) {
+				var mobileCamera = plus.camera.getCamera();
+				mobileCamera.captureImage(function(e) {
+					plus.io.resolveLocalFileSystemURL(e, function(entry) {
+						var path = entry.toLocalURL() + '?version=' + new Date().getTime();
+						uploadHeadImg(path, event);
+						console.log(path);
+					}, function(err) {
+						console.log("读取拍照文件错误");
+					});
+				}, function(e) {
+					console.log("er", err);
+				}, function() {
+					filename: '_doc/head.png';
+				});
+			}
+
+			//本地相册选择   
+			function galleryImages(event) {
+				console.log("你选择了从相册选择");
+				plus.gallery.pick(function(a) {
+					plus.io.resolveLocalFileSystemURL(a, function(entry) {
+						plus.io.resolveLocalFileSystemURL('_doc/', function(root) {
+							root.getFile('head.png', {}, function(file) {
+								//文件已经存在
+								file.remove(function() {
+									console.log("文件移除成功");
+									entry.copyTo(root, 'head.png', function(e) {
+										var path = e.fullPath + '?version=' + new Date().getTime();
+										uploadHeadImg(path, event);
+									}, function(err) {
+										console.log("copy image fail: ", err);
+									});
+								}, function(err) {
+									console.log("删除图片失败：（" + JSON.stringify(err) + ")");
+								});
+							}, function(err) {
+								//打开文件失败
+								entry.copyTo(root, 'head.png', function(e) {
+									var path = e.fullPath + '?version=' + new Date().getTime();
+									uploadHeadImg(path, event);
+								}, function(err) {
+									console.log("上传图片失败：（" + JSON.stringify(err) + ")");
+								});
+							});
+						}, function(e) {
+							console.log("读取文件夹失败：（" + JSON.stringify(err) + ")");
+						});
+					});
+				}, function(err) {
+					console.log("读取拍照文件失败: ", err);
+				}, {
+					filter: 'image'
+				});
+			};
+
+			// var container = mui("#progress-bar p");
+			var stateText = localStorage.getItem('$token');
+
+			//上传图片
+			function uploadHeadImg(imgPath, event) {
+				var hint = document.getElementById('courseImg');
+				hint.style.display = "inline-block";
+				hint.innerHTML = '上传中...';
+				hint.style.color = "#778899";
+				//选中图片之后，头像当前的照片变为选择的照片
+				var mainImg = event;
+				mainImg.src = imgPath;
+			}
+
+
+			function uploadBaseMessage( c_name, t_name, r_name, longitude, latitude, start_time, end_time) {
+				
+				var myurl = getport() + '/course/addCourse';
+                        var course = {
+                        	"name": c_name,
+                        	"teacherName": t_name,
+                        	"room": r_name,
+                        	"longitude": longitude,
+                        	"latitude": latitude,
+                        	"startTime": start_time,
+                        	"endTime": end_time
+                        }
+                        mui.ajax(myurl, {
+                        	contentType: "application/json",
+                        	data: JSON.stringify(course),
+                        	dataType: 'json', //服务器返回json格式数据
+                        	type: 'post', //HTTP请求类型
+                        	timeout: 10000, //超时时间设置为10秒；
+                        	success: function(data) {
+                        		console.log(JSON.stringify(data));
+                        		// messageCode = data.code;
+                        
+                        		if (data.code == 200) {
+                        			mui.toast(data.msg);
+							plus.webview.currentWebview().close(); //本窗口关闭
+                        		}else {
+							mui.alert(data.msg);
+						 }
+                        
+                        	},
+                        	error: function(xhr, type, errorThrown) {
+                        		if (type == "timeout") {
+                        			mui.alert("请求超时，请检查网络或重试");
+                        		} else {
+                        			mui.alert("未知网络错误");
+                        		}
+                        		console.log(type);
+                        		// console.log(errorThrown);
+                        	}
+                        });
+                      
+			}
+
+
+        //                function judgeCourseExist(){
+				    // var url = getport() + '/course/judgeCourseExists';
+				     
+				     
+			     // }
+                                 
+
+
+
+
+			function uploadMessage(file, c_name, t_name, r_name, longitude, latitude, start_time, end_time) {
+
+				mui.plusReady(function() {
+					// var wait = plus.nativeUI.showWaiting("正在上传");
+
+					var url = getport() + '/course/addCourse';
+					var task = plus.uploader.createUpload(url, {
+						method: "POST"
+					}, function(t, status) {
+						if (status == 200) {
+							console.log(t.responseText);
+							// if (t.responseText == "success") {
+							// 	console.log("上传成功：" + t.responseText);
+							// 	mui.alert('上传成功');
+							// 	wait.close();
+							// 	mui.back();
+							// } else if (t.responseText == "failed") {
+
+							// 	mui.alert('上传失败');
+							// 	wait.close();
+							// } else {
+
+							// 	mui.alert('未知原因');
+							// 	wait.close();
+							// }
+
+						} else {
+							console.log("上传失败：" + status);
+							// wait.close();
+							mui.alert('服务器连接失败');
+						}
+
+
+
+					});
+					var course = {
+						"name": c_name,
+						"teacherName": t_name,
+						"room": r_name,
+						"longitude": longitude,
+						"latitude": latitude,
+						"start_name": start_time,
+						"end_name": end_time
+					}
+
+
+					var code = getRandomCode(10);
+					task.addData("course", JSON.stringify(course));
+
+					// task.addData("cname", c_name);
+					// task.addData("tname", t_name);
+					// task.addData("rname", r_name);
+
+
+					task.addFile(file, {
+						key: "file",
+						name: code,
+						mime: "image/png"
+					});
+					task.start();
+
+				})
+			}
+
+
+
+
+			function getRandomCode(length) {
+				if (length > 0) {
+					var data = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+						"K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f",
+						"g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
+					];
+					var nums = "";
+					for (var i = 0; i < length; i++) {
+						var r = parseInt(Math.random() * 61);
+						nums += data[r];
+					}
+					return nums;
+				} else {
+					return false;
+				}
+			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			window.onload = getGeocode();
+		</script>
+
+
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">添加课程</h1>
+		</header>
+		<div class="mui-content">
+			<div style="text-align: center;margin-top: 6px;">
+				<span>点击下方添加或更换图片</span>
+			</div>
+			<div align="center" class="divimagecss">
+				<img src="" id="courseImg" class="imagecss" onclick="choosePhoto(this)" name="file" />
+			</div>
+
+			<form class="mui-input-group" style="margin: 10px;">
+				<div class="mui-input-row">
+					<label>课程名</label>
+					<input id='cname' type="text" class="mui-input-clear mui-input" placeholder="请输入课程名称">
+				</div>
+				<div class="mui-input-row">
+					<label>老师名</label>
+					<input id='tname' type="text" class="mui-input-clear mui-input" placeholder="请输入老师姓名">
+				</div>
+				<div class="mui-input-row">
+					<label>课室号</label>
+					<input id='rname' type="text" class="mui-input-clear mui-input" placeholder="请输入课室号">
+				</div>
+				<div class="mui-input-row">
+					<label>经纬度</label>
+					<div class="location">
+						<div style="float: left;">
+							<span id="longitude" class="dataSize">124.55</span>
+							<span class="dataSize">,</span>
+							<span id="latitude" class="dataSize">124.55</span>
+						</div>
+
+						<div style="padding: 2px;float: right; font-size: small;">
+							<button type="button" onclick="getGeocode()" class="mui-btn2 mui-btn-primary mui-icon mui-icon-location">
+								定位
+							</button>
+						</div>
+					</div>
+				</div>
+			</form>
+			<div class="divtimecss" align="center">
+				<button id='result0' data-options='{"type":"time"}' type="button" class="mui-btn mui-btn-primary mui-btn-outlined">上课时间</button>
+				<label>~</label>
+				<button id='result1' data-options='{"type":"time"}' type="button" class="mui-btn mui-btn-primary mui-btn-outlined "
+				 style="">下课时间</button>
+			</div>
+
+
+
+			<div class="mui-content-padded">
+				<button id='submit' onclick="submit()" class="mui-btn mui-btn-block mui-btn-primary">提交</button>
+			</div>
+		</div>
+
+
+
+		<script>
+			(function($) {
+				$.init();
+				var times = $("[data-options]");
+
+				var btns = $('.btn');
+				times.each(function(i, btn) {
+					btn.addEventListener('tap', function() {
+						// console.log("进来了");
+						var _self = this;
+						if (_self.picker) {
+							_self.picker.show(function(rs) {
+								btn.innerText = rs.text;
+								btn.value = rs.text;
+								console.log(btn.value);
+								_self.picker.dispose();
+								_self.picker = null;
+							});
+						} else {
+							var optionsJson = this.getAttribute('data-options') || '{}';
+							var options = JSON.parse(optionsJson);
+							var id = this.getAttribute('id');
+							/*
+							 * 首次显示时实例化组件
+							 * 示例为了简洁，将 options 放在了按钮的 dom 上
+							 * 也可以直接通过代码声明 optinos 用于实例化 DtPicker
+							 */
+
+
+							_self.picker = new $.DtPicker(options);
+							_self.picker.show(function(rs) {
+								/*
+								 * rs.value 拼合后的 value
+								 * rs.text 拼合后的 text
+								 * rs.y 年，可以通过 rs.y.vaue 和 rs.y.text 获取值和文本
+								 * rs.m 月，用法同年
+								 * rs.d 日，用法同年
+								 * rs.h 时，用法同年
+								 * rs.i 分（minutes 的第二个字母），用法同年
+								 */
+								btn.innerText = rs.text;
+								btn.value = rs.text;
+								console.log(btn.value);
+								/* 
+								 * 返回 false 可以阻止选择框的关闭
+								 * return false;
+								 */
+								/*
+								 * 释放组件资源，释放后将将不能再操作组件
+								 * 通常情况下，不需要示放组件，new DtPicker(options) 后，可以一直使用。
+								 * 当前示例，因为内容较多，如不进行资原释放，在某些设备上会较慢。
+								 * 所以每次用完便立即调用 dispose 进行释放，下次用时再创建新实例。
+								 */
+								_self.picker.dispose();
+								_self.picker = null;
+							});
+						}
+
+					}, false);
+				});
+
+
+
+
+
+
+
+
+
+
+
+			})(mui);
+		</script>
+
+	</body>
+
+</html>
