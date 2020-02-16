@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"> 
+  <head>
+    <title>index.html</title>
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <script th:src="@{/js/jquery.min.js }"></script>
+	<script th:inline="javascript">
+        function MyTime() {
+            let timer = new Date();
+            let day = timer.getDay();
+            let hours = timer.getHours()<10?"0"+timer.getHours():timer.getHours();
+            let right = timer.getMinutes()<10?"0"+timer.getMinutes():timer.getMinutes();
+            return day+","+hours+":"+right;
+        }
+
+        window.onload = function () {
+            let data = MyTime();
+            $.ajax({
+                url:'/signin/findByTime',
+                type:'GET',
+                data:{data:data},
+                success:function (result) {
+                }
+            })
+        }
+
+        
+	
+	</script>
+  </head>
+  
+  <body>
+
+
+
+  </body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>考勤管理后台</title>
+    <link rel="stylesheet" type="text/css" th:href="@{css/bootstrap.css }">
+    <link rel="stylesheet" type="text/css" th:href="@{css/index.css }">
+</head>
+<body>
+<div class="navbar navbar-inverse" role="navigation">
+    <div class="container-fluid">
+        　<div class="navbar-header">
+        　   <a href="#" class="navbar-brand">考勤管理系统后台</a>
+        　</div>
+        <ul class="nav navbar-nav navbar-right">
+            <!--<li class=""><a href="#" id="showqr">生成二维码</a></li>-->
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="glyphicon glyphicon-user" th:text="${session.user.getName() }"></span>
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="javascript:void(0)" id="dis" data-toggle="modal" data-target="#myModal">修改密码</a></li>
+                    <li><a th:href="@{/logOff }">退出</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2 col-xs-4" id="nav-left">
+            <ul class="list-group">
+                <li class="list-group-item active">管理列表</li>
+                <li class="list-group-item"><a th:href="@{student/findAll }"><i class="glyphicon glyphicon-user"></i>学生管理</a></li>
+                <li class="list-group-item"><a th:href="@{course/findAll }"><i class="glyphicon glyphicon-book"></i>课程管理</a></li>
+                <li class="list-group-item"><a th:href="@{signin/findAll }"><i class="glyphicon glyphicon-briefcase"></i>考勤管理</a></li>
+                <li class="list-group-item"><a th:href="@{signin/2 }"><i class="glyphicon glyphicon-briefcase"></i>查看本次到课情况</a></li>
+                <li class="list-group-item"><a th:href="@{toIndex}"><i class="glyphicon glyphicon-user"></i>产品说明书</a></li>
+            </ul>
+
+        </div>
+        <div style="width: 83%;float:right;margin-top: 20px;">
+        <p style="text-align:center">
+            <strong><span style="font-size:16px">考勤管理系统操作使用说明书</span></strong>
+        </p>
+        <p style="text-align:left">
+            本系统分为4个功能模块
+        </p>
+        <p>
+            1、<span style="font-size:16px;color:#0070C0">学生管理功能</span>，点击左侧菜单栏的学生管理进入本模块
+        </p>
+        <p>
+            <span style="color:red">学生的增加</span>：点击增加学生按钮，在弹出的框中输入姓名、班级、学号。学生具有查重功能，相同学号不可再次添加。
+        </p>
+        <p>
+            <span style="color:red">学生的删除</span>：删除分为两种方式，点击学生信息所在行的删除按钮，可单个删除学生。多选学生信息行前的方框，点击批量删除按钮，可以单次删除多个学生。
+        </p>
+        <p>
+            <span style="color:red">学生的修改</span>：点击学生信息所在行的修改按钮，在弹出的框中修改姓名、班级、学号。
+        </p>
+        <p>
+            <span style="color:red">学生的查询</span>：在页面搜索框中输入学生的学号、班级、姓名其中之一即可查询该生信息。
+        </p>
+        <p>
+            2、<span style="font-size:16px;color:#0070C0">课程管理功能</span>，点击左侧菜单栏的课程管理进入本模块
+        </p>
+        <p>
+            <span style="color:red">课程的增加</span>：点击增加课程按钮，在弹出的框中输入课程的名称、开始时间、结束时间、上课那天周几、上课教室、教室经度、教室纬度、上课班级。<span style="color:#00B050">格式要求如下：开始时间例如00:00,精确两位；结束时间例如23:59分，精确两位，中间冒号用英文标点；上课那天周几，输入数字，周日为0，周一到周六分别为1-6；上课教室例如0#811；教室经纬度打开<a href="http://lbs.amap.com/api/javascript-api/example/location/browser-location/"><span style="color:#00B050">http://lbs.amap.com/api/javascript-api/example/location/browser-location/</span></a>获得相应的经纬度；上课班级例如通信161,通信162，中间用英文逗号隔开。</span>
+        </p>
+        <p>
+            <span style="color:red">课程的删除</span>：同学生的删除
+        </p>
+        <p>
+            <span style="color:red">课程的修改</span>：点击课程信息所在行的修改按钮，在弹出的框中修改，格式要求如课程增加。
+        </p>
+        <p>
+            <span style="color:red">课程的查询</span>：在页面搜索框中输入课程的名称、教室、上课班级其中之一即可查询。
+        </p>
+        <p>
+            3、<span style="font-size:16px;color:#0070C0">考勤情况查看功能</span>，点击左侧菜单栏的考勤管理进入本模块
+        </p>
+        <p>
+            <span style="color:red">考勤的删除</span>：同学生的删除
+        </p>
+        <p>
+            <span style="color:red">考勤的查询</span>：在页面搜索框中输入签到学生的姓名、IP、学号其中之一即可查询。
+        </p>
+        <p>
+            <br/>
+        </p>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-show="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form action="" id="pass">
+                    <div class="form-inline">
+                        <input type="hidden" name="id" th:value="${session.user.getId()}">
+                        <div class="form-group use">
+                            <label for="oldpass">旧&nbsp;密&nbsp;码&nbsp;</label>
+                            <input type="password" class="form-control" name="oldpass" >
+                        </div>
+                        <div class="form-group use">
+                            <label for="newpass" class="control-label">新&nbsp;密&nbsp;码&nbsp;</label>
+                            <input type="password" class="form-control" name="newpass">
+                        </div>
+                        <div class="form-group use">
+                            <label for="again" class="control-label">重新输入</label>
+                            <input type="password" class="form-control repeat" name="again" >
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal" id="close">关闭
+                </button>
+                <button type="button" class="btn btn-primary" id="submit">
+                    确认
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!--展示二维码-->
+<div id="showUrl" class="show-qr"></div>
+<script type="text/javascript" th:src="@{js/jquery.min.js }"></script>
+<script type="text/javascript" th:src="@{js/bootstrap.min.js }"></script>
+<script type="text/javascript" th:src="@{js/index.js }"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+server:
+  port: 80
+  tomcat:
+    uri-encoding: UTF-8
+#    servlet:
+#      context-path: /
+logging:
+  config: classpath:logback-spring.xml
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/attendencedb?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false&autoReconnect=true&failOverReadOnly=false
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+  #热部署生效
+    devtools:
+      restart:
+        enabled: true
+  #设置重启的目录
+        additional-paths: src/main/java/
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+
+  thymeleaf:
+      cache: false
+      mode: HTML5
+      encoding: UTF-8
+      prefix: classpath:/templates/
+      suffix: .html
+      servlet:
+        content-type: text/html

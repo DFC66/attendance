@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>登陆</title>
+    <link rel="stylesheet" type="text/css" th:href="@{css/login.css }">
+    <script th:inline="javascript">
+        var logout = [[${msg }]];
+        if (logout !== null && logout !== undefined && logout !== '') {
+            alert(logout);
+        }
+    </script>
+</head>
+<body class="login-bg">
+    <div class="center">
+        <div class="message">考勤管理系统</div>
+        <div class="wrap"></div>
+        <!-- onsubmit="return false" -->
+        <form th:action="@{/login }" th:method="post" onsubmit="change()">
+            <div class="form-group"><input type="text" placeholder="用户名" name="username" required="required" id="username"></div>
+            <div class="form-group"><input type="password" placeholder="密码" name="password" required="required" id="password"></div>
+            <div class="form-group"><input type="submit" value="登录" id="login"></div>
+        </form>
+    </div>
+    <script type="text/javascript" th:src="@{js/jquery.min.js }"></script>
+    <script type="text/javascript" th:src="@{js/md5.js}"></script>
+    <script type="text/javascript" th:src="@{js/login.js }"></script>
+</body>
+</html>

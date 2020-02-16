@@ -1,0 +1,85 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+a {
+  text-decoration: none;
+  color: black;
+}
+a:hover {
+  text-decoration: none;
+  color: black;
+}
+.navbar {
+  margin-bottom: 2px;
+  min-width: 800px;
+}
+.container-fluid .navbar-brand {
+  color: white!important;
+}
+.container-fluid .dropdown-menu {
+  min-width: 100px;
+}
+.list-group-item:hover {
+  background-color: #e1e1e8;
+}
+.center {
+  margin-top: -20px;
+}
+#nav-left {
+  left: -15px;
+  padding-right: 0px;
+}
+#nav-right {
+  border-right: 1px solid #e5e5e5;
+  position: absolute;
+  top: 50px;
+  bottom: 1px;
+  right: 0px;
+  padding: 15px 0px;
+}
+.glyphicon {
+  margin: 2px 5px 0 0;
+}
+.form-group {
+  margin-right: 15px;
+}
+#list td {
+  vertical-align: middle;
+}
+.pagination {
+  margin: 0px 5px 0 5px;
+}
+.myPage {
+  width: 500px;
+  margin: 0  auto;
+}
+.myPage span {
+  position: relative;
+  top: -10px;
+  display: inline-block;
+  height: 26px;
+}
+.myPage span input {
+  width: 30px;
+  margin: 0 10px 0 10px;
+  text-align: center;
+}
+.myPage span button {
+  padding: 5px 8px;
+  margin-left: 10px;
+}
+@media only screen and (max-width: 768px) {
+  #nav-right {
+    top: 150px;
+  }
+}
+@media only screen and (min-width: 768px) {
+  .modal-dialog{
+    width: 360px;
+    margin-top: 100px;
+  }
+}

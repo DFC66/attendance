@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>考勤管理后台</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css }">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/index.css }">
+</head>
+<body>
+<div class="navbar navbar-inverse" role="navigation">
+    <div class="container-fluid">
+        　<div class="navbar-header">
+        　   <a href="#" class="navbar-brand">河南科技学院考勤管理系统后台</a>
+        　</div>
+        <ul class="nav navbar-nav navbar-right">
+            <!--<li class=""><a href="#">生成二维码</a></li>-->
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="glyphicon glyphicon-user" th:text="${session.user.getName() }"></span>
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="javascript:void(0)" id="dis" data-toggle="modal" data-target="#myModal">修改密码</a></li>
+                    <li><a th:href="@{/logOff }">退出</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2 col-xs-4" id="nav-left">
+            <ul class="list-group">
+                <li class="list-group-item active">管理列表</li>
+                <li class="list-group-item"><a th:href="@{../student/findAll }"><i class="glyphicon glyphicon-user"></i>学生管理</a></li>
+                <li class="list-group-item"><a th:href="@{../course/findAll }"><i class="glyphicon glyphicon-book"></i>课程管理</a></li>
+                <li class="list-group-item"><a th:href="@{../signin/findAll }"><i class="glyphicon glyphicon-briefcase"></i>考勤管理</a></li>
+                <li class="list-group-item"><a href=""><i class="glyphicon glyphicon-briefcase"></i>查看本次到课情况</a></li>
+                <li class="list-group-item"><a th:href="@{/toIndex}"><i class="glyphicon glyphicon-user"></i>产品说明书</a></li>
+            </ul>
+
+        </div>
+        <div class="col-sm-10 col-xs-8" id="nav-right">
+            <div class="right-body">
+                <fieldset>
+                    <div class="tableOpera">
+                        <div class="form-inline">
+                            <form th:action="@{/course/findAll }" th:method="get">
+                                <input type="text" class="form-control"  placeholder="输入课程名、教室、上课教室其一即可" name="condition" th:value="${condition }">
+                                <div class="form-group">
+                                    <input type="submit" id="search" class="btn btn-primary" value="搜索">
+                                </div>
+                            <div class="form-group">
+                                <input type="button" id="allDel" class="btn btn-danger" value="批量删除">
+                            </div>
+                            <div class="form-group">
+                                <input type="button" id="add" class="btn btn-primary" value="增加课程" data-toggle="modal" data-target="#myModal">
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                    <legend>课程信息</legend>
+                    <div class="stuInfo">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <td><input type="checkbox" id="selectAll"></td>
+                                <!--<td>ID</td>-->
+                                <td>课程名</td>
+                                <td>开始时间</td>
+                                <td>结束时间</td>
+                                <td>周几</td>
+                                <td>教室</td>
+                                <td>经度</td>
+                                <td>纬度</td>
+                                <td>上课班级</td>
+                                <td>操作</td>
+                            </tr>
+                            </thead>
+                            <tbody id="list">
+                                <tr th:each="course : ${page }">
+                                    <td><input type="checkbox" class="sel"></td>
+                                    <td th:text="${course.id}" style="display: none"></td>
+                                    <td th:text="${course.name}"></td>
+                                    <td th:text="${course.start_time}"></td>
+                                    <td th:text="${course.end_time}"></td>
+                                    <td th:text="${course.today}"></td>
+                                    <td th:text="${course.room}"></td>
+                                    <td th:text="${course.longitude}"></td>
+                                    <td th:text="${course.dimension}"></td>
+                                    <td th:text="${course.classess}"></td>
+                                    <td>
+                                        <a href="#" class="btn btn-primary update" data-toggle="modal" data-target="#myModal">修改</a>
+                                        <a href="#" class="btn btn-danger" id="delete">删除</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="myPage">
+                            <ul class="pagination pagination-sm">
+                                <li class="previous"><a th:href="@{findAll(pn=0,condition=${condition})}">首页</a></li>
+                                <li class="previous">
+                                    <a th:if="${page.getNumber() == 0 }">上一页</a>
+                                    <a th:if="${page.getNumber() != 0}" th:href="@{findAll(pn=${page.getNumber()-1},condition=${condition})}">上一页</a>
+                                </li>
+
+                                    <li th:each="page_Num : ${#numbers.sequence( 0 ,page.getTotalPages() - 1 )}"
+                                        th:class="${page_Num eq page.getNumber()} ? 'active' : ''">
+
+                                        <a th:if="${page_Num eq page.getNumber()}">
+                                            <i th:text="${page_Num + 1}"></i>
+                                        </a>
+
+                                        <a th:if="${not (page_Num eq page.getNumber())}" th:href="@{findAll(pn=${page_Num},condition=${condition})}">
+                                            <i th:text="${page_Num + 1}"></i>
+                                        </a>
+                                    </li>
+
+
+                                <li>
+                                    <a th:if="${page.getNumber() == 0}">下一页</a>
+                                    <a th:if="${page.getNumber() != 0}" th:href="@{findAll(pn=${page.getNumber()+1},condition=${condition})}">下一页</a>
+                                </li>
+                                <li class="previous"><a th:href="@{findAll(pn=${page.getTotalPages() - 1},condition=${condition})}">尾页</a></li>
+                            </ul>
+                            <span>每页10条,共<i th:text="${page.getTotalElements() }"></i>条数据</span>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-show="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form action="" id="user">
+                    <div class="form-inline">
+                        <input type="hidden" name="id">
+                        <div class="form-group use">
+                            <label for="name">课程名称</label>
+                            <input type="text" class="form-control" name="name" placeholder="请输入课程名">
+                        </div>
+                        <div class="form-group use">
+                            <label for="start_time">开始时间</label>
+                            <input type="text" class="form-control" name="start_time" placeholder="请输入开始时间">
+                        </div>
+                        <div class="form-group use">
+                            <label for="end_time">结束时间</label>
+                            <input type="text" class="form-control" name="end_time" placeholder="请输入结束时间">
+                        </div>
+                        <div class="form-group use">
+                            <label for="today">上课周几</label>
+                            <input type="text" class="form-control" name="today" placeholder="请输入上课是周几">
+                        </div>
+                        <div class="form-group use">
+                            <label for="room">上课教室</label>
+                            <input type="text" class="form-control" name="room" placeholder="请输入教室">
+                        </div>
+                        <div class="form-group use">
+                            <label for="longitude">教室经度</label>
+                            <input type="text" class="form-control" name="longitude" placeholder="请输入经度">
+                        </div>
+                        <div class="form-group use">
+                            <label for="dimension">教室纬度</label>
+                            <input type="text" class="form-control" name="dimension" placeholder="请输入纬度">
+                        </div>
+                        <div class="form-group use">
+                            <label for="classess">上课班级</label>
+                            <input type="text" class="form-control" name="classess" placeholder="请输入上课班级">
+                        </div>
+                    </div>
+                </form>
+                <form action="" id="pass">
+                    <div class="form-inline">
+                        <input type="hidden" name="id" th:value="${session.user.getId()}">
+                        <div class="form-group use">
+                            <label for="oldpass">旧&nbsp;密&nbsp;码&nbsp;</label>
+                            <input type="password" class="form-control" name="oldpass" >
+                        </div>
+                        <div class="form-group use">
+                            <label for="newpass" class="control-label">新&nbsp;密&nbsp;码&nbsp;</label>
+                            <input type="password" class="form-control" name="newpass">
+                        </div>
+                        <div class="form-group use">
+                            <label for="again" class="control-label">重新输入</label>
+                            <input type="password" class="form-control repeat" name="again" >
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal" id="close">关闭
+                </button>
+                <button type="button" class="btn btn-primary" id="submit">
+                    确认
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script type="text/javascript" th:src="@{/js/jquery.min.js }"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js }"></script>
+<script type="text/javascript" th:src="@{/js/cou.js}"></script>
+</body>
+</html>

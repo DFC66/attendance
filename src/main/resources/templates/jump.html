@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"> 
+  <head>
+    <title>index.html</title>
+    <meta name="content-type" content="text/html; charset=UTF-8">
+	<script th:inline="javascript">
+		
+	    //防止页面后退
+        history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.URL);
+        });
+        document.location = "/student/findAll";
+        
+	
+	</script>
+  </head>
+  
+  <body>
+  </body>
+</html>
