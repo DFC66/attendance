@@ -1,6 +1,8 @@
 package com.dfc.controller;
 
 import com.dfc.api.StorageApi;
+import com.dfc.entity.CourseResult;
+import com.dfc.service.CourseResultService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,6 +30,9 @@ public class CourseController {
 
     @Resource
     CourseService courseService;
+
+    @Autowired
+    private CourseResultService courseResultService;
 
     @Autowired
     private StorageApi storageApi;
@@ -64,14 +69,36 @@ public class CourseController {
         return result;
     }
 
-//    @RequestMapping(value = "/judgeCourseExists",method = RequestMethod.POST)
-//    public Result judgeCourseExists(Course course){
-//        Result result = new Result<Course>();
-//        courseService.save(course);
-//        result.setCode(200);
-//        result.setMsg("添加课程成功!");
-//        return result;
-//    }
+
+
+
+    @RequestMapping(value = "/joinCourse", method = RequestMethod.POST)
+    public Result JoinCourse(String number,Integer courseCode) throws Exception {
+        Result result = new Result<CourseResult>();
+        Course byCourseCode = courseService.findByCourseCode(courseCode);
+        if (byCourseCode==null){
+            result.setCode(000);
+            result.setMsg("查无此课程号的课程");
+        }else{
+            CourseResult courseResult = new CourseResult(number,courseCode);
+            CourseResult joinCourse = courseResultService.joinCourse(courseResult);
+            if (joinCourse!=null){
+                result.setCode(000);
+                result.setMsg("你已加入此课程");
+            }else{
+                courseResultService.save(courseResult);
+                result.setCode(200);
+                result.setMsg("你已成功加入此课程");
+                result.setMessage(courseResult);
+            }
+
+        }
+
+        return result;
+    }
+
+
+
 
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
