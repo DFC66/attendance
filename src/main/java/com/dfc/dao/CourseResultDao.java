@@ -16,6 +16,7 @@ public interface CourseResultDao extends JpaRepository<CourseResult,Integer>
         , PagingAndSortingRepository<CourseResult,Integer>
         ,JpaSpecificationExecutor<CourseResult> {
 
+
       CourseResult findByCourseCodeAndNumber(Integer courseCode,String number);
 
 //     CourseResult findByNameAndTeacherName(String name, String teacherName);
