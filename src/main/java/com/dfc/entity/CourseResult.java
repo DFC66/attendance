@@ -3,6 +3,7 @@ package com.dfc.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,9 +17,13 @@ import java.io.Serializable;
 @Entity
 @Table(name = "course_result")
 @Data
-@AllArgsConstructor
 public class CourseResult  {
 //    private static final long serialVersionUID=1L;
+
+
+    public CourseResult() {
+    }
+
     /**
      * 主键id
      */

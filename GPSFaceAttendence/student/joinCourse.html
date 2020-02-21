@@ -5,6 +5,7 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<meta charset="utf-8">
+		<link href="../css/mui.min.css" rel="stylesheet" />
 		<title></title>
 		<style>
 			* {
@@ -121,8 +122,12 @@
 
 	</head>
 	<body>
-		<div id="app" class="app">
-			<h2 class="heading-2">验证码:</h2>
+		<header id="header" class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		</header>
+		
+		<div id="app" class="app ">
+			<h2 class="heading-2">请输入课程码:</h2>
 			<div class="v-code">
 				<input ref="vcode" id="vcode" type="tel" maxlength="4" v-model="aCodes" @focus="focused = true" @blur="focused = false"
 				 :disabled="telDisabled">
@@ -132,7 +137,7 @@
 				</label>
 			</div>
 		</div>
-             <script src="../js/configurl.js"></script>     
+		<script src="../js/configurl.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script src="../js/mui.min.js"></script>
 		<script>
@@ -145,14 +150,15 @@
 					codeLength: 4,
 					telDisabled: false,
 					focused: false,
-					number:'',
+					number: '',
+					camaraFlag:false
 				},
 				created() {
 					var all = this;
-					var url = getport() +'/student/findByOpenid';
+					var url = getport() + '/student/findByOpenid';
 					mui.ajax(url, {
 						data: {
-							openid:JSON.parse(localStorage.getItem('person')).openid
+							openid: JSON.parse(localStorage.getItem('person')).openid
 						},
 						dataType: 'json', //服务器返回json格式数据
 						type: 'post', //HTTP请求类型
@@ -170,9 +176,9 @@
 							console.log(errorThrown);
 						}
 					});
-					
-					
-					
+
+
+
 				},
 				computed: {
 					codeArr() {
@@ -189,26 +195,39 @@
 							// this.telDisabled = true
 							this.$refs.vcode.blur()
 							// alert((this.number));
-							this.join(this.number,parseInt(this.aCodes))
-
+							this.join(this.number, parseInt(this.aCodes))
 						}
 					}
 				},
 				methods: {
 					join: function(number, courseCode) {
-					
-						var url = getport() +'/course/joinCourse';
+                                      var all =this;
+						var url = getport() + '/course/joinCourse';
 						mui.ajax(url, {
 							data: {
-								number:number,
-								courseCode:courseCode
+								number: number,
+								courseCode: courseCode
 							},
 							dataType: 'json', //服务器返回json格式数据
 							type: 'post', //HTTP请求类型
 							timeout: 10000, //超时时间设置为10秒；
 							success: function(data) {
 								console.log(JSON.stringify(data));
-								alert(JSON.stringify(data));
+								mui.toast(data.msg);
+								switch (data.code) {
+									case 0:
+                                                          alert("wuwuwuw") 
+										break;
+									case 300:
+                                                          alert("inininin")
+										break;
+									case 200:
+                                                           plus.webview.currentWebview().close();
+									     all.camaraFlag = true;
+										break;
+									default:
+										break;
+								}
 							},
 							error: function(xhr, type, errorThrown) {
 								if (type == "timeout") {
@@ -216,8 +235,6 @@
 								} else {
 									mui.alert("未知网络错误");
 								}
-								console.log(type);
-								console.log(errorThrown);
 							}
 						});
 					}

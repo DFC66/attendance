@@ -80,10 +80,12 @@ public class CourseController {
             result.setCode(000);
             result.setMsg("查无此课程号的课程");
         }else{
-            CourseResult courseResult = new CourseResult(number,courseCode);
+            CourseResult courseResult = new CourseResult();
+            courseResult.setCourseCode(courseCode);
+            courseResult.setNumber(number);
             CourseResult joinCourse = courseResultService.joinCourse(courseResult);
             if (joinCourse!=null){
-                result.setCode(000);
+                result.setCode(300);
                 result.setMsg("你已加入此课程");
             }else{
                 courseResultService.save(courseResult);
