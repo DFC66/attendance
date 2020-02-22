@@ -69,10 +69,11 @@ public class StudentController {
             result.setMessage(student);
         } else {
             result.setMsg("该学生不存在,新增该学生");
-            result.setCode(500);
+
             Student newStudent = new Student();
             newStudent.setOpenid(openid);
             studentService.save(newStudent);
+            result.setCode(200);
             result.setMessage(newStudent);
         }
 

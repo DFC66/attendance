@@ -249,11 +249,11 @@
 													// console.log(JSON.stringify(auth));
 													app.createStateMe(openid, img, username, province, city, function() {
 														var personInfo = {
-															openid:openid,
-															img:img,
-															nicheng:username,
-															province:province,
-															city:city
+															'openid':openid,
+															'img':img,
+															'nicheng':username,
+															'province':province,
+															'city':city
 														}
 														// console.log(typeof JSON.stringify(personInfo));
 														localStorage.setItem('person',JSON.stringify(personInfo));

@@ -7,7 +7,7 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
 		<style>
 			html,
 			body {
@@ -203,20 +203,15 @@
 			}
 			/*问题反馈在setting页面单独的css==end*/
 		</style>
-		<script src="../js/imporime.js"></script>
+		<!-- <script src="../js/imporime.js"></script> -->
 	</head>
-<script src="../js/mui.js"></script>
-<script type="text/javascript" >
-	mui.init();
-	
-	
-	
-</script>
-	<body onload="refreshMessage()">
+	<script src="../js/mui.min.js"></script>
+
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<h1 class="mui-title">我的</h1>
 		</header>
-		<div class="mui-page-content">
+		<div id="app"  class="mui-page-content">
 			<div class="mui-scroll-wrapper">
 				<div class="mui-scroll">
 					<ul class="mui-table-view">
@@ -228,10 +223,10 @@
 							</a>
 						</li>
 						<li class="mui-table-view-cell">
-							<a>学号<span id="stuNumber" class="mui-pull-right">Hbuilder</span></a>
+							<a>学号<span id="stuNumber"  class="mui-pull-right">{{stu_number}}</span></a>
 						</li>
 						<li class="mui-table-view-cell">
-							<a>姓名<span id="stuName" class="mui-pull-right">Hbuilder</span></a>
+							<a>姓名<span id="stuName" v-text="stu_name"  class="mui-pull-right">{{stu_name}}</span></a>
 						</li>
 						<li class="mui-table-view-cell">
 							<a>用户名<span id="account" class="mui-pull-right">登陆失败，无法显示</span></a>
@@ -259,16 +254,15 @@
 			</div>
 		</div>
 
-		
+
 		<script src="../js/app.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script src="../js/configurl.js"></script>
 		<!-- 引入登录注册JS文件 -->
 		<script type="text/javascript">
-			
-			
 			(function($, doc) {
 
-				// $.init();
-
+				$.init();
 
 
 
@@ -278,12 +272,17 @@
 
 				$.plusReady(function() {
 
+
+
+
+
+
 					window.addEventListener('refresh', function(e) {
 						// $.toast('进入监听');
-						
-						
+
+
 						plus.webview.currentWebview().reload();
-						
+
 
 					});
 
@@ -345,6 +344,7 @@
 										break;
 									case 1:
 										localStorage.removeItem('person');
+										localStorage.removeItem('StuNumber');
 										// localStorage.clear();
 										mui.toast('注销完成');
 										plus.runtime.restart();
@@ -360,7 +360,7 @@
 					}, false);
 				});
 
-			
+
 
 
 
@@ -380,186 +380,84 @@
 						}, 1000);
 						return false;
 					};
+
+
+
 				});
 			}(mui, document));
 
-			// 			//更换头像
-			// 			mui(".mui-table-view-cell").on("tap", "#head", function(e) {
-			// 				if (mui.os.plus) {
-			// 					var a = [{
-			// 						title: "拍照"
-			// 					}, {
-			// 						title: "从手机相册选择"
-			// 					}];
-			// 					plus.nativeUI.actionSheet({
-			// 						title: "修改头像",
-			// 						cancel: "取消",
-			// 						buttons: a
-			// 					}, function(b) {
-			// 						switch (b.index) {
-			// 							case 0:
-			// 								break;
-			// 							case 1:
-			// 								getImage();
-			// 								break;
-			// 							case 2:
-			// 								galleryImg();
-			// 								break;
-			// 							default:
-			// 								break
-			// 						}
-			// 					})
-			// 				}
-			// 
-			// 			});
-			// 
-			// 			function getImage() {
-			// 				var c = plus.camera.getCamera();
-			// 				c.captureImage(function(e) {
-			// 					plus.io.resolveLocalFileSystemURL(e, function(entry) {
-			// 						var s = entry.toLocalURL() + "?version=" + new Date().getTime();
-			// 						console.log(s);
-			// 						document.getElementById("head-img").src = s;
-			// 						document.getElementById("head-img1").src = s;
-			// 						//变更大图预览的src
-			// 						//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
-			// 						document.querySelector("#__mui-imageview__group .mui-slider-item img").src = s + "?version=" + new Date().getTime();;;
-			// 					}, function(e) {
-			// 						console.log("读取拍照文件错误：" + e.message);
-			// 					});
-			// 				}, function(s) {
-			// 					console.log("error" + s);
-			// 				}, {
-			// 					filename: "_doc/head.jpg"
-			// 				})
-			// 			}
-			// 
-			// 			function galleryImg() {
-			// 				plus.gallery.pick(function(a) {
-			// 					plus.io.resolveLocalFileSystemURL(a, function(entry) {
-			// 						plus.io.resolveLocalFileSystemURL("_doc/", function(root) {
-			// 							root.getFile("head.jpg", {}, function(file) {
-			// 								//文件已存在
-			// 								file.remove(function() {
-			// 									console.log("file remove success");
-			// 									entry.copyTo(root, 'head.jpg', function(e) {
-			// 											var e = e.fullPath + "?version=" + new Date().getTime();
-			// 											document.getElementById("head-img").src = e;
-			// 											document.getElementById("head-img1").src = e;
-			// 											//变更大图预览的src
-			// 											//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
-			// 											document.querySelector("#__mui-imageview__group .mui-slider-item img").src = e + "?version=" +
-			// 												new Date().getTime();;
-			// 										},
-			// 										function(e) {
-			// 											console.log('copy image fail:' + e.message);
-			// 										});
-			// 								}, function() {
-			// 									console.log("delete image fail:" + e.message);
-			// 								});
-			// 							}, function() {
-			// 								//文件不存在
-			// 								entry.copyTo(root, 'head.jpg', function(e) {
-			// 										var path = e.fullPath + "?version=" + new Date().getTime();
-			// 										document.getElementById("head-img").src = path;
-			// 										document.getElementById("head-img1").src = path;
-			// 										//变更大图预览的src
-			// 										//目前仅有一张图片，暂时如此处理，后续需要通过标准组件实现
-			// 										document.querySelector("#__mui-imageview__group .mui-slider-item img").src = path;
-			// 									},
-			// 									function(e) {
-			// 										console.log('copy image fail:' + e.message);
-			// 									});
-			// 							});
-			// 						}, function(e) {
-			// 							console.log("get _www folder fail");
-			// 						})
-			// 					}, function(e) {
-			// 						console.log("读取拍照文件错误：" + e.message);
-			// 					});
-			// 				}, function(a) {}, {
-			// 					filter: "image"
-			// 				})
-			// 			};
-			// 
-			// 			function defaultImg() {
-			// 				if (mui.os.plus) {
-			// 					plus.io.resolveLocalFileSystemURL("_doc/head.jpg", function(entry) {
-			// 						var s = entry.fullPath + "?version=" + new Date().getTime();;
-			// 						document.getElementById("head-img").src = s;
-			// 						document.getElementById("head-img1").src = s;
-			// 					}, function(e) {
-			// 						document.getElementById("head-img").src = '../images/logo.png';
-			// 						document.getElementById("head-img1").src = '../images/logo.png';
-			// 					})
-			// 				} else {
-			// 					document.getElementById("head-img").src = '../images/logo.png';
-			// 					document.getElementById("head-img1").src = '../images/logo.png';
-			// 				}
-			// 
-			// 			}
-			// 			document.getElementById("head-img1").addEventListener('tap', function(e) {
-			// 				e.stopPropagation();
-			// 			});
-			// 			// 		document.getElementById("welcome").addEventListener('tap', function(e) {
-			// 			// 			//显示启动导航
-			// 			// 			mui.openWindow({
-			// 			// 				id: 'guide',
-			// 			// 				url: 'guide.html',
-			// 			// 				show: {
-			// 			// 					aniShow: 'fade-in',
-			// 			// 					duration: 300
-			// 			// 				},
-			// 			// 				waiting: {
-			// 			// 					autoShow: false
-			// 			// 				}
-			// 			// 			});
-			// 			// 		});
-			// 
-			// 			function initImgPreview() {
-			// 				var imgs = document.querySelectorAll("img.mui-action-preview");
-			// 				imgs = mui.slice.call(imgs);
-			// 				if (imgs && imgs.length > 0) {
-			// 					var slider = document.createElement("div");
-			// 					slider.setAttribute("id", "__mui-imageview__");
-			// 					slider.classList.add("mui-slider");
-			// 					slider.classList.add("mui-fullscreen");
-			// 					slider.style.display = "none";
-			// 					slider.addEventListener("tap", function() {
-			// 						slider.style.display = "none";
-			// 					});
-			// 					slider.addEventListener("touchmove", function(event) {
-			// 						event.preventDefault();
-			// 					})
-			// 					var slider_group = document.createElement("div");
-			// 					slider_group.setAttribute("id", "__mui-imageview__group");
-			// 					slider_group.classList.add("mui-slider-group");
-			// 					imgs.forEach(function(value, index, array) {
-			// 						//给图片添加点击事件，触发预览显示；
-			// 						value.addEventListener('tap', function() {
-			// 							slider.style.display = "block";
-			// 							_slider.refresh();
-			// 							_slider.gotoItem(index, 0);
-			// 						})
-			// 						var item = document.createElement("div");
-			// 						item.classList.add("mui-slider-item");
-			// 						var a = document.createElement("a");
-			// 						var img = document.createElement("img");
-			// 						img.setAttribute("src", value.src);
-			// 						a.appendChild(img)
-			// 						item.appendChild(a);
-			// 						slider_group.appendChild(item);
-			// 					});
-			// 					slider.appendChild(slider_group);
-			// 					document.body.appendChild(slider);
-			// 					var _slider = mui(slider).slider();
-			// 				}
-			// 			}
-			// 
-			// 			if (mui.os.stream) {
-			// 				document.getElementById("check_update").display = "none";
-			// 			}
-			//
+				var app = new Vue({
+					el: '#app',
+					data: {
+						number: '',
+						stu_name:'测试',
+						stu_number:''
+					},
+					created() {
+						var all = this;
+                                     this.getMessage();
+
+
+
+					},
+					methods: {
+						getMessage: function() {
+                                            var all = this;
+							var url = getport() + '/student/findByOpenid';
+							var personInfoStr = localStorage.getItem('person');
+							var personInfo = JSON.parse(personInfoStr);
+							console.log(personInfo.openid)
+							if (personInfoStr != null) {
+								if (personInfo.openid != null && personInfo.openid != undefined) {
+
+									mui.ajax(url, {
+										data: {
+											openid: personInfo.openid
+										},
+
+										dataType: 'json', //服务器返回json格式数据
+										type: 'post', //HTTP请求类型
+										timeout: 10000, //超时时间设置为10秒；
+										success: function(data) {
+											console.log(JSON.stringify(data));
+											if (data.message != null) {
+												all.stu_name = data.message.name;
+												all.stu_number= data.message.number;
+											}
+										},
+										error: function(xhr, type, errorThrown) {
+											if (type == "timeout") {
+												mui.alert("请求超时，请检查网络或重试");
+											} else {
+												mui.alert("未知网络错误");
+											}
+											console.log(type);
+											console.log(errorThrown);
+										}
+
+
+									});
+								}
+
+								var personInfo = JSON.parse(personInfoStr);
+								// console.log(typeof personInfo);
+								document.getElementById('head-img1').src = personInfo.img;
+								document.getElementById('account').innerHTML = personInfo.nicheng;
+								document.getElementById('province').innerHTML = personInfo.province;
+								document.getElementById('city').innerHTML = personInfo.city;
+
+							} else {
+								document.getElementById('head-img1').src = '../imgs/weixin.png';
+								document.getElementById('account').innerHTML = '你还未登录';
+								document.getElementById('province').innerHTML = '你还未登录';
+								document.getElementById('city').innerHTML = '你还未登录';
+							}
+						}
+
+					}
+
+				})
+			
 		</script>
 	</body>
 

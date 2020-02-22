@@ -280,6 +280,7 @@
 							} else if (data.code == 200) {
 								mui.toast('个人信息已完善');
 								mui.fire(plus.webview.getWebviewById('bottomtab/me.html'), 'refresh');
+								plus.webview.getWebviewById('bottomtab/me.html').reload();
 								plus.webview.currentWebview().close(); //本窗口关闭
 							}
 

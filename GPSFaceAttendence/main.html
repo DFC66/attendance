@@ -32,15 +32,12 @@
 
 	<body>
 		<nav class="mui-bar mui-bar-tab">
-			<!-- 	<a id="defaultTab" class="mui-tab-item mui-active" href="bottomtab/map.html">
-				<span class="mui-icon mui-icon-map"></span>
-				<span class="mui-tab-label">地图</span>
-			</a> -->
+
 			<a id="defaultTab" class="mui-tab-item mui-active" href="bottomtab/course.html">
 				<span class="mui-icon mui-icon-home"></span>
 				<span class="mui-tab-label">我的课程</span>
 			</a>
-			<a id="myMessage" class="mui-tab-item" href="bottomtab/me.html">
+			<a id="myMessage" @click="judgeStudentExists()" class="mui-tab-item" href="bottomtab/me.html">
 				<span class="mui-icon mui-icon-person"></span>
 				<span class="mui-tab-label">我的</span>
 			</a>
@@ -48,9 +45,13 @@
 	</body>
 
 </html>
+
 <script src="js/configurl.js"></script>
 <script src="js/mui.min.js"></script>
 <script src="js/app.js"></script>
+<script src="js/vue.min.js"></script>
+
+
 <script type="text/javascript" charset="utf-8">
 	//mui初始化
 	mui.init();
@@ -61,165 +62,21 @@
 	};
 
 	var aniShow = {};
-
-	var userid = null;
 	//创建子页面，首个选项卡页面显示，其它均隐藏；
 	mui.plusReady(function() {
-
-
-		document.getElementById('defaultTab').addEventListener('tap', function() {
-
-
-
-		}, false);
-
-
-
-		document.getElementById('myMessage').addEventListener('tap', function() {
-			// console.log(judgeStudentExists());
-			if (judgeStudentExists()) {
-				mui.openWindow({
-						url: 'student/WritePersonMessage.html',
-						id: 'WritePersonMessage.html',
-						//        styles:{
-						//       top:newpage-top-position,//新页面顶部位置
-						//       bottom:newage-bottom-position,//新页面底部位置
-						//       width:newpage-width,//新页面宽度，默认为100%
-						//       height:newpage-height,//新页面高度，默认为100%
-						//       ......
-						//     },
-						//     extras:{
-						//       .....//自定义扩展参数，可以用来处理页面间传值
-						//     },
-						createNew: false
-					}
-
-				);
-			}
-			
-
-
-
-		}, false);
-
-
-		function loadMessage() {
-			var url = getport() + '/student/findByOpenid';
-			var personInfoStr = localStorage.getItem('person');
-                   console.log(personInfoStr.openid)
-			if (personInfoStr != null) {
-				if (personInfoStr.openid != null && personInfoStr.openid != undefined) {
-
-					mui.ajax(url, {
-						data: {
-							openid: personInfoStr.openid
-						},
-						dataType: 'json', //服务器返回json格式数据
-						type: 'post', //HTTP请求类型
-						timeout: 10000, //超时时间设置为10秒；
-						success: function(data) {
-							console.log(JSON.stringify(data));
-							if (data.message != null) {
-								document.getElementById('stuName').innerHTML = data.message.name;
-								document.getElementById('stuNumber').innerHTML = data.message.number;
-							}
-						},
-						error: function(xhr, type, errorThrown) {
-							if (type == "timeout") {
-								mui.alert("请求超时，请检查网络或重试");
-							} else {
-								mui.alert("未知网络错误");
-							}
-							console.log(type);
-							console.log(errorThrown);
-						}
-
-
-					});
-				}
-			}
-
-
-		}
-
-		function judgeStudentExists() {
-			var existStudent = false;
-			var url = getport() + '/student/findByOpenid';
-			var personInfoStr = localStorage.getItem('person');
-			if (personInfoStr != null) {
-				var personInfo = JSON.parse(personInfoStr);
-				// console.log(personInfo.openid);
-
-				mui.ajax(url, {
-					data: {
-						openid: personInfo.openid
-					},
-					dataType: 'json', //服务器返回json格式数据
-					type: 'post', //HTTP请求类型
-					timeout: 10000, //超时时间设置为10秒；
-					success: function(data) {
-						console.log(JSON.stringify(data));
-						if (data.message.number == null || data.message.name == null || data.message.number == '' || data.message.name ==
-							'') {
-							existStudent = true;
-						}
-						//        // console.log(typeof  data.code);
-						// if(data.code==500){
-						// 	existStudent =true;
-						// }
-					},
-					error: function(xhr, type, errorThrown) {
-						if (type == "timeout") {
-							mui.alert("请求超时，请检查网络或重试");
-						} else {
-							mui.alert("未知网络错误");
-						}
-						console.log(type);
-						console.log(errorThrown);
-					}
-				});
-
-			}
-			return existStudent;
-		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		window.addEventListener('show', function() {
 			var that = this;
-			var state = app.getState();
-			mui.alert("初始化");
-			that.openid = state.openid;
-
-
-
-
+			// var state = app.getState();
+			mui.toast("初始化");
+			// that.openid = state.openid;
 			mui.fire(plus.webview.getWebviewById('bottomtab/me.html'), 'refresh');
-
+			mui.fire(plus.webview.getWebviewById('bottomtab/course.html'), 'refreshCourse');
 		}, false);
+
 
 
 		var self = plus.webview.currentWebview();
-		for (var i = 0; i < 3; i++) {
+		for (var i = 0; i < 2; i++) {
 			var temp = {};
 			var sub = plus.webview.create(subpages[i], subpages[i], subpage_style);
 			if (i > 0) {
@@ -230,13 +87,10 @@
 			}
 			self.append(sub);
 		}
-
-
 	});
 	//当前激活选项
 	var activeTab = subpages[0];
-	// var title = document.getElementById("title");
-
+	var title = document.getElementById("title");
 	//选项卡点击事件
 	mui('.mui-bar-tab').on('tap', 'a', function(e) {
 		var targetTab = this.getAttribute('href');
@@ -244,7 +98,7 @@
 			return;
 		}
 		//更换标题
-
+		// title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
 		//显示目标选项卡
 		//若为iOS平台或非首次显示，则直接显示
 		if (mui.os.ios || aniShow[targetTab]) {
@@ -273,4 +127,109 @@
 			defaultTab.classList.add('mui-active');
 		}
 	});
+
+	document.getElementById('myMessage').addEventListener('tap', function() {
+               if(judgeStudentExists()){
+			   mui.openWindow({
+			   	url: 'student/WritePersonMessage.html',
+			   	id: 'WritePersonMessage.html',
+			   	createNew: false
+			   });
+		   }
+	});
+
+	function judgeStudentExists() {
+
+		var existStudent = false;
+		var url = getport() + '/student/findByOpenid';
+		var personInfoStr = localStorage.getItem('person');
+		if (personInfoStr != null) {
+			var personInfo = JSON.parse(personInfoStr);
+			console.log(personInfo.openid);
+
+			mui.ajax(url, {
+				data: {
+					openid: personInfo.openid
+				},
+				dataType: 'json', //服务器返回json格式数据
+				type: 'post', //HTTP请求类型
+				timeout: 10000, //超时时间设置为10秒；
+				success: function(data) {
+					console.log(JSON.stringify(data));
+					if (data.message.number == null || data.message.name == null || data.message.number == '' || data.message.name ==
+						'') {
+						existStudent = true;
+					}
+				},
+				error: function(xhr, type, errorThrown) {
+					if (type == "timeout") {
+						mui.alert("请求超时，请检查网络或重试");
+					} else {
+						mui.alert("未知网络错误");
+					}
+					console.log(type);
+					console.log(errorThrown);
+				}
+			});
+
+		}
+		return existStudent;
+	}
+
+
+
+	var app = new Vue({
+				el: '#app',
+				data: {
+					number: '',
+				},
+				created() {
+
+
+				},
+
+				mounted() {
+					this.getNumber()
+				},
+				methods: {
+					getNumber: function() {
+						var all = this;
+						var url = getport() + '/student/findByOpenid';
+						mui.ajax(url, {
+							data: {
+								openid: JSON.parse(localStorage.getItem('person')).openid
+							},
+							dataType: 'json', //服务器返回json格式数据
+							type: 'post', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							success: function(data) {
+								console.log(JSON.stringify(data));
+								if (data.message.number != null || data.message.number != undefined) {
+									all.number = data.message.number;
+									// alert(all.number);
+									localStorage.setItem('StuNumber', all.number);
+								} else {
+									mui.openWindow({
+										url: 'student/WritePersonMessage.html',
+										id: 'WritePersonMessage.html',
+										createNew: false
+									});
+								}
+
+
+							},
+							error: function(xhr, type, errorThrown) {
+								if (type == "timeout") {
+									mui.alert("请求超时，请检查网络或重试");
+								} else {
+									mui.alert("未知网络错误");
+								}
+							}
+						});
+					}
+                           }
+
+
+
+				})
 </script>

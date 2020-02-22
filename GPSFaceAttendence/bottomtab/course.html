@@ -33,36 +33,95 @@
 	</head>
 
 	<body>
-		<div class="mui-content">
+		<div id="content"  class="mui-content">
 			<header class="mui-bar mui-bar-nav">
 				<!-- <h1 class="mui-title">检索</h1> -->
 				<button id="joinCourse" onclick=" openJoin()" class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">加入课程</button>
 			</header>
 
-
 		</div>
 		<script src="../js/configurl.js"></script>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/app.js"></script> <!-- 引入登录注册JS文件 -->
+		<script src="../js/vue.min.js"></script>
+		
+		
 		<script type="text/javascript">
-			mui.init({
-				// //预加载界面
-				// preloadPages: [{
-				// 	url: '../login.html',
-				// 	id: 'login.html',
-				// 	// 				    styles:{},//窗口参数
-				// 	// 				    extras:{},//自定义扩展参数
-				// 	// subpages:[{},{}]//预加载页面的子页面
-				// }],
-				// preloadLimit: 5 //预加载窗口数量限制(一旦超出,先进先出)默认不限制
-			});
+			mui.init();
+			
+		      new Vue({
+				el: '#content',
+				data: {
+					number: '',
+				},
+				created() {
+					this.getNumber()
+					 
+				},
+				
+				mounted() {
+					
+				},
+				methods:{
+					getNumber: function(){
+						var all = this;
+						var url = getport() + '/student/findByOpenid';
+						mui.ajax(url, {
+							data: {
+								openid: JSON.parse(localStorage.getItem('person')).openid
+							},
+							dataType: 'json', //服务器返回json格式数据
+							type: 'post', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							success: function(data) {
+								console.log(JSON.stringify(data));
+								if(data.message.number!=null||data.message.number!=''){
+									all.number = data.message.number;
+									// alert(all.number);
+									localStorage.setItem('StuNumber',all.number);
+								}else{
+									mui.openWindow({
+											url: 'student/WritePersonMessage.html',
+											id: 'WritePersonMessage.html',
+											createNew: false
+										});
+								}
+								
+								
+							},
+							error: function(xhr, type, errorThrown) {
+								if (type == "timeout") {
+									mui.alert("请求超时，请检查网络或重试");
+								} else {
+									mui.alert("未知网络错误");
+								}
+							}
+						});
+						
+					}
+				}
+				
+				
+				})
+			
+			
+			
 		function openJoin(){
 			mui.openWindow({
 				url: '../student/joinCourse.html',
 				id: 'joinCourse.html',
 				createNew: true
 			});
+			mui.toast(localStorage.getItem('StuNumber'));
 		}	
+			
+			
+			window.addEventListener('refreshCourse', function(e) {
+				 mui.toast('进入监听');	
+				plus.webview.currentWebview().reload();
+			
+			
+			});
 			
 			
 		</script>

@@ -125,7 +125,7 @@
 		<header id="header" class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 		</header>
-		
+
 		<div id="app" class="app ">
 			<h2 class="heading-2">请输入课程码:</h2>
 			<div class="v-code">
@@ -135,14 +135,23 @@
 				<label for="vcode" class="line" v-for="item,index in codeLength" :class="{'animated': focused && cursorIndex === index}"
 				 v-text="codeArr[index]">
 				</label>
+
 			</div>
 		</div>
 		<script src="../js/configurl.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script src="../js/mui.min.js"></script>
 		<script>
-			mui.init();
-			// import constant from '../js/vue-PortIp.vue',
+			mui.init({
+				// preloadPages: [{
+				// 	url: 'addFace.html',
+				// 	id: 'addFace.html',
+				// 	// styles: {}, //窗口参数
+				// 	// extras: {}, //自定义扩展参数
+				// 	// subpages: [{}, {}] //预加载页面的子页面
+				// }],
+				// preloadLimit: 5 //预加载窗口数量限制(一旦超出,先进先出)默认不限制
+			});
 			var app = new Vue({
 				el: '#app',
 				data: {
@@ -150,34 +159,10 @@
 					codeLength: 4,
 					telDisabled: false,
 					focused: false,
-					number: '',
-					camaraFlag:false
+					number: localStorage.getItem('StuNumber'),
+					camaraFlag: false
 				},
 				created() {
-					var all = this;
-					var url = getport() + '/student/findByOpenid';
-					mui.ajax(url, {
-						data: {
-							openid: JSON.parse(localStorage.getItem('person')).openid
-						},
-						dataType: 'json', //服务器返回json格式数据
-						type: 'post', //HTTP请求类型
-						timeout: 10000, //超时时间设置为10秒；
-						success: function(data) {
-							all.number = data.message.number;
-						},
-						error: function(xhr, type, errorThrown) {
-							if (type == "timeout") {
-								mui.alert("请求超时，请检查网络或重试");
-							} else {
-								mui.alert("未知网络错误");
-							}
-							console.log(type);
-							console.log(errorThrown);
-						}
-					});
-
-
 
 				},
 				computed: {
@@ -190,18 +175,28 @@
 				},
 				watch: {
 					aCodes(newVal) {
+						var all = this;
 						this.aCodes = newVal.replace(/[^\d]/g, '')
 						if (newVal.length == 4) {
 							// this.telDisabled = true
 							this.$refs.vcode.blur()
-							// alert((this.number));
-							this.join(this.number, parseInt(this.aCodes))
+							// alert(all.aCodes);
+							this.join(all.number, parseInt(this.aCodes))
+							
+						}
+					},
+					camaraFlag : function(newVal){
+						var all = this;
+						// mui.alert(newVal);
+						if(newVal){
+                                         all.camaraFlag = false;
+                                         all.openCamara();
 						}
 					}
 				},
 				methods: {
 					join: function(number, courseCode) {
-                                      var all =this;
+						var all = this;
 						var url = getport() + '/course/joinCourse';
 						mui.ajax(url, {
 							data: {
@@ -216,14 +211,20 @@
 								mui.toast(data.msg);
 								switch (data.code) {
 									case 0:
-                                                          alert("wuwuwuw") 
+									//不存在该课程
+										all.aCodes = '';
+										document.getElementById('vcode').focus()
 										break;
 									case 300:
-                                                          alert("inininin")
+										// alert("inininin")
+										document.getElementById('vcode').focus()
+										//已在该课程中
 										break;
 									case 200:
-                                                           plus.webview.currentWebview().close();
-									     all.camaraFlag = true;
+										// plus.webview.currentWebview().close();
+										all.camaraFlag = true;
+										// console.log(all.camaraFlag)
+										plus.webview.getWebviewById('joinCourse.html').close();
 										break;
 									default:
 										break;
@@ -237,10 +238,23 @@
 								}
 							}
 						});
+						
+						
+						
+					},
+					openCamara: function() {
+						// mui.openWindow({
+						// 	url: '../student/addFace.html',
+						// 	id: 'addFace.html',
+						// 	createNew: false
+						// });
+						
+						plus.webview.open('addFace.html','addFace.html');
 					}
+
+
+
 				},
-
-
 				mounted() {
 
 

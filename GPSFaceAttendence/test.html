@@ -123,6 +123,11 @@
 			<div class="mui-content-padded">
 				<button id='catch' class="mui-btn mui-btn-block mui-btn-primary">对比</button>
 			</div>
+			<div class="mui-content-padded">
+				<button id='queryAll' class="mui-btn mui-btn-block mui-btn-primary">查询全部</button>
+			</div>
+
+			<nav id="message" style="font-size: 10px;"></nav>
 
 		</div>
 
@@ -133,13 +138,13 @@
 			mui.init();
 			var myToken = null;
 			$(function() {
-				function CreateAddFaceSet(uniquename, imgtoken) {
+				function CreateAddFaceSet(uniqueName, imgtoken) {
 					var url = "https://api-cn.faceplusplus.com/facepp/v3/faceset/create";
 					mui.ajax(url, {
 						data: {
 							api_key: "CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA",
 							api_secret: "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3",
-							outer_id: uniquename,
+							outer_id: uniqueName,
 							face_tokens: imgtoken,
 							force_merge: 1
 						},
@@ -168,9 +173,38 @@
 			})
 
 
+			function queryAllFaceSets() {
+				var url = "https://api-cn.faceplusplus.com/facepp/v3/faceset/getfacesets";
+				mui.ajax(url, {
+					data: {
+						api_key: "CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA",
+						api_secret: "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3",
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					success: function(data) {
+						console.log(JSON.stringify(data));
+						// mui.toast('上传成功');
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(type);
+						console.log(errorThrown);
+					}
+				});
+
+
+			}
 
 
 
+
+
+			document.getElementById('queryAll').addEventListener("tap", function() {
+				queryAllFaceSets();
+
+
+			});
 
 
 
@@ -184,7 +218,7 @@
 
 			document.getElementById('two').addEventListener("tap", function() {
 
-				// queryFaceSet("userId-01");
+				console.log(JSON.stringify(queryFaceSet("userId-01"))) ;
 
 
 			});
@@ -337,7 +371,7 @@
 					type: 'post', //HTTP请求类型
 					timeout: 10000, //超时时间设置为10秒；
 					success: function(data) {
-						console.log(typeof data.face_tokens);
+						// console.log(typeof data.face_tokens);
 						// console.log(JSON.stringify(data.face_tokens));
 						myData = data;
 						return myData;
@@ -557,21 +591,12 @@
 							mui.alert('该图片无法识别出人脸，请更换图片或重试');
 
 						} else {
-							document.getElementById('tm').innerText = data.image_id;
 
 							var fk = data.faces[0].face_token;
 							CreateAddFaceSet(faceSetname, fk);
 
-							mui.alert('识别出存在人脸');
-
-
-
-
-
+							mui.toast('识别出存在人脸');
 						}
-
-
-
 					},
 					error: function(xhr, type, errorThrown) {
 						console.log(type);

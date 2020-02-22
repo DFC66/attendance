@@ -3,6 +3,7 @@ package com.dfc.controller;
 import com.dfc.api.StorageApi;
 import com.dfc.entity.CourseResult;
 import com.dfc.service.CourseResultService;
+import com.dfc.util.HttpsUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,8 @@ import com.dfc.service.CourseService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -88,16 +91,19 @@ public class CourseController {
                 result.setCode(300);
                 result.setMsg("你已加入此课程");
             }else{
-                courseResultService.save(courseResult);
+//                courseResultService.save(courseResult);
                 result.setCode(200);
-                result.setMsg("你已成功加入此课程");
-                result.setMessage(courseResult);
+                result.setMsg("开始添加人脸信息");
+//                result.setMessage(courseResult);
             }
 
         }
 
         return result;
     }
+
+
+
 
 
 
