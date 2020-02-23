@@ -107,7 +107,7 @@ public class HttpsUtil {
         Map<String,String> map = new HashMap<>();
         map.put("api_key","CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA");
         map.put("api_secret","NodN9bNE113YiOweX6hnOgtjLxHY_uJ3");
-        map.put("outer_id","666666");
+        map.put("outer_id","abcd");
         String response = HttpsUtil.httpsPost("https://api-cn.faceplusplus.com/facepp/v3/faceset/getdetail", map);
         System.out.println(response);
     }

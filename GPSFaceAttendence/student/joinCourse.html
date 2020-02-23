@@ -191,6 +191,7 @@
 						if(newVal){
                                          all.camaraFlag = false;
                                          all.openCamara();
+						     
 						}
 					}
 				},
@@ -250,6 +251,10 @@
 						// });
 						
 						plus.webview.open('addFace.html','addFace.html');
+						// mui.alert(this.aCodes);
+						 mui.fire(plus.webview.getWebviewById('addFace.html'),'num',{
+						    aCodes:this.aCodes
+						  });
 					}
 
 

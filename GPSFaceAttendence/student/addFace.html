@@ -152,6 +152,7 @@
         <script src="../js/jquery-3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="../js/mui.min.js"></script>
 	  <script src="../js/vue.min.js"></script>
+	  <script src="../js/configurl.js"></script>
 	  
         <script>
 		  
@@ -166,7 +167,9 @@
 		  
 		  //     })
 		  var all =this;
-		    var stuNumber = localStorage.getItem('StuNumber');
+		  var stuNumber = localStorage.getItem('StuNumber');
+		  var courseCode = 0;
+		  
 		  var video,canvas,vendorUrl,interval;
 		  var time=0;
 		  
@@ -175,6 +178,12 @@
 		      clearInterval(interval);//清除定时器
 		  	old_back();
 		  }
+		  
+		  window.addEventListener('num',function(event){
+		    //获得事件参数
+		    courseCode = event.detail.aCodes;
+		     
+		  });
 		  
 		  
 		 
@@ -201,15 +210,17 @@
 		    	timeout: 10000, //超时时间设置为10秒；
 		    	success: function(data) {
 		    		console.log('成功连接api！');
-				console.log(stuNumber);
+				console.log(courseCode+'------------------'+stuNumber);
 		    		console.log(JSON.stringify(data));
 		    		if (data.faces.length >0) {
 		    			clearInterval(interval);//清除定时器
 		    			var fk = data.faces[0].face_token;
 					mui.toast('识别出存在人脸');
-					if(stuNumber!=null){
+					if(stuNumber!=null&&courseCode!=0){
 		    			    CreateAddFaceSet(stuNumber, fk);
-		    			}		    		
+		    			}else{
+					     mui.alert('课程号和学号出错')
+					}		    		
 		    			
 		    		} else if (time>9){
 					clearInterval(interval);//清除定时器
@@ -244,8 +255,12 @@
 				timeout: 10000, //超时时间设置为10秒；
 				success: function(data) {
 					console.log(JSON.stringify(data));
-					if(data!=null){
+					if(JSON.stringify(data).indexOf("error_message")==-1){
 						mui.toast('人脸上传成功');
+						joinDataBase(stuNumber,courseCode)
+						
+					}else{
+						mui.toast('人脸上传失败，请重试');
 						plus.webview.currentWebview().close();
 					}
 					
@@ -257,6 +272,37 @@
 		
 		
 		}
+		
+		function joinDataBase(number,courseCode){
+			var url = getport() + '/course/addFace';
+			mui.ajax(url, {
+				data: {
+					number: number,
+					courseCode: courseCode
+				},
+                         // contentType: "application/json",
+				dataType: 'json', //服务器返回json格式数据
+				type: 'post', //HTTP请求类型
+				timeout: 10000, //超时时间设置为10秒；
+				success: function(data) {
+					console.log(JSON.stringify(data));
+					if(data.message!=null){
+						mui.toast(data.msg)
+						plus.webview.currentWebview().close();
+					}
+				},
+				error: function(xhr, type, errorThrown) {
+					if (type == "timeout") {
+						mui.alert("请求超时，请检查网络或重试");
+					} else {
+						mui.alert("未知网络错误");
+					}
+				}
+			});
+		}
+		
+		
+		
 		
 		function faceDetectAdd(base64, faceSetname) {
 

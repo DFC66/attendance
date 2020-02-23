@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import com.dfc.entity.Course;
@@ -72,29 +73,25 @@ public class CourseController {
         return result;
     }
 
-
-
-
+     @Transactional
     @RequestMapping(value = "/joinCourse", method = RequestMethod.POST)
-    public Result JoinCourse(String number,Integer courseCode) throws Exception {
+    public Result JoinCourseJudge(String number, Integer courseCode) throws Exception {
         Result result = new Result<CourseResult>();
         Course byCourseCode = courseService.findByCourseCode(courseCode);
-        if (byCourseCode==null){
+        if (byCourseCode == null) {
             result.setCode(000);
             result.setMsg("查无此课程号的课程");
-        }else{
+        } else {
             CourseResult courseResult = new CourseResult();
             courseResult.setCourseCode(courseCode);
             courseResult.setNumber(number);
             CourseResult joinCourse = courseResultService.joinCourse(courseResult);
-            if (joinCourse!=null){
+            if (joinCourse != null) {
                 result.setCode(300);
                 result.setMsg("你已加入此课程");
-            }else{
-//                courseResultService.save(courseResult);
+            } else {
                 result.setCode(200);
                 result.setMsg("开始添加人脸信息");
-//                result.setMessage(courseResult);
             }
 
         }
@@ -102,11 +99,19 @@ public class CourseController {
         return result;
     }
 
-
-
-
-
-
+    @Transactional
+    @RequestMapping(value = "/addFace", method = RequestMethod.POST)
+    public Result addFaceToDB(String number, Integer courseCode) throws Exception {
+        Result result = new Result<CourseResult>();
+          CourseResult courseResult = new CourseResult();
+          courseResult.setNumber(number);
+          courseResult.setCourseCode(courseCode);
+        courseResultService.save(courseResult);
+        result.setCode(200);
+        result.setMsg("课程添加成功");
+        result.setMessage(courseResult);
+        return result;
+    }
 
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
