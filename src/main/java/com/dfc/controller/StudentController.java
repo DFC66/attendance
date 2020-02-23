@@ -1,6 +1,8 @@
 package com.dfc.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,10 +26,11 @@ import java.io.InputStream;
  * @Description:
  */
 @RestController
-@Slf4j
 @RequestMapping("/student")
 public class StudentController {
 
+
+    private static Logger log = LoggerFactory.getLogger(StudentController.class);
     @Resource
     StudentService studentService;
 
