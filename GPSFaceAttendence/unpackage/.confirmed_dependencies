@@ -30,6 +30,32 @@
 	"student/joinCourse.html": {
 		"refer": [
 			"student/addFace.html"
+		],
+		"resources": []
+	},
+	"course/course-homePage.html": {
+		"resources": [
+			"course/course-message.html",
+			"course/course-first.html"
+		],
+		"refer": [
+			"course/course-detail.html",
+			"course/course-message.html",
+			"course/course-members.html",
+			"course/course-first.html"
+		]
+	},
+	"course/course-first.html": {
+		"refer": [
+			"sign/maps_map.html"
+		]
+	},
+	"sign/maps_map.html": {
+		"resources": [
+			"sign/maps_map_sub.html"
+		],
+		"refer": [
+			"sign/maps_map_sub.html"
 		]
 	}
 }
