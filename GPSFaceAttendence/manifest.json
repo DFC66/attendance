@@ -37,7 +37,8 @@
         },
         "Speech" : {
             "description" : "管理语音识别插件"
-        }
+        },
+        "VideoPlayer" : {}
     },
     "plus" : {
         "splashscreen" : {
@@ -69,6 +70,7 @@
                     "<uses-permission android:name=\"android.permission.ACCESS_MOCK_LOCATION\"/>",
                     "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.ADD_VOICEMAIL\"/>",
                     "<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
                     "<uses-permission android:name=\"android.permission.CAMERA\"/>",
                     "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
@@ -154,6 +156,119 @@
                     "ifly" : {}
                 }
             }
-        }
-    }
+        },
+        "screenOrientation" : [ "portrait-primary", "portrait-secondary" ]
+    },
+	"dependencies": {
+		"pages": {
+			"student/StudentLogin.html": {
+				"resources": [],
+				"refer": [
+					"main.html"
+				],
+				"priority": 0
+			},
+			"main.html": {
+				"resources": [
+					"bottomtab/course.html"
+				],
+				"refer": [
+					"bottomtab/me.html"
+				],
+				"priority": 0
+			},
+			"first.html": {
+				"resources": [],
+				"refer": [
+					"student/StudentLogin.html",
+					"main.html"
+				],
+				"priority": 0
+			},
+			"bottomtab/course.html": {
+				"resources": [],
+				"refer": [
+					"student/joinCourse.html"
+				],
+				"priority": 0
+			},
+			"student/joinCourse.html": {
+				"resources": [],
+				"refer": [
+					"student/addFace.html"
+				],
+				"priority": 0
+			}
+		},
+		"idle": {
+			"resources": [
+				"test.html",
+				"Common/img/ic_good.png",
+				"js/mui.picker.min.js",
+				"addFaceModel.html",
+				"css/login.less",
+				"imgs/landmark.png",
+				"Common/img/home_p.png",
+				"Common/img/ic_default_image.png",
+				"imgs/call.png",
+				"css/bootstrap.css",
+				"Common/img/ic_look.png",
+				"css/font-awesome.css",
+				"css/iconfont.css",
+				"Common/css/common.css",
+				"js/bootstrap.min.js",
+				"js/jquery-3.3.1.min.js",
+				"js/cou.js",
+				"js/mui.js",
+				"css/mui.picker.min.css",
+				"js/app.js",
+				"Common/ic_launcher.png",
+				"fonts/mui.ttf",
+				"imgs/maptb.png",
+				"imgs/ppp.png",
+				"css/mui.css",
+				"js/mui.enterfocus.js",
+				"imgs/sinaweibo.png",
+				"css/index.less",
+				"bottomtab/map.html",
+				"js/sig.js",
+				"js/index.js",
+				"js/md5.js",
+				"imgs/landmark2.png",
+				"js/vue.min.js",
+				"css/icons-extra.css",
+				"teacher/InsertMessage.html",
+				"js/configurl.js",
+				"imgs/weixin.png",
+				"imgs/qq.png",
+				"Common/img/me_p.png",
+				"js/imporime.js",
+				"teacher/TeacherLogin.html",
+				"js/jquery.md5.js",
+				"imgs/bg.png",
+				"js/mui.min.js",
+				"student/Appraise.html",
+				"imgs/qrcode.jpg",
+				"student/HomePage.html",
+				"Common/img/home_n.png",
+				"js/jquery.min.js",
+				"js/stu.js",
+				"js/login.js",
+				"addFaceModel2.html",
+				"imgs/location.png",
+				"student/StudentLoginOld.html",
+				"student/WritePersonMessage.html",
+				"imgs/aiwrap.png",
+				"imgs/bigwx.png",
+				"Common/css/index.css",
+				"css/mui.min.css",
+				"student/home.html",
+				"teacher/test.html",
+				"Common/js/common.js",
+				"Common/img/me_n.png",
+				"imgs/b.jpg",
+				"Common/js/UrlConfig.js"
+			]
+		}
+	}
 }

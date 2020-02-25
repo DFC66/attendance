@@ -1,0 +1,35 @@
+{
+	"student/StudentLogin.html": {
+		"refer": [
+			"main.html"
+		],
+		"resources": []
+	},
+	"main.html": {
+		"resources": [
+			"bottomtab/course.html"
+		],
+		"refer": [
+			"bottomtab/course.html",
+			"bottomtab/me.html"
+		]
+	},
+	"first.html": {
+		"refer": [
+			"student/StudentLogin.html",
+			"main.html"
+		],
+		"resources": []
+	},
+	"bottomtab/course.html": {
+		"refer": [
+			"student/joinCourse.html"
+		],
+		"resources": []
+	},
+	"student/joinCourse.html": {
+		"refer": [
+			"student/addFace.html"
+		]
+	}
+}

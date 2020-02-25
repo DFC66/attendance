@@ -167,7 +167,7 @@
 		  
 		  //     })
 		  var all =this;
-		  var stuNumber = localStorage.getItem('StuNumber');
+		  var stuNumber = localStorage.getItem('stuNumber');
 		  var courseCode = 0;
 		  
 		  var video,canvas,vendorUrl,interval;
@@ -219,7 +219,7 @@
 					if(stuNumber!=null&&courseCode!=0){
 		    			    CreateAddFaceSet(stuNumber, fk);
 		    			}else{
-					     mui.alert('课程号和学号出错')
+					     console.log('课程号和学号出错')
 					}		    		
 		    			
 		    		} else if (time>9){

@@ -19,6 +19,7 @@ import com.dfc.service.CourseService;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -112,6 +113,27 @@ public class CourseController {
         result.setMessage(courseResult);
         return result;
     }
+
+
+    @Transactional
+    @RequestMapping(value = "/getMyCourse", method = RequestMethod.POST)
+    public Result getMyCourse(String number) throws Exception {
+        Result result = new Result<>();
+        List<Course> myCourse = courseService.findMyCourse(number);
+        if (myCourse.size()>0){
+            result.setCode(200);
+            result.setMsg("找到自己的课程了");
+            result.setMessage(myCourse);
+        }else{
+            result.setCode(0);
+            result.setMsg("还没有加入的课程");
+            result.setMessage(myCourse);
+        }
+        return result;
+    }
+
+
+
 
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET)

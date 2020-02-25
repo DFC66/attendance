@@ -125,22 +125,23 @@
     </head>
 
     <body>
-        <header class="mui-bar mui-bar-nav">
+        <!-- <header class="mui-bar mui-bar-nav">
             <div id='user' class="mui-pull-left">
                 <div class="mui-pull-left back" onclick="back()">
                     <img class="mui-icon-back" src="icon/main/back.png" />
                 </div>
             </div>
             <span class="mui-title">人脸识别登录</span>
-    </header>
+    </header> -->
                  
         <div class="mui-content">
             <div style="margin: auto;margin-bottom: 50px; ">
-                <video id="video" width="100%" height="100%" style="border: 0px solid red;margin: auto;"></video>
+                <video id="video" width="100%" height="100%" style="border: 0px solid red;margin: auto;" loop preload="auto"></video>
                 <canvas id='canvas' width="100%" height="100px" style="display: none;"></canvas>                
                 <!--<img id='img' src=''>-->
             </div>    
             <label>请正对手机进行人脸验证</label>
+			<button onclick="refresh()">刷新</button>
         </div>    
         <!--<div class="mui-content-setting1">
             <div id='check' class="button mui-text-center">人脸识别</div>
@@ -148,11 +149,23 @@
         <script src="js/jquery-3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/mui.min.js"></script>
         <script>
+			function refresh(){
+			console.log('开始了');	
+				video.play();
+				// mui.plusReady(function () {
+				//     plus.webview.currentWebview().reload();
+				// })
+			}
+			
+			
+			
             function back() {
                 plus.webview.open("login.html"); 
             }
             var video,canvas,vendorUrl,interval;
             var time=0;
+			
+			
             //自动拍照
             function getface(){
                 time++;            
@@ -164,63 +177,70 @@
                 //img.src = canvas.toDataURL("image/png");
                 var base64 = bdata.split(',')[1];//照片压缩成base位数据
                 //提交至接口匹配人脸库
-                $.post('http://192.168.1.39:8039/FaceWebService.asmx/getFace', {
-                    "face": base64,
-                    "group": "test"
-                }, function(data) {                        
-                    //人脸识别成功直接跳转至主页
-                    if(data.error_code == "0") {
-                        clearInterval(interval);//清除定时器  
-                        plus.webview.open("main.html");    //跳转至主页                        
-                    } else if(time>9){
-                        clearInterval(interval);//清除定时器 
-                        time=0;//重新计时
-                        //10s后未识别成功，提示用户
-                        if(data.error_code == "110") {
-                            alert("人脸匹配度低于70，匹配失败！");
-                        } else if(data.error_code == "222202") {
-                            alert("未检测到人脸,请使用账号登录！");                            
-                        } else if(data.error_code == "222203") {
-                            alert("无法解析人脸，请检查图片质量！");
-                        } else if(data.error_code == "222207") {                            
-                            alert("未找到匹配的用户，请确认人脸库中是否存在此用户！");
-                        }else {
-                            alert("匹配失败，错误代码：" + data.error_code + "，请联系技术人员！");
-                        }
-                        plus.webview.open("login.html"); 
-                    }    
-                }, 'json');
+                // $.post('http://192.168.1.39:8039/FaceWebService.asmx/getFace', {
+                //     "face": base64,
+                //     "group": "test"
+                // }, function(data) {                        
+                //     //人脸识别成功直接跳转至主页
+                //     if(data.error_code == "0") {
+                //         clearInterval(interval);//清除定时器  
+                //         plus.webview.open("main.html");    //跳转至主页                        
+                //     } else if(time>9){
+                //         clearInterval(interval);//清除定时器 
+                //         time=0;//重新计时
+                //         //10s后未识别成功，提示用户
+                //         if(data.error_code == "110") {
+                //             alert("人脸匹配度低于70，匹配失败！");
+                //         } else if(data.error_code == "222202") {
+                //             alert("未检测到人脸,请使用账号登录！");                            
+                //         } else if(data.error_code == "222203") {
+                //             alert("无法解析人脸，请检查图片质量！");
+                //         } else if(data.error_code == "222207") {                            
+                //             alert("未找到匹配的用户，请确认人脸库中是否存在此用户！");
+                //         }else {
+                //             alert("匹配失败，错误代码：" + data.error_code + "，请联系技术人员！");
+                //         }
+                //         plus.webview.open("login.html"); 
+                //     }    
+                // }, 'json');
             }
             
             (function($, doc) {
                 $.init(); 
-                $.plusReady(function() {
+                // $.plusReady(function() {
                     video = doc.getElementById('video'),
                     canvas = doc.getElementById('canvas'),
                     vendorUrl = window.URL || window.webkitURL;
                         
                     //初始化摄像头：媒体对象；仅支持android，ios11.0一下系统均不支持
                     navigator.getMedia =navigator.getUserMedia || navagator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-
+                    // navigator.getMedia =navigator.getUserMedia;
                     navigator.getMedia({
                         video: true, //使用摄像头对象
                         audio: false //不适用音频
-                    }, function(strem) {
-                        video.src = vendorUrl.createObjectURL(strem);
+                    }, function(stream) {
+						console.log(JSON.stringify(stream))
+						MediaStreamTrack =typeof stream.stop==='function'?stream:stream.getTracks()[1];
+						try{
+							video.src = vendorUrl.createObjectURL(stream);
+						}catch(e){
+							video.srcObject =stream;
+						}
+                        // video.src = vendorUrl.createObjectURL(stream);
                         video.play();
                     }, function(error) {
                         alert(error);
                     });
                     //getface(); 
-                    
                     interval=setInterval(getface,1000);
+                    
                     
                     /*//手动拍照
                     var checkButton = doc.getElementById('check');
                     checkButton.addEventListener('tap', function(event) {
                         
                     });*/
-                });
+                // });
             }(mui, document));
         </script>
     </body>

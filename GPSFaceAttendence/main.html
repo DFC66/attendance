@@ -37,7 +37,7 @@
 				<span class="mui-icon mui-icon-home"></span>
 				<span class="mui-tab-label">我的课程</span>
 			</a>
-			<a id="myMessage" @click="judgeStudentExists()" class="mui-tab-item" href="bottomtab/me.html">
+			<a id="myMessage" @click="judgeNumber()"  class="mui-tab-item" href="bottomtab/me.html">
 				<span class="mui-icon mui-icon-person"></span>
 				<span class="mui-tab-label">我的</span>
 			</a>
@@ -65,10 +65,9 @@
 	//创建子页面，首个选项卡页面显示，其它均隐藏；
 	mui.plusReady(function() {
 		window.addEventListener('show', function() {
-			var that = this;
-			// var state = app.getState();
+
+
 			mui.toast("初始化");
-			// that.openid = state.openid;
 			mui.fire(plus.webview.getWebviewById('bottomtab/me.html'), 'refresh');
 			mui.fire(plus.webview.getWebviewById('bottomtab/course.html'), 'refreshCourse');
 		}, false);
@@ -118,6 +117,8 @@
 	//自定义事件，模拟点击“首页选项卡”
 	document.addEventListener('gohome', function() {
 		var defaultTab = document.getElementById("defaultTab");
+		console.log('这个加载了');
+
 		//模拟首页点击
 		mui.trigger(defaultTab, 'tap');
 		//切换选项卡高亮
@@ -128,19 +129,10 @@
 		}
 	});
 
-	document.getElementById('myMessage').addEventListener('tap', function() {
-               if(judgeStudentExists()){
-			   mui.openWindow({
-			   	url: 'student/WritePersonMessage.html',
-			   	id: 'WritePersonMessage.html',
-			   	createNew: false
-			   });
-		   }
-	});
-
+	
+     var existStudent = false;
 	function judgeStudentExists() {
 
-		var existStudent = false;
 		var url = getport() + '/student/findByOpenid';
 		var personInfoStr = localStorage.getItem('person');
 		if (personInfoStr != null) {
@@ -156,9 +148,11 @@
 				timeout: 10000, //超时时间设置为10秒；
 				success: function(data) {
 					console.log(JSON.stringify(data));
+					console.log(data.message.number);
 					if (data.message.number == null || data.message.name == null || data.message.number == '' || data.message.name ==
 						'') {
 						existStudent = true;
+						alert(existStudent);
 					}
 				},
 				error: function(xhr, type, errorThrown) {
@@ -167,8 +161,6 @@
 					} else {
 						mui.alert("未知网络错误");
 					}
-					console.log(type);
-					console.log(errorThrown);
 				}
 			});
 
@@ -179,57 +171,142 @@
 
 
 	var app = new Vue({
-				el: '#app',
-				data: {
-					number: '',
-				},
-				created() {
+		el: '#app',
+		data: {
+			number: '',
+			numberNotExist: false
+		},
+		created() {
+             
 
-
-				},
-
-				mounted() {
-					this.getNumber()
-				},
-				methods: {
-					getNumber: function() {
-						var all = this;
-						var url = getport() + '/student/findByOpenid';
-						mui.ajax(url, {
-							data: {
-								openid: JSON.parse(localStorage.getItem('person')).openid
-							},
-							dataType: 'json', //服务器返回json格式数据
-							type: 'post', //HTTP请求类型
-							timeout: 10000, //超时时间设置为10秒；
-							success: function(data) {
-								console.log(JSON.stringify(data));
-								if (data.message.number != null || data.message.number != undefined) {
-									all.number = data.message.number;
-									// alert(all.number);
-									localStorage.setItem('StuNumber', all.number);
-								} else {
-									mui.openWindow({
-										url: 'student/WritePersonMessage.html',
-										id: 'WritePersonMessage.html',
-										createNew: false
-									});
-								}
-
-
-							},
-							error: function(xhr, type, errorThrown) {
-								if (type == "timeout") {
-									mui.alert("请求超时，请检查网络或重试");
-								} else {
-									mui.alert("未知网络错误");
-								}
-							}
+		},
+		watch: {
+			number(newValue) {
+				// console.log(newValue)
+				// this.sendNumber(newValue)
+			},
+			numberNotExist(newValue) {
+				var all =this;
+				console.log(newValue)
+				if(newValue){
+					  all.numberNotExist = false;
+						mui.openWindow({
+							url: 'student/WritePersonMessage.html',
+							id: 'WritePersonMessage.html',
+							createNew: false
 						});
+				}
+			
+			}
+		},
+		mounted() {
+			window.judgeNumber = this.judgeNumber;
+			this.getNumber();
+		},
+		methods: {
+			getNumber: function() {
+				var all = this;
+				var url = getport() + '/student/findByOpenid';
+				mui.ajax(url, {
+					data: {
+						openid: JSON.parse(localStorage.getItem('person')).openid
+					},
+					async: false,
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					success: function(data) {
+						console.log(JSON.stringify(data));
+						if (data.message.number != null || data.message.number != undefined) {
+							all.number = data.message.number;
+							// console.log(all.number);
+							localStorage.setItem('StuNumber', all.number);
+						} else {
+							mui.openWindow({
+								url: 'student/WritePersonMessage.html',
+								id: 'WritePersonMessage.html',
+								createNew: false
+							});
+						}
+
+
+					},
+					error: function(xhr, type, errorThrown) {
+						if (type == "timeout") {
+							mui.alert("请求超时，请检查网络或重试");
+						} else {
+							mui.alert("未知网络错误");
+						}
 					}
-                           }
-
-
-
+				});
+			},
+			sendNumber: function(num) {
+				console.log('发数字')
+				mui.plusReady(function() {
+					mui.fire(plus.webview.getWebviewById('bottomtab/course.html'), 'sendNum', {
+						number: num
+					})
 				})
+
+
+			},
+			judgeNumber : function(){
+				var all =this;
+				
+				var url = getport() + '/student/findByOpenid';
+				var personInfoStr = localStorage.getItem('person');
+				if (personInfoStr != null) {
+					var personInfo = JSON.parse(personInfoStr);
+					console.log(personInfo.openid);
+				
+					mui.ajax(url, {
+						data: {
+							openid: personInfo.openid
+						},
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						success: function(data) {
+							console.log(JSON.stringify(data));
+							// console.log(data.message.number);
+							if (data.message.number == null || data.message.name == null || data.message.number == '' || data.message.name ==
+								'') {
+								all.numberNotExist = true;
+								mui.toast(all.numberNotExist);
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							if (type == "timeout") {
+								mui.alert("请求超时，请检查网络或重试");
+							} else {
+								mui.alert("未知网络错误");
+							}
+						}
+					});
+				
+				}else{
+					mui.alert("登录出错，请注销后重新登录");
+				}
+			
+			}
+			
+		}
+
+
+
+	})
+	
+	
+	document.getElementById('myMessage').addEventListener('tap', function() {
+		
+		console.log(localStorage.getItem('stuNumber'))
+	    judgeNumber();
+		// if (judgeStudentExists()) {
+		// 	mui.openWindow({
+		// 		url: 'student/WritePersonMessage.html',
+		// 		id: 'WritePersonMessage.html',
+		// 		createNew: false
+		// 	});
+		// }
+	});
 </script>

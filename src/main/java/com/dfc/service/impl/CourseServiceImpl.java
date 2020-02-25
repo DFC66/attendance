@@ -11,6 +11,7 @@ import com.dfc.entity.Course;
 import com.dfc.utils.SpecificationUtil;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author: zsh
@@ -76,5 +77,10 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Course findByNameAndTeacherName(Course course) {
         return  courseDao.findByNameAndTeacherName(course.getName(),course.getTeacherName());
+    }
+
+    @Override
+    public List<Course> findMyCourse(String number) {
+        return courseDao.findMyCourse(number);
     }
 }

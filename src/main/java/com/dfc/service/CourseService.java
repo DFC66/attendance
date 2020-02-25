@@ -5,6 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import com.dfc.entity.Course;
 
+import java.util.List;
+
 /**
  * @author: zsh
  * @Date:21:33 2018/5/9
@@ -38,4 +40,7 @@ public interface CourseService {
 
     @Transactional
     Course findByNameAndTeacherName(Course course);
+
+    @Transactional
+    List<Course> findMyCourse(String number);
 }

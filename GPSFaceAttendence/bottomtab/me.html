@@ -199,7 +199,7 @@
 			}
 			
 			.mui-plus.mui-plus-stream .mui-stream-hidden {
-				display: none !important;
+				display: none ;
 			}
 			/*问题反馈在setting页面单独的css==end*/
 		</style>
@@ -344,7 +344,7 @@
 										break;
 									case 1:
 										localStorage.removeItem('person');
-										localStorage.removeItem('StuNumber');
+										localStorage.removeItem('stuNumber');
 										// localStorage.clear();
 										mui.toast('注销完成');
 										plus.runtime.restart();
@@ -394,19 +394,22 @@
 						stu_number:''
 					},
 					created() {
-						var all = this;
-                                     this.getMessage();
+			
+                                     
 
 
 
 					},
+					mounted() {
+						this.getMessage();
+					},
 					methods: {
 						getMessage: function() {
-                                            var all = this;
+                            var all = this;
 							var url = getport() + '/student/findByOpenid';
 							var personInfoStr = localStorage.getItem('person');
 							var personInfo = JSON.parse(personInfoStr);
-							console.log(personInfo.openid)
+							// console.log(personInfo.openid)
 							if (personInfoStr != null) {
 								if (personInfo.openid != null && personInfo.openid != undefined) {
 
@@ -431,8 +434,6 @@
 											} else {
 												mui.alert("未知网络错误");
 											}
-											console.log(type);
-											console.log(errorThrown);
 										}
 
 

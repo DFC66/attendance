@@ -1,6 +1,8 @@
 package com.dfc.controller;
 
-import lombok.extern.slf4j.Slf4j;
+import com.dfc.entity.Result;
+import com.dfc.entity.Student;
+import com.dfc.service.StudentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,10 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-import com.dfc.entity.Result;
-import com.dfc.entity.Student;
-import com.dfc.service.StudentService;
-
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

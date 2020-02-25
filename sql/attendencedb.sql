@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50728
 File Encoding         : 65001
 
-Date: 2020-02-19 17:38:15
+Date: 2020-02-23 18:25:07
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -107,6 +107,27 @@ INSERT INTO `course` VALUES ('7', '3964', null, '语文', '妈妈', '16:30', '16
 INSERT INTO `course` VALUES ('8', '5346', null, '英语', '妈妈', '16:30', '16:59', null, '固特异', '113.126097', '22.933386', null, null);
 
 -- ----------------------------
+-- Table structure for course_result
+-- ----------------------------
+DROP TABLE IF EXISTS `course_result`;
+CREATE TABLE `course_result` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `course_code` int(11) DEFAULT NULL,
+  `number` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of course_result
+-- ----------------------------
+INSERT INTO `course_result` VALUES ('1', '8816', '654321');
+INSERT INTO `course_result` VALUES ('3', '3964', '654321');
+INSERT INTO `course_result` VALUES ('6', '5346', '654321');
+INSERT INTO `course_result` VALUES ('8', '8816', '666666');
+INSERT INTO `course_result` VALUES ('9', '3964', '666666');
+INSERT INTO `course_result` VALUES ('21', '5346', '666666');
+
+-- ----------------------------
 -- Table structure for hibernate_sequence
 -- ----------------------------
 DROP TABLE IF EXISTS `hibernate_sequence`;
@@ -160,7 +181,7 @@ CREATE TABLE `student` (
 -- Records of student
 -- ----------------------------
 INSERT INTO `student` VALUES ('1', '计算机6班', 'FFF', '123456', 'asd');
-INSERT INTO `student` VALUES ('2', '计算机6班', '大风车', '654321', '0BC89AB4B775441D7E82BF9B75973334');
+INSERT INTO `student` VALUES ('2', '', '大风车', '666666', '0BC89AB4B775441D7E82BF9B75973334');
 
 -- ----------------------------
 -- Table structure for user

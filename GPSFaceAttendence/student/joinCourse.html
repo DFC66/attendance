@@ -152,6 +152,16 @@
 				// }],
 				// preloadLimit: 5 //预加载窗口数量限制(一旦超出,先进先出)默认不限制
 			});
+			
+			
+			var old_back = mui.back;
+			mui.back = function() {
+			         plus.webview.getWebviewById('bottomtab/course.html').reload();
+					old_back();
+				
+			
+			}
+			
 			var app = new Vue({
 				el: '#app',
 				data: {

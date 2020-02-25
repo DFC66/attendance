@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 /**
  * @author: zsh
  * @Date:21:32 2018/5/9
@@ -22,7 +24,9 @@ public interface CourseDao extends JpaRepository<Course,Integer>
 
      Course findByCourseCode(Integer courseCode);
 
+    @Query(value = "select c.*  from  course c inner  join course_result cr  on c.course_code =cr.course_code where cr.number = ?1",nativeQuery = true)
+    List<Course> findMyCourse(String number);
 
 
-     Course findByNameAndTeacherName(String name,String teacherName);
+    Course findByNameAndTeacherName(String name, String teacherName);
 }

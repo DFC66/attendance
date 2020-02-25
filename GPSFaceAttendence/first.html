@@ -100,6 +100,8 @@
 						var state2 = localStorage.getItem('person'); //openid值
 						// mui.toast('初始页面显示' + state2);
 						if (state2 == null) {
+							// plus.webview.open('student/StudentLogin.html','login.html');
+							
 							mui.openWindow({
 								url: 'student/StudentLogin.html',
 								id: 'login.html',

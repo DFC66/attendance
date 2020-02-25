@@ -98,6 +98,7 @@
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">添加课程评价</h1>
+			<button id="joinCourse" onclick="open()" class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">加入课程</button>
 		</header>
 		<div class="mui-content">
 			<div style="text-align: center;margin-top: 6px;">
@@ -136,6 +137,10 @@
 
 		<script>
 			mui.init();
+			
+			function open(){
+				 plus.runtime.openURL('addFaceModel.html');//调用浏览器打开网址  
+			}
 			var myToken = null;
 			$(function() {
 				function CreateAddFaceSet(uniqueName, imgtoken) {
