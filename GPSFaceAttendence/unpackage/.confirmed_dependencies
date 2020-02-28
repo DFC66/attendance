@@ -1,7 +1,9 @@
 {
 	"student/StudentLogin.html": {
 		"refer": [
-			"main.html"
+			"main.html",
+			"bottom-tab/main.html",
+			"bottom-tab/homePage.html"
 		],
 		"resources": []
 	},
@@ -17,7 +19,10 @@
 	"first.html": {
 		"refer": [
 			"student/StudentLogin.html",
-			"main.html"
+			"main.html",
+			"bottom-tab/main.html",
+			"bottom-tab/homePage.html",
+			"teacher/InsertMessage.html"
 		],
 		"resources": []
 	},
@@ -48,7 +53,8 @@
 	"course/course-first.html": {
 		"refer": [
 			"sign/maps_map.html"
-		]
+		],
+		"resources": []
 	},
 	"sign/maps_map.html": {
 		"resources": [
@@ -57,5 +63,36 @@
 		"refer": [
 			"sign/maps_map_sub.html"
 		]
+	},
+	"bottom-tab/main.html": {
+		"resources": [
+			"bottom-tab/course.html"
+		],
+		"refer": [
+			"bottom-tab/me.html",
+			"bottom-tab/course.html",
+			"bottom-tab/map.html",
+			"bottom-tab/course-members.html"
+		]
+	},
+	"bottom-tab/homePage.html": {
+		"resources": [
+			"bottom-tab/course-members.html",
+			"bottom-tab/course.html"
+		],
+		"refer": [
+			"bottom-tab/me.html",
+			"bottom-tab/course-members.html",
+			"bottom-tab/course.html",
+			"student/WritePersonMessage.html",
+			"course/course-homePage.html",
+			"bottom-tab/course-detail.html"
+		]
+	},
+	"bottom-tab/course.html": {
+		"refer": [
+			"student/joinCourse.html"
+		],
+		"resources": []
 	}
 }

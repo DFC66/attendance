@@ -78,6 +78,36 @@ w.clicked=function(id,wa,ns,ws){
 	}
 	return null;
 };
+
+
+w.clickSend=function(id,wa,ns,ws,longi,lati){
+	if(openw){//避免多次打开同一个页面
+		return null;
+	}
+	if(w.plus){
+		wa&&(waiting=plus.nativeUI.showWaiting());
+		ws=ws||{};
+		ws.scrollIndicator||(ws.scrollIndicator='none');
+		ws.scalable||(ws.scalable=false);
+		var pre='';//'http://192.168.1.178:8080/h5/';
+		openw=plus.webview.create(pre+id,id,ws,{longitude:longi,latitude:lati});
+		ns||openw.addEventListener('loaded',function(){//页面加载完成后才显示
+//		setTimeout(function(){//延后显示可避免低端机上动画时白屏
+			openw.show(as);
+			closeWaiting();
+//		},200);
+		},false);
+		openw.addEventListener('close',function(){//页面关闭后可再次打开
+			openw=null;
+		},false);
+		return openw;
+	}else{
+		w.open(id);
+	}
+	return null;
+};
+
+
 w.openDoc=function(t,c){
 //	var d=plus.webview.getWebviewById('document');
 //	if(d){

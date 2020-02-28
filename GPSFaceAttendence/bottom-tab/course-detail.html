@@ -1,19 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-
 	<head>
-		<meta charset="utf-8">
-		<title></title>
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta charset="UTF-8">
+				<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>new webview</title>
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<style>
-			html,
-			body {
-				background-color: #efeff4;
-			}
-			
 			.mui-views,
 			.mui-view,
 			.mui-pages,
@@ -201,12 +195,8 @@
 			.mui-plus.mui-plus-stream .mui-stream-hidden {
 				display: none ;
 			}
-			/*问题反馈在setting页面单独的css==end*/
 		</style>
-		<!-- <script src="../js/imporime.js"></script> -->
 	</head>
-	<script src="../js/mui.min.js"></script>
-
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<h1 class="mui-title">我的</h1>
@@ -253,78 +243,21 @@
 				</div>
 			</div>
 		</div>
-
-
-		<script src="../js/app.js"></script>
-		<script src="../js/vue.min.js"></script>
+<!--        <script src="../js/app.js"></script>
+-->		
+		<script src="../js/mui.min.js"></script>
+        <script src="../js/vue.min.js"></script>
 		<script src="../js/configurl.js"></script>
 		<!-- 引入登录注册JS文件 -->
 		<script type="text/javascript">
+//			mui.init();
 			(function($, doc) {
 
 				$.init();
 
 
-
-
-
-
-
 				$.plusReady(function() {
 
-
-
-
-
-
-					window.addEventListener('refresh', function(e) {
-						// $.toast('进入监听');
-
-
-						plus.webview.currentWebview().reload();
-
-
-					});
-
-
-
-					function judgeStudentExists() {
-						var existStudent = false;
-						var url = getport() + '/student/findByOpenid';
-						var personInfoStr = localStorage.getItem('person');
-						if (personInfoStr != null) {
-							var personInfo = JSON.parse(personInfoStr);
-							console.log(personInfo.openid);
-
-							mui.ajax(url, {
-								data: {
-									openid: personInfo.openid
-								},
-								async: false,
-								dataType: 'json', //服务器返回json格式数据
-								type: 'post', //HTTP请求类型
-								timeout: 10000, //超时时间设置为10秒；
-								success: function(data) {
-									console.log(JSON.stringify(data));
-									if (data.message.number == null || data.message.name == null || data.message.number == '' || data.message
-										.name == '') {
-										existStudent = true;
-									}
-								},
-								error: function(xhr, type, errorThrown) {
-									if (type == "timeout") {
-										mui.alert("请求超时，请检查网络或重试");
-									} else {
-										mui.alert("未知网络错误");
-									}
-									console.log(type);
-									console.log(errorThrown);
-								}
-							});
-
-						}
-						return existStudent;
-					}
 
 					doc.getElementById('exitlogin').addEventListener("tap", function() {
 
@@ -358,14 +291,8 @@
 							})
 						}
 					}, false);
-				});
-
-
-
-
-
-				$.plusReady(function() {
-					//--
+					
+					
 					$.oldBack = mui.back;
 					var backButtonPress = 0;
 					$.back = function(event) {
@@ -380,11 +307,20 @@
 						}, 1000);
 						return false;
 					};
-
-
-
+					
+					
+					
 				});
+//
+//
+//
+//
+//
+			
 			}(mui, document));
+
+
+
 
 				var app = new Vue({
 					el: '#app',
@@ -394,14 +330,18 @@
 						stu_number:''
 					},
 					created() {
-			
-                                     
+						 var all = this;
+						mui.plusReady(function(){
+			               all.getMessage();
+                        })       
 
 
 
 					},
 					mounted() {
-						this.getMessage();
+//						 var all = this;
+//						
+//						all.getMessage();			
 					},
 					methods: {
 						getMessage: function() {
@@ -412,8 +352,8 @@
 							// console.log(personInfo.openid)
 							if (personInfoStr != null) {
 								if (personInfo.openid != null && personInfo.openid != undefined) {
-
-									mui.ajax(url, {
+                                   
+                                    	mui.ajax(url, {
 										data: {
 											openid: personInfo.openid
 										},
@@ -438,7 +378,13 @@
 
 
 									});
+								
+                                    	
+                                    
+									
+								
 								}
+								
 
 								var personInfo = JSON.parse(personInfoStr);
 								// console.log(typeof personInfo);
@@ -460,6 +406,8 @@
 				})
 			
 		</script>
-	</body>
 
+		
+
+	</body>
 </html>

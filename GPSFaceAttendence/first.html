@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
@@ -9,52 +10,51 @@
 		<script src="js/mui.min.js"></script>
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<style>
-			html,body {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
+			html,
+			body {
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+			}
 			
-        }
-		
-		body{ 
-            display: flex;
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            top: 0;
-            margin: auto;
-			background:#4187F1; }
-		.buttondiv{
-		  margin-top: 90px;
-		
-		  
-		}
-		
-		.mui-content2 {
-			background: #4187F1
-		 display: inline-block;
-			 margin: auto;
-            align-items: center; /*定义body的元素垂直居中*/
-            justify-content: center; /*定义body的里的元素水平居中*/
-		}
-		
-		
-		.twobutton{
+			body {
+				display: flex;
+				position: absolute;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				top: 0;
+				margin: auto;
+				background: #4187F1;
+			}
 			
-			font-size: 50px;
-		}
-		
-		.mui-btn-primary2,
-		input[type=submit] {
-			color: #fff;
-			border: 4px solid #FFFFFF;;
-			border-radius: 15px;
-			background-color: #4187F1
+			.buttondiv {
+				margin-top: 90px;
+			}
 			
-		}
-	</style>
+			.mui-content2 {
+				background: #4187F1 display: inline-block;
+				margin: auto;
+				align-items: center;
+				/*定义body的元素垂直居中*/
+				justify-content: center;
+				/*定义body的里的元素水平居中*/
+			}
+			
+			.twobutton {
+				font-size: 50px;
+			}
+			
+			.mui-btn-primary2,
+			input[type=submit] {
+				color: #fff;
+				border: 4px solid #FFFFFF;
+				;
+				border-radius: 15px;
+				background-color: #4187F1
+			}
+		</style>
 		<script src="js/app.js"></script>
 		<script type="text/javascript">
 			(function($, doc) {
@@ -66,7 +66,7 @@
 					var backButtonPress = 0;
 					$.back = function(event) {
 						backButtonPress++;
-						if (backButtonPress > 1) {
+						if(backButtonPress > 1) {
 							plus.runtime.quit();
 							plus.storage.clear();
 						} else {
@@ -82,26 +82,21 @@
 					doc.getElementById("exit").addEventListener('tap', function() {
 
 						$.confirm('确认关闭应用？', btn, function(e) {
-							if (e.index == 0) {
+							if(e.index == 0) {
 								plus.runtime.quit();
 							}
 						});
 					});
 
-
-
-
-
-
-
-
 					//学生界面进入监听
 					doc.getElementById("student").addEventListener('tap', function() {
+						//						localStorage.clear();
+
 						var state2 = localStorage.getItem('person'); //openid值
 						// mui.toast('初始页面显示' + state2);
-						if (state2 == null) {
+						if(state2 == null) {
 							// plus.webview.open('student/StudentLogin.html','login.html');
-							
+
 							mui.openWindow({
 								url: 'student/StudentLogin.html',
 								id: 'login.html',
@@ -119,13 +114,13 @@
 							});
 						} else {
 							mui.openWindow({
-								url: 'main.html',
+								url: 'bottom-tab/homePage.html',
+								id: 'homepage.html',
 								createNew: false
 							});
 						}
 
 					});
-
 
 					//老师界面进入监听
 					doc.getElementById("teacher").addEventListener('tap', function() {
@@ -151,17 +146,12 @@
 
 					});
 
-
-
 				});
-
-
-
-
 
 			}(mui, document));
 		</script>
 	</head>
+
 	<body>
 
 		<header id="header" class="mui-bar mui-bar-nav">
@@ -179,10 +169,6 @@
 
 		</div>
 
-
-
 	</body>
-
-
 
 </html>

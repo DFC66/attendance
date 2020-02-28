@@ -133,6 +133,25 @@ public class CourseController {
     }
 
 
+    @Transactional
+    @RequestMapping(value = "/getCourseDetail", method = RequestMethod.POST)
+    public Result getCourseDetail(Integer courseCode) throws Exception {
+        Result result = new Result<>();
+        Course course = courseService.findByCourseCode(courseCode);
+        if (course!=null){
+            result.setCode(200);
+            result.setMsg("找到自己的课程了");
+            result.setMessage(course);
+        }else{
+            result.setCode(0);
+            result.setMsg("没有该课程");
+            result.setMessage(null);
+        }
+        return result;
+    }
+
+
+
 
 
 

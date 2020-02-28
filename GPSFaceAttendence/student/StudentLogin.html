@@ -164,16 +164,17 @@
 						plus.screen.lockOrientation("portrait-primary");
 						var settings = app.getSettings();
 						var state = app.getState();
-						var mainPage = plus.webview.getWebviewById("main");
+						var mainPage = plus.webview.getWebviewById("homePage");
 						// console.log(mainPage);
 						var main_loaded_flag = false;
 
 
 						if (!mainPage) {
-							mainPage = $.preload({
-								"id": 'main',
-								"url": '../main.html'
-							});
+							mainPage = plus.webview.create('../bottom-tab/homePage.html','homePage');
+//							mainPage = $.preload({
+//								"id": 'homePage',
+//								"url": '../bottom-tab/homePage.html'
+//							});
 						} else {
 							main_loaded_flag = true;
 						}
@@ -182,59 +183,19 @@
 						mainPage.addEventListener("loaded", function() {
 							main_loaded_flag = true;
 						});
-						var toMain = function() {
+						var toMain = function(openid) {
 							//使用定时器的原因：
 							//可能执行太快，main页面loaded事件尚未触发就执行自定义事件，此时必然会失败
 							var id = setInterval(function() {
 								if (main_loaded_flag) {
 									clearInterval(id);
-									$.fire(mainPage, 'show', null);
+									$.fire(mainPage, 'show', {openid:openid});
 									mainPage.show("pop-in");
 								}
 							}, 20);
 						};
 						
-						
-						var toWrite =function(){
-							mui.openWindow({
-								url: '../student/WritePersonMessage.html',
-								id: 'WritePersonMessage.html',
-								createNew: false
-							});
-						}
-						var numberFlag = false;
-						
-						var	getNumber =function(openid) {
-								var url = getport() + '/student/findByOpenid';
-								mui.ajax(url, {
-									data: {
-										openid: openid
-									},
-									async: false,
-									dataType: 'json', //服务器返回json格式数据
-									type: 'post', //HTTP请求类型
-									timeout: 10000, //超时时间设置为10秒；
-									success: function(data) {
-										console.log(JSON.stringify(data));
-										if (data.message.number != null) {
-											console.log(data.message.number);
-											localStorage.setItem('stuNumber', data.message.number);
-										} else {
-											
-											numberFlag =true;
-										}
-						
-						
-									},
-									error: function(xhr, type, errorThrown) {
-										if (type == "timeout") {
-											mui.alert("请求超时，请检查网络或重试");
-										} else {
-											mui.alert("未知网络错误");
-										}
-									}
-								});
-							};
+				
 						if (settings.autoLogin && token) {
 							toMain();
 						} else {
@@ -289,8 +250,8 @@
 														}
 														// console.log(typeof JSON.stringify(personInfo));
 														localStorage.setItem('person',JSON.stringify(personInfo));
-														getNumber(openid);
-																toMain();
+													
+														toMain(openid);
                           
                                                                           
 													plus.webview.currentWebview().close(); //本窗口关闭
@@ -313,8 +274,8 @@
 																	}
 																	// console.log(typeof JSON.stringify(personInfo));
 																	localStorage.setItem('person',JSON.stringify(personInfo));
-																	getNumber(openid);
-																	toMain();
+							
+																	toMain(openid);
 																	// mui.toast(auth.userInfo.openid);
 																	
                                                                                                    

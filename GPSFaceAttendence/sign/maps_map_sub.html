@@ -10,6 +10,12 @@
 function resetMap(){
 	plus.webview.currentWebview().opener().evalJS('resetMap()');
 }
+
+function atttendence(){
+	plus.webview.currentWebview().opener().evalJS('execute()');
+}
+
+
 		</script>
 		<link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8"/>
 		<style type="text/css">
@@ -19,6 +25,6 @@ html,body{
 		</style>
 	</head>
 	<body>
-		<div class="button" style="margin:.2em auto;width:50%" onclick="resetMap()">重　置</div>
+		<div class="button" style="margin:.2em auto;width:50%" onclick="atttendence()">签   到</div>
 	</body>
 </html>

@@ -66,10 +66,10 @@
 				<span class="mui-tab-label">课程成员</span>
 			</a>
 			
-			<a class="mui-tab-item" href="course-detail.html">
+			<!--<a class="mui-tab-item" href="course-detail.html">
 				<span class="mui-icon mui-icon-gear"></span>
 				<span class="mui-tab-label">详细信息</span>
-			</a>
+			</a>-->
 		</nav>
 	</body>
 	<script src="../js/mui.min.js"></script>
@@ -77,18 +77,21 @@
 		mui.init({
 			swipeBack:true //启用右滑关闭功能
 		});
-		var subpages = ['course-first.html', 'course-members.html','course-detail.html'];
+		var subpages = ['course-first.html', 'course-members.html'];
 	var subpage_style = {
 		top: '0px',
 		bottom: '50px'
 	};
+	
+
+	
 
 	var aniShow = {};
 	//创建子页面，首个选项卡页面显示，其它均隐藏；
 	mui.plusReady(function() {
 		
 		var self = plus.webview.currentWebview();
-		for (var i = 0; i < 3; i++) {
+		for (var i = 0; i < 2; i++) {
 			var temp = {};
 			var sub = plus.webview.create(subpages[i], subpages[i], subpage_style);
 			if (i > 0) {
@@ -102,7 +105,25 @@
 		
 		
 		
-		
+		//添加courseCode自定义事件监听
+		window.addEventListener('courseCode',function(event){
+		  //获得事件参数
+		  var code = event.detail.courseCode;
+		  //根据courseCode向服务器请求新闻详情
+		  console.log('开始发送');
+		  
+		  mui.fire(plus.webview.getWebviewById('course-first.html'),'course-1',{
+			  courseCode:code
+		  });
+		   mui.fire(plus.webview.getWebviewById('course-members.html'),'course-2',{
+		   			  courseCode:code
+		   }) 
+		   mui.fire(plus.webview.getWebviewById('course-detail.html'),'course-3',{
+		   			  courseCode:code
+		   }) 
+		 
+		 
+		});
 		
 		
 		
@@ -150,6 +171,9 @@
 			defaultTab.classList.add('mui-active');
 		}
 	});
+		
+		
+		
 		
 		
 	</script>

@@ -10,7 +10,7 @@
     "icons" : {
         "72" : "icon.png"
     },
-    "launch_path" : "course/course-homePage.html", /*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
+    "launch_path" : "first.html", /*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
     "developer" : {
         "name" : "", /*开发者名称*/
         "email" : "", /*开发者邮箱地址*/
@@ -164,7 +164,9 @@
 			"student/StudentLogin.html": {
 				"resources": [],
 				"refer": [
-					"main.html"
+					"main.html",
+					"bottom-tab/main.html",
+					"bottom-tab/homePage.html"
 				],
 				"priority": 0
 			},
@@ -181,7 +183,10 @@
 				"resources": [],
 				"refer": [
 					"student/StudentLogin.html",
-					"main.html"
+					"main.html",
+					"bottom-tab/main.html",
+					"bottom-tab/homePage.html",
+					"teacher/InsertMessage.html"
 				],
 				"priority": 0
 			},
@@ -223,6 +228,37 @@
 				],
 				"refer": [],
 				"priority": 0
+			},
+			"bottom-tab/main.html": {
+				"resources": [
+					"bottom-tab/course.html",
+					"bottom-tab/map.html",
+					"bottom-tab/course-members.html"
+				],
+				"refer": [
+					"bottom-tab/me.html"
+				],
+				"priority": 0
+			},
+			"bottom-tab/homePage.html": {
+				"resources": [
+					"bottom-tab/course-members.html",
+					"bottom-tab/course.html"
+				],
+				"refer": [
+					"bottom-tab/me.html",
+					"student/WritePersonMessage.html",
+					"course/course-homePage.html",
+					"bottom-tab/course-detail.html"
+				],
+				"priority": 0
+			},
+			"bottom-tab/course.html": {
+				"resources": [],
+				"refer": [
+					"student/joinCourse.html"
+				],
+				"priority": 0
 			}
 		},
 		"idle": {
@@ -262,7 +298,6 @@
 				"imgs/landmark2.png",
 				"js/vue.min.js",
 				"css/icons-extra.css",
-				"teacher/InsertMessage.html",
 				"js/configurl.js",
 				"imgs/weixin.png",
 				"imgs/qq.png",
@@ -282,7 +317,6 @@
 				"addFaceModel2.html",
 				"imgs/location.png",
 				"student/StudentLoginOld.html",
-				"student/WritePersonMessage.html",
 				"imgs/aiwrap.png",
 				"imgs/bigwx.png",
 				"Common/css/index.css",

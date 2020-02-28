@@ -103,7 +103,7 @@
 			<form class="mui-input-group" style="margin: 10px;">
 				<div class="mui-input-row">
 					<label>你的学号</label>
-					<input id='number' type="text" class="mui-input-clear mui-input" placeholder="请输入你的学号(必填)">
+					<input id='number' type="number" class="mui-input-clear mui-input" placeholder="请输入你的学号(必填)">
 				</div>
 				<div class="mui-input-row">
 					<label>你的姓名</label>
@@ -281,9 +281,10 @@
 								mui.toast('个人信息已完善');
 								// mui.fire(plus.webview.getWebviewById('bottomtab/me.html'), 'refresh');
 								localStorage.setItem('stuNumber', MyNumber);
-								plus.webview.getWebviewById('bottomtab/me.html').reload();
-								plus.webview.getWebviewById('bottomtab/course.html').reload();
 								plus.webview.currentWebview().close(); //本窗口关闭
+								plus.webview.getWebviewById('me.html').reload();
+								plus.webview.getWebviewById('course.html').reload();
+								
 							}
 
 						},
