@@ -136,8 +136,8 @@
 //						mui.alert('你点击了图标，你在此可以打开摄像头或者新窗口等自定义点击事件。', '悬浮球点击事件');
 					    
 //						console.log(JSON.stringify(whole.course));
-					     let  detail = whole.course; 
-						 showMaps(detail.message.longitude,detail.message.latitude);
+					     let  detail = whole.course.message; 
+						 showMaps(detail);
 					});
 					// 中间凸起图标绘制及监听点击完毕
 
@@ -234,7 +234,7 @@ function preateClear(){
 	}
 }
 
-function showMaps(longitude,latitude){
+function showMaps(course){
 	if('Android'===plus.os.name&&navigator.userAgent.indexOf('StreamApp')>0){
 		plus.nativeUI.toast('当前环境暂不支持地图插件');
 		return;
@@ -244,11 +244,8 @@ function showMaps(longitude,latitude){
 //	wm&&wm.evalJS("preateClear()");
 	
 //	clicked('../sign/maps_map.html',false,true);
-	clickSend('../sign/maps_map.html',false,true,null,longitude,latitude)
-//	mui.fire(plus.webview.getWebviewById('../sign/maps_map.html'),'position',{
-//		longitude:longitude,
-//		latitude: latitude
-//	})
+	clickSend('../sign/maps_map.html',false,true,null,course);
+
 }
 			
 		</script>

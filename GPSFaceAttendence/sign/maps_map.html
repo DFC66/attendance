@@ -31,14 +31,15 @@
 				};
 				// 获取窗口对象
 				ws = plus.webview.currentWebview();
-				console.log(ws.longitude);
-				console.log(ws.latitude);
+				console.log(JSON.stringify(ws.course));
+				console.log(ws.course.longitude);
+				console.log(ws.course.latitude);
 				wo = ws.opener();
 				//高德地图坐标为(116.3974357341,39.9085574220), 百度地图坐标为(116.3975,39.9074)
 				//				pcenter = new plus.maps.Point(116.3975, 39.9074);
 
 				//转换坐标系
-				var roomPoint = new plus.maps.Point(ws.longitude, ws.latitude);
+				var roomPoint = new plus.maps.Point(ws.course.longitude, ws.course.latitude);
 				plus.maps.Map.convertCoordinates(roomPoint, {
 					coordType: 'gcj02'
 				}, function(event) {
@@ -149,14 +150,18 @@
             if(distance<=getDistance()){
             	//在范围内，可以签到，打开人脸识别界面
                 console.log('开始人脸识别'); 
+                
             }else{
                mui.alert('不在范围内，不能签到');
             }
 
 	},function(e){
-		alert('计算距离失败,'+e.message);
+		alert('计算距离失败,请重试'+e.message);
 	});
 	   }
+	
+	
+	
 			
 			
 		</script>
