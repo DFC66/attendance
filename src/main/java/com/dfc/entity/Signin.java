@@ -19,41 +19,58 @@ public class Signin {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+
     /**
      * 签到人姓名
      */
-    @Column(name = "name")
+    @Column(name = "stu_name")
     private String name;
-    /**
-     * 签到班级
-     */
-    @Column(name = "classes")
-    private String classes;
+
     /**
      * 签到学号
      */
     @Column(name = "number")
     private String number;
+
+
+
+    @Column(name = "course_code")
+    private  Integer courseCode;
+
+
+    /**
+     * 课程名
+     */
+    @Column(name = "course_name")
+    private String courseName;
+
+
+
+    /**
+     * 签到IP
+     */
+    @Column(name = "ip")
+    private String ip;
+
+
+    /**
+     * 签到班级
+     */
+    @Column(name = "classes")
+    private String classes;
+
     /**
      * 签到时间
      */
-    @Column(name = "time")
+    @Column(name = "signin_time")
     private String time;
     /**
      * 签到教室
      */
     @Column(name = "room")
     private String room;
-    /**
-     * 课程名
-     */
-    @Column(name = "course_name")
-    private String course_name;
-    /**
-     * 签到IP
-     */
-    @Column(name = "ip")
-    private String ip;
+
+
 
 
     public Integer getId() {
@@ -104,12 +121,20 @@ public class Signin {
         this.room = room;
     }
 
-    public String getCourse_name() {
-        return course_name;
+    public Integer getCourseCode() {
+        return courseCode;
     }
 
-    public void setCourse_name(String course_name) {
-        this.course_name = course_name;
+    public void setCourseCode(Integer courseCode) {
+        this.courseCode = courseCode;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
     }
 
     public String getIp() {

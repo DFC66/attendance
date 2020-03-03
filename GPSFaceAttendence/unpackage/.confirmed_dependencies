@@ -61,7 +61,8 @@
 			"sign/maps_map_sub.html"
 		],
 		"refer": [
-			"sign/maps_map_sub.html"
+			"sign/maps_map_sub.html",
+			"sign/compareFace.html"
 		]
 	},
 	"bottom-tab/main.html": {

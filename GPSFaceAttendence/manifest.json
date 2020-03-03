@@ -226,7 +226,9 @@
 				"resources": [
 					"sign/maps_map_sub.html"
 				],
-				"refer": [],
+				"refer": [
+					"sign/compareFace.html"
+				],
 				"priority": 0
 			},
 			"bottom-tab/main.html": {

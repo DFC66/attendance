@@ -84,6 +84,10 @@ public class Course {
     @Column(name = "classess")
     private String classess;
 
+
+    @Column(name = "signin_status")
+    private String signinStatus;
+
     public Integer getId() {
         return id;
     }
@@ -178,5 +182,13 @@ public class Course {
 
     public void setTeacherName(String teacherName) {
         this.teacherName = teacherName;
+    }
+
+    public String getSigninStatus() {
+        return signinStatus;
+    }
+
+    public void setSigninStatus(String signinStatus) {
+        this.signinStatus = signinStatus;
     }
 }

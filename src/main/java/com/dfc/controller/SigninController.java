@@ -97,7 +97,7 @@ public class SigninController {
                     signin.setNumber(number);
                     signin.setTime(timer);
                     signin.setRoom(course.getRoom());
-                    signin.setCourse_name(course.getName());
+                    signin.setCourseName(course.getName());
                     signin.setIp(remoteAddr);
                     signinService.save(signin);
                     //签到成功

@@ -9,7 +9,7 @@
 		<title>显示地图</title>
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<script type="text/javascript" src="../js/common.js"></script>
-		
+
 		<script src="../js/configurl.js"></script>
 		<script src="../js/mui.min.js"></script>
 		<script type="text/javascript">
@@ -24,6 +24,13 @@
 
 			var longi = null,
 				lati = null;
+
+			var myFaceData = null;
+
+			var myNumber = localStorage.getItem('stuNumber');
+
+            var thisCourse  =null;
+
 			// H5 plus事件处理
 			function plusReady() {
 				if(!em || ws) {
@@ -31,22 +38,39 @@
 				};
 				// 获取窗口对象
 				ws = plus.webview.currentWebview();
-				console.log(JSON.stringify(ws.course));
-				console.log(ws.course.longitude);
-				console.log(ws.course.latitude);
+				thisCourse = ws.course;
+				if(myNumber != null) {
+					myFaceData = queryFaceSet(myNumber);
+				} else {
+					mui.alert('人脸信息获取失败');
+					
+					
+				}
+
+
+
+
+				console.log(JSON.stringify(thisCourse));
+
+				    if(thisCourse==null||thisCourse==undefined){
+				    	mui.toast('人脸信息获取失败');
+				    	plus.webview.currentWebview().close();
+				    	return;
+				    }
+				
+				
 				wo = ws.opener();
 				//高德地图坐标为(116.3974357341,39.9085574220), 百度地图坐标为(116.3975,39.9074)
 				//				pcenter = new plus.maps.Point(116.3975, 39.9074);
 
 				//转换坐标系
-				var roomPoint = new plus.maps.Point(ws.course.longitude, ws.course.latitude);
+				var roomPoint = new plus.maps.Point(thisCourse.longitude, thisCourse.latitude);
 				plus.maps.Map.convertCoordinates(roomPoint, {
 					coordType: 'gcj02'
 				}, function(event) {
-					// JS code.
 					var point = event.coord; // 转换后的坐标值
 					var coordType = event.coordType; // 转换后的坐标系类型
-					console.log(coordType);
+//					console.log(coordType);
 					pcenter = point;
 				}, function(error) {
 					// Handle error
@@ -56,13 +80,13 @@
 				});
 				//                 pcenter = new plus.maps.Point( , );
 				setTimeout(function() {
-					console.log('每次都运行');
+//					console.log('每次都运行');
 					map = new plus.maps.Map("map");
 					map.centerAndZoom(pcenter, 19);
 					createRoomCircle();
 
 					//                  初始化本人位置
-					//                  userLocation();
+					userLocation();
 
 					//					createMarker();
 					// 创建子窗口
@@ -121,6 +145,37 @@
 
 			}
 
+			function queryFaceSet(uniqueName) {
+				var myData = {};
+				var url = "https://api-cn.faceplusplus.com/facepp/v3/faceset/getdetail";
+				mui.ajax(url, {
+					data: {
+						api_key: "CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA",
+						api_secret: "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3",
+						outer_id: uniqueName
+					},
+					async: false,
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					success: function(data) {
+						// console.log(typeof data.face_tokens);
+						// console.log(JSON.stringify(data.face_tokens));
+						myData = data;
+						return myData;
+
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(type);
+						console.log(errorThrown);
+						return null;
+					}
+				});
+
+				return myData;
+			}
+
+
 			function createSubview() {
 				// 创建加载内容窗口
 				var topoffset = '44px';
@@ -141,29 +196,42 @@
 				//map.centerAndZoom(pcenter,12);
 				map.reset();
 			}
-			
-	function execute(){
-		userLocation();
-		plus.maps.Map.calculateDistance(Mypostion,pcenter,function(event){
-		var distance = event.distance;  // 转换后的距离值
-         console.log(distance);
-            if(distance<=getDistance()){
-            	//在范围内，可以签到，打开人脸识别界面
-                console.log('开始人脸识别'); 
-                
-            }else{
-               mui.alert('不在范围内，不能签到');
-            }
 
-	},function(e){
-		alert('计算距离失败,请重试'+e.message);
-	});
-	   }
-	
-	
-	
-			
-			
+			var faceSign = null;
+
+			function execute() {
+				userLocation();
+				plus.maps.Map.calculateDistance(Mypostion, pcenter, function(event) {
+					var distance = event.distance; // 转换后的距离值
+					console.log(distance);
+					if(distance <= getDistance()) {
+						//在范围内，可以签到，打开人脸识别界面
+                        console.log('开始人脸识别'+JSON.stringify(myFaceData));
+
+						mui.openWindow({
+							id: 'compareFace.html',
+							url: 'compareFace.html',
+//							extra: {
+//								face: JSON.stringify(myFaceData)
+//							},
+							show: {
+								autoShow: false
+							}
+						});
+						
+						mui.fire(plus.webview.getWebviewById('compareFace.html'),'getData',{
+							face:myFaceData,
+						    course:thisCourse});
+						
+
+					} else {
+						mui.alert('不在范围内，不能签到');
+					}
+
+				}, function(e) {
+					alert('计算距离失败,请重试' + e.message);
+				});
+			}
 		</script>
 		<link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
 		<style type="text/css">
@@ -200,15 +268,14 @@
 			<div class="nvbt iback" onclick="back();"></div>
 			<div class="nvtt">开始签到</div>
 			<div class="nvbt ipos" onclick="userLocation();"></div>
-			</header>
-	    <!--<header class="mui-bar mui-bar-nav">
+		</header>
+		<!--<header class="mui-bar mui-bar-nav">
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" ></a>
 			<div class="nvbt iback" onclick="back();"></div>
 			<h1 class="mui-title">开始签到</h1>
 		   <div class="nvbt ipos" onclick="userLocation();"></div>
 		</header>-->
-			
-		
+
 		<div id="map">地图加载中...</div>
 
 		<!--<button id="up-map-div">

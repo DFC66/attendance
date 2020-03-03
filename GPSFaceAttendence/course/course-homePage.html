@@ -73,6 +73,7 @@
 		</nav>
 	</body>
 	<script src="../js/mui.min.js"></script>
+	<script src="../js/configurl.js"></script>
 	<script>
 		mui.init({
 			swipeBack:true //启用右滑关闭功能
@@ -107,20 +108,61 @@
 		
 		//添加courseCode自定义事件监听
 		window.addEventListener('courseCode',function(event){
+			var aCourse = null;
+			
 		  //获得事件参数
-		  var code = event.detail.courseCode;
+		  let singleCode = event.detail.courseCode;
 		  //根据courseCode向服务器请求新闻详情
 		  console.log('开始发送');
+//		  mui.plusReady(function() {
+							var url = getport() + '/course/getCourseDetail';
+
+							mui.ajax(url, {
+								data: {
+									courseCode: singleCode
+								},
+								async:false,
+								dataType: 'json', //服务器返回json格式数据
+								type: 'post', //HTTP请求类型
+								timeout: 10000, //超时时间设置为10秒；
+								success: function(data) {
+									console.log(JSON.stringify(data));
+									if(data.message != null) {
+									    aCourse = data;
+									} else {
+										mui.toast(data.msg);
+									}
+
+								},
+								error: function(xhr, type, errorThrown) {
+
+									if(type == "timeout") {
+										mui.alert("请求超时，请检查网络或重试");
+									} else {
+										mui.alert("未知网络错误");
+									}
+
+								}
+							});
+
+						
+						
+//						})
 		  
-		  mui.fire(plus.webview.getWebviewById('course-first.html'),'course-1',{
-			  courseCode:code
+		 if(aCourse!=null){
+		 	mui.fire(plus.webview.getWebviewById('course-first.html'),'course-1',{
+			  course:aCourse
 		  });
 		   mui.fire(plus.webview.getWebviewById('course-members.html'),'course-2',{
-		   			  courseCode:code
+		   			  course:aCourse
 		   }) 
 		   mui.fire(plus.webview.getWebviewById('course-detail.html'),'course-3',{
-		   			  courseCode:code
+		   			  course:aCourse
 		   }) 
+		 }else{
+		 	mui.alert('获取课程信息失败,请返回重试')
+		 }
+		  
 		 
 		 
 		});

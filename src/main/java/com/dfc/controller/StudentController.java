@@ -81,6 +81,24 @@ public class StudentController {
         return result;
     }
 
+    @Transactional
+    @RequestMapping("/findByNumber")
+    public Result findStudentByNumber(String number) {
+        Result result = new Result();
+
+        Student student = studentService.findByNumber(number);
+        if (student != null) {
+            result.setMsg("该学生存在");
+            result.setCode(500);
+            result.setMessage(student);
+        } else {
+            result.setMsg("该学生不存在");
+            result.setCode(200);
+        }
+
+        return result;
+    }
+
 
     @Transactional
     @RequestMapping(value = "/updateMessage", method = RequestMethod.POST)
@@ -97,10 +115,10 @@ public class StudentController {
                 Integer integer = studentService.updateMessage(student);
                 System.err.println(integer);
                 Student updateStudent = studentService.findByOpenid(student.getOpenid());
-                if ("".equals(updateStudent.getNumber())||updateStudent.getNumber()==null||"".equals(updateStudent.getName())||updateStudent.getName()==null){
+                if ("".equals(updateStudent.getNumber()) || updateStudent.getNumber() == null || "".equals(updateStudent.getName()) || updateStudent.getName() == null) {
                     result.setCode(000);
                     result.setMsg("学号姓名更新失败");
-                }else {
+                } else {
                     result.setCode(200);
                 }
 

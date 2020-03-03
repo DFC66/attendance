@@ -53,7 +53,6 @@
 		</header>
 		<div id="all" class="mui-content">
 			<div class="title">
-		        {{aaa}}
 			</div>
 
 			<ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
@@ -160,7 +159,6 @@
 				el: '#all',
 				data: {
 					number: localStorage.getItem('stuNumber'),
-					aaa:'',
 					myCourses: []
 				}
 		  })
@@ -169,10 +167,9 @@
 		//添加自定义事件监听
 		window.addEventListener('course-2',function(event){
 		  //获得事件参数
-		  var code = event.detail.courseCode;
-		  //根据courseCode向服务器请求
-		  console.log('界面2收到'+code);
-		   content.aaa =code;
+		  var data = event.detail.course;
+       
+		  
 		
 		           
 		});
