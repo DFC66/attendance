@@ -86,6 +86,8 @@ public class SigninController {
                 String[] split = timer.split(" ");
                 //remoteAddr代表IP地址
                 String remoteAddr = request.getRemoteAddr();
+
+
                 //拼接开始时间和结束时间
                 String start_time = split[0]+" "+course.getStartTime();
                 String end_time = split[0]+" "+course.getEndTime();
@@ -95,7 +97,7 @@ public class SigninController {
                     signin.setName(student.getName());
                     signin.setClasses(student.getClasses());
                     signin.setNumber(number);
-                    signin.setTime(timer);
+                    signin.setSigninTime(timer);
                     signin.setRoom(course.getRoom());
                     signin.setCourseName(course.getName());
                     signin.setIp(remoteAddr);
@@ -111,6 +113,36 @@ public class SigninController {
                 }
             }
         }
+    }
+
+    @RequestMapping(value = "/record",method = RequestMethod.POST)
+    public Result recordSign(String number,Integer courseCode,String timer,HttpServletRequest request) {
+        Result result = new Result();
+        Signin signin = new Signin();
+        if (number==null||courseCode==null){
+            result.setMsg("学号或课程号为空值");
+            result.setCode(400);
+        }else {
+
+            Student student = studentService.findByNumber(number);
+            signin.setNumber(number);
+            signin.setName(student.getName());
+            signin.setClasses(student.getClasses());
+
+            Course course = courseService.findByCourseCode(courseCode);
+            signin.setCourseCode(courseCode);
+            signin.setCourseName(course.getName());
+            signin.setTeacherName(course.getTeacherName());
+            signin.setRoom(course.getRoom());
+
+
+            signin.setSigninTime(timer);
+            //remoteAddr代表IP地址
+            String remoteAddr = request.getRemoteAddr();
+            signin.setIp(remoteAddr);
+
+        }
+        return  result;
     }
 
     @RequestMapping(value = "/delete",method = RequestMethod.GET)

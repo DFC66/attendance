@@ -46,6 +46,8 @@
 		<script src="../js/vue.min.js"></script>
 		<script src="../js/configurl.js"></script>
 		<script type="text/javascript">
+			var changeFlag = false;
+			
 			(function() {
 				mui.init({
 					swipeBack: true //启用右滑关闭功能
@@ -137,25 +139,33 @@
 						//						mui.alert('你点击了图标，你在此可以打开摄像头或者新窗口等自定义点击事件。', '悬浮球点击事件');
 
 						//						console.log(JSON.stringify(whole.course));
-						let detail = whole.course.message;
-//						console.log(JSON.stringify(detail));
+//						if(changeFlag){
+							let detail = whole.course.message;
+						console.log('点击就送' + JSON.stringify(detail));
 						showMaps(detail);
+//						}
+						
+					
+					
+					
 					});
 					// 中间凸起图标绘制及监听点击完毕
 
-					//添加自定义事件监听
-					window.addEventListener('course-1', function(event) {
-						//获得事件参数
-						var data = event.detail.course;
-						
-						//根据courseCode向服务器请求
-//						console.log('界面1收到' + JSON.stringify(data));
-						whole.course = data; 
-
-					});
-
 				});
 			})();
+
+              
+
+			//添加自定义事件监听
+			window.addEventListener('course-1', function(event) {
+				//获得事件参数
+				var data = event.detail.course;
+
+				//根据courseCode向服务器请求
+				console.log('界面1收到' + JSON.stringify(data));
+				whole.course = data;
+
+			});
 
 			function getMyMessage(stuNumber) {
 				var url = getport() + '/student/findByNumber';
@@ -170,7 +180,7 @@
 					success: function(data) {
 						console.log(JSON.stringify(data));
 						if(data.message != null) {
-							whole.myMessage= data;
+							whole.myMessage = data;
 						} else {
 							mui.toast(data.msg);
 						}
@@ -197,8 +207,8 @@
 					course: {
 
 					},
-					myMessage:{
-						
+					myMessage: {
+
 					},
 					numberNotExist: false
 				},
@@ -210,9 +220,9 @@
 					//			console.log("mounted加载")
 				},
 				watch: {
-					//			course(newVal){
-					//				console.log(JSON.stringify(newVal));
-					//			}
+					course(newVal) {
+						console.log('界面1马上发生了变化' + JSON.stringify(newVal));
+					}
 				},
 				methods: {
 
@@ -239,7 +249,7 @@
 				var wm = plus.webview.getWebviewById(plus.runtime.appid);
 				//	wm&&wm.evalJS("preateClear()");
 
-				//	clicked('../sign/maps_map.html',false,true);
+				//					clicked('../sign/maps_map.html',false,true);
 				clickSend('../sign/maps_map.html', false, true, null, aCourse);
 
 			}

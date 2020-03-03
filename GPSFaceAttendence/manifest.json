@@ -211,7 +211,8 @@
 				],
 				"refer": [
 					"course/course-detail.html",
-					"course/course-members.html"
+					"course/course-members.html",
+					"sign/maps_map.html"
 				],
 				"priority": 0
 			},

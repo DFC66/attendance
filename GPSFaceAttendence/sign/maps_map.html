@@ -31,6 +31,17 @@
 
             var thisCourse  =null;
 
+
+//添加自定义事件监听
+		window.addEventListener('courseDetail',function(event){
+		  //获得事件参数
+		  thisCourse= event.detail.course;
+       
+		  
+		
+		           
+		});
+
 			// H5 plus事件处理
 			function plusReady() {
 				if(!em || ws) {
@@ -225,7 +236,7 @@
 						
 
 					} else {
-						mui.alert('不在范围内，不能签到');
+						mui.toast('预测你离签到点还有'+(distance-getDistance()).toFixed(2)+'米，不在签到范围内,不能签到');
 					}
 
 				}, function(e) {

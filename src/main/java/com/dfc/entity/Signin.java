@@ -1,8 +1,12 @@
 package com.dfc.entity;
 
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @author: zsh
@@ -12,7 +16,10 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "signin")
+@EntityListeners(AuditingEntityListener.class)
 public class Signin {
+
+
     /**
      * 签到情况id
      */
@@ -32,6 +39,11 @@ public class Signin {
     @Column(name = "number")
     private String number;
 
+    /**
+     * 签到班级
+     */
+    @Column(name = "classes")
+    private String classes;
 
 
     @Column(name = "course_code")
@@ -45,6 +57,17 @@ public class Signin {
     private String courseName;
 
 
+    /**
+     * 课程名
+     */
+    @Column(name = "teacher_name")
+    private String teacherName;
+
+    @Column(name = "week_day")
+    private String weekDay;
+
+
+
 
     /**
      * 签到IP
@@ -53,17 +76,12 @@ public class Signin {
     private String ip;
 
 
-    /**
-     * 签到班级
-     */
-    @Column(name = "classes")
-    private String classes;
 
     /**
      * 签到时间
      */
     @Column(name = "signin_time")
-    private String time;
+    private String signinTime;
     /**
      * 签到教室
      */
@@ -71,6 +89,13 @@ public class Signin {
     private String room;
 
 
+    @CreatedDate
+    @Column(name = "create_time")
+    private Date createTime;
+
+    @LastModifiedDate
+    @Column(name = "update_time")
+    private Date updateTime;
 
 
     public Integer getId() {
@@ -105,12 +130,12 @@ public class Signin {
         this.number = number;
     }
 
-    public String getTime() {
-        return time;
+    public String getSigninTime() {
+        return signinTime;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setSigninTime(String signinTime) {
+        this.signinTime = signinTime;
     }
 
     public String getRoom() {
@@ -143,5 +168,13 @@ public class Signin {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
     }
 }

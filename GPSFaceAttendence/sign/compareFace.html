@@ -303,6 +303,8 @@
 					});
 
 					if(flag) {
+						mui.alert("开始输入数据库" );
+						plus.webview.getWebviewById('../sign/maps_map.html').close();
 						plus.webview.currentWebview().close();
 						break;
 					} else {

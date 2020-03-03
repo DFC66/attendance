@@ -140,7 +140,7 @@ public class CourseController {
         Course course = courseService.findByCourseCode(courseCode);
         if (course!=null){
             result.setCode(200);
-            result.setMsg("找到自己的课程了");
+            result.setMsg("找到对应的课程了");
             result.setMessage(course);
         }else{
             result.setCode(0);

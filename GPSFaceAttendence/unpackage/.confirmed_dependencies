@@ -47,7 +47,8 @@
 			"course/course-detail.html",
 			"course/course-message.html",
 			"course/course-members.html",
-			"course/course-first.html"
+			"course/course-first.html",
+			"sign/maps_map.html"
 		]
 	},
 	"course/course-first.html": {

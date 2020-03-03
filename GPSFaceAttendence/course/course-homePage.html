@@ -10,10 +10,9 @@
 		<!--标准mui.css-->
 		<link rel="stylesheet" href="../css/mui.min.css">
 		<!--App自定义的css-->
-		<link rel="stylesheet" type="text/css" href="../css/app.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/app.css" />
 		<style>
-			
-			.title{
+			.title {
 				margin: 20px 15px 10px;
 				color: #6d6d72;
 				font-size: 15px;
@@ -28,31 +27,36 @@
 				position: relative;
 				margin: -11px 0;
 			}
-	
+			
 			.oa-contact-avatar {
 				width: 75px;
 			}
+			
 			.oa-contact-avatar img {
 				border-radius: 50%;
 			}
+			
 			.oa-contact-content {
 				width: 100%;
 			}
+			
 			.oa-contact-name {
 				margin-right: 20px;
 			}
-			.oa-contact-name, oa-contact-position {
+			
+			.oa-contact-name,
+			oa-contact-position {
 				float: left;
 			}
 		</style>
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav">
+		<!--<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">{{course.name}}</h1>
-		</header>
-		<nav class="mui-bar mui-bar-tab">
+		</header>-->
+		<nav id="courseBottom" class="mui-bar mui-bar-tab">
 			<a id="defaultTab" class="mui-tab-item mui-active" href="course-first.html">
 				<span class="mui-icon mui-icon-home"></span>
 				<span class="mui-tab-label">首页</span>
@@ -65,7 +69,7 @@
 				<span class="mui-icon mui-icon-contact"></span>
 				<span class="mui-tab-label">课程成员</span>
 			</a>
-			
+
 			<!--<a class="mui-tab-item" href="course-detail.html">
 				<span class="mui-icon mui-icon-gear"></span>
 				<span class="mui-tab-label">详细信息</span>
@@ -74,149 +78,176 @@
 	</body>
 	<script src="../js/mui.min.js"></script>
 	<script src="../js/configurl.js"></script>
+	<script src="../js/vue.min.js"></script>
 	<script>
 		mui.init({
-			swipeBack:true //启用右滑关闭功能
+			swipeBack: true //启用右滑关闭功能
+//			preloadPages: [{
+//				url: '../sign/maps_map.html',
+//				id: 'maps_map.html'
+//			}]
 		});
 		var subpages = ['course-first.html', 'course-members.html'];
-	var subpage_style = {
-		top: '0px',
-		bottom: '50px'
-	};
-	
+		var subpage_style = {
+			top: '0px',
+			bottom: '50px'
+		};
 
-	
+		var detailPage = null;
+		var courseMain = new Vue({
+			el: '#courseBottom',
+			data: {
+				id: null,
+				number: localStorage.getItem('stuNumber'),
+				course: {
 
-	var aniShow = {};
-	//创建子页面，首个选项卡页面显示，其它均隐藏；
-	mui.plusReady(function() {
-		
-		var self = plus.webview.currentWebview();
-		for (var i = 0; i < 2; i++) {
-			var temp = {};
-			var sub = plus.webview.create(subpages[i], subpages[i], subpage_style);
-			if (i > 0) {
-				sub.hide();
-			} else {
-				temp[subpages[i]] = "true";
-				mui.extend(aniShow, temp);
+				}
+			},
+			created() {
+				var all = this;
+
+			},
+			mounted() {
+				//			console.log("mounted加载")
+			},
+			watch: {
+				course(newVal) {
+					console.log('发生了变化' + JSON.stringify(newVal));
+					mui.fire(plus.webview.getWebviewById('course-first.html'), 'course-1', {
+						course: newVal
+					});
+//					if(!detailPage) {
+//						detailPage = plus.webview.getWebviewById('maps_map.html');
+//					}
+//					//触发详情页面的newsId事件
+//					mui.fire(detailPage, 'courseDetail', {
+//						course: newVal
+//					});
+
+				}
+			},
+			methods: {
+
 			}
-			self.append(sub);
-		}
-		
-		
-		
-		//添加courseCode自定义事件监听
-		window.addEventListener('courseCode',function(event){
-			var aCourse = null;
-			
-		  //获得事件参数
-		  let singleCode = event.detail.courseCode;
-		  //根据courseCode向服务器请求新闻详情
-		  console.log('开始发送');
-//		  mui.plusReady(function() {
-							var url = getport() + '/course/getCourseDetail';
-
-							mui.ajax(url, {
-								data: {
-									courseCode: singleCode
-								},
-								async:false,
-								dataType: 'json', //服务器返回json格式数据
-								type: 'post', //HTTP请求类型
-								timeout: 10000, //超时时间设置为10秒；
-								success: function(data) {
-									console.log(JSON.stringify(data));
-									if(data.message != null) {
-									    aCourse = data;
-									} else {
-										mui.toast(data.msg);
-									}
-
-								},
-								error: function(xhr, type, errorThrown) {
-
-									if(type == "timeout") {
-										mui.alert("请求超时，请检查网络或重试");
-									} else {
-										mui.alert("未知网络错误");
-									}
-
-								}
-							});
-
-						
-						
-//						})
-		  
-		 if(aCourse!=null){
-		 	mui.fire(plus.webview.getWebviewById('course-first.html'),'course-1',{
-			  course:aCourse
-		  });
-		   mui.fire(plus.webview.getWebviewById('course-members.html'),'course-2',{
-		   			  course:aCourse
-		   }) 
-		   mui.fire(plus.webview.getWebviewById('course-detail.html'),'course-3',{
-		   			  course:aCourse
-		   }) 
-		 }else{
-		 	mui.alert('获取课程信息失败,请返回重试')
-		 }
-		  
-		 
-		 
 		});
-		
-		
-		
-		
-		
-	});
-	//当前激活选项
-	var activeTab = subpages[0];
-	var title = document.getElementById("title");
-	//选项卡点击事件
-	mui('.mui-bar-tab').on('tap', 'a', function(e) {
-		var targetTab = this.getAttribute('href');
-		if (targetTab == activeTab) {
-			return;
-		}
-		//更换标题
-		// title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
-		//显示目标选项卡
-		//若为iOS平台或非首次显示，则直接显示
-		if (mui.os.ios || aniShow[targetTab]) {
-			plus.webview.show(targetTab);
-		} else {
-			//否则，使用fade-in动画，且保存变量
-			var temp = {};
-			temp[targetTab] = "true";
-			mui.extend(aniShow, temp);
-			plus.webview.show(targetTab, "fade-in", 300);
-		}
-		//隐藏当前;
-		plus.webview.hide(activeTab);
-		//更改当前活跃的选项卡
-		activeTab = targetTab;
-	});
-	//自定义事件，模拟点击“首页选项卡”
-	document.addEventListener('gohome', function() {
-		var defaultTab = document.getElementById("defaultTab");
-		console.log('这个加载了');
 
-		//模拟首页点击
-		mui.trigger(defaultTab, 'tap');
-		//切换选项卡高亮
-		var current = document.querySelector(".mui-bar-tab>.mui-tab-item.mui-active");
-		if (defaultTab !== current) {
-			current.classList.remove('mui-active');
-			defaultTab.classList.add('mui-active');
-		}
-	});
-		
-		
-		
-		
-		
+		var aniShow = {};
+		//创建子页面，首个选项卡页面显示，其它均隐藏；
+		mui.plusReady(function() {
+
+
+			//添加courseCode自定义事件监听
+			window.addEventListener('courseCode', function(event) {
+				var aCourse = null;
+
+				//获得事件参数
+				let singleCode = event.detail.courseCode;
+				//根据courseCode向服务器请求新闻详情
+				console.log('开始发送');
+
+				var url = getport() + '/course/getCourseDetail';
+
+				mui.ajax(url, {
+					data: {
+						courseCode: singleCode
+					},
+					async: false,
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					success: function(data) {
+						console.log(JSON.stringify(data));
+						if(data.message != null) {
+							courseMain.course = data;
+							aCourse = data;
+						} else {
+							mui.toast(data.msg);
+						}
+
+					},
+					error: function(xhr, type, errorThrown) {
+
+						if(type == "timeout") {
+							mui.alert("请求超时，请检查网络或重试");
+						} else {
+							mui.alert("未知网络错误");
+						}
+
+					}
+				});
+
+//				if(aCourse != null) {
+//					mui.fire(plus.webview.getWebviewById('course-members.html'), 'course-2', {
+//						course: aCourse
+//					})
+//					mui.fire(plus.webview.getWebviewById('course-detail.html'), 'course-3', {
+//						course: aCourse
+//					})
+//				}
+				//		 else{
+				//		 	mui.alert('获取课程信息失败,请返回重试')
+				//		 }
+
+			});
+
+			var self = plus.webview.currentWebview();
+			for(var i = 0; i < 2; i++) {
+				var temp = {};
+				var sub = plus.webview.create(subpages[i], subpages[i], subpage_style);
+				console.log('现在才建页面');
+				if(i > 0) {
+					sub.hide();
+				} else {
+					temp[subpages[i]] = "true";
+					mui.extend(aniShow, temp);
+				}
+				self.append(sub);
+			}
+
+
+
+		});
+		//当前激活选项
+		var activeTab = subpages[0];
+		var title = document.getElementById("title");
+		//选项卡点击事件
+		mui('.mui-bar-tab').on('tap', 'a', function(e) {
+			var targetTab = this.getAttribute('href');
+			if(targetTab == activeTab) {
+				return;
+			}
+			//更换标题
+			// title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
+			//显示目标选项卡
+			//若为iOS平台或非首次显示，则直接显示
+			if(mui.os.ios || aniShow[targetTab]) {
+				plus.webview.show(targetTab);
+			} else {
+				//否则，使用fade-in动画，且保存变量
+				var temp = {};
+				temp[targetTab] = "true";
+				mui.extend(aniShow, temp);
+				plus.webview.show(targetTab, "fade-in", 300);
+			}
+			//隐藏当前;
+			plus.webview.hide(activeTab);
+			//更改当前活跃的选项卡
+			activeTab = targetTab;
+		});
+		//自定义事件，模拟点击“首页选项卡”
+		document.addEventListener('gohome', function() {
+			var defaultTab = document.getElementById("defaultTab");
+			console.log('这个加载了');
+
+			//模拟首页点击
+			mui.trigger(defaultTab, 'tap');
+			//切换选项卡高亮
+			var current = document.querySelector(".mui-bar-tab>.mui-tab-item.mui-active");
+			if(defaultTab !== current) {
+				current.classList.remove('mui-active');
+				defaultTab.classList.add('mui-active');
+			}
+		});
 	</script>
+
 </html>
