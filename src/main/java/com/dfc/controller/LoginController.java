@@ -2,6 +2,8 @@ package com.dfc.controller;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,10 +23,10 @@ import javax.servlet.http.HttpSession;
  * @Date:22:16 2018/5/4
  * @Description:
  */
-@Slf4j
+
 @RestController
 public class LoginController {
-
+    private static Logger log = LoggerFactory.getLogger(LoginController.class);
     @Resource
     UserService userService;
 

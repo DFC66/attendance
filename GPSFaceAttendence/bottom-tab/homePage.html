@@ -101,10 +101,10 @@
 				success: function(data) {
 					console.log(JSON.stringify(data));
 					if(data.message.number != null && data.message.number != '') {
-						console.log(data.message.number);
+//						console.log(data.message.number);
 						localStorage.setItem('stuNumber', data.message.number);
 						if(localStorage.getItem('stuNumber') != null) {
-							plus.webview.currentWebview().getWebviewById('course.html').reload();
+							plus.webview.getWebviewById('course.html').reload();
 							plus.webview.getWebviewById('me.html').reload();
 						}
 
@@ -126,9 +126,15 @@
 			console.log('先加载');
 			console.log(event.detail.openid);
 			var id = event.detail.openid;
-			mui.plusReady(function() {
+			 if(window.plus) {
 				getNumber(id);
-			})
+			} else {
+				document.addEventListener("plusready", getNumber(id), false);
+			}
+			
+//			mui.plusReady(function() {
+//				
+//			})
 		});
 
 		var subpages = ['course.html', 'me.html'];
@@ -201,7 +207,7 @@
 		//自定义事件，模拟点击“首页选项卡”
 		document.addEventListener('gohome', function() {
 			var defaultTab = document.getElementById("defaultTab");
-			console.log('这个加载了');
+//			console.log('这个加载了');
 
 			//模拟首页点击
 			mui.trigger(defaultTab, 'tap');

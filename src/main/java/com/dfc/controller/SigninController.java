@@ -2,6 +2,8 @@ package com.dfc.controller;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,14 @@ import com.dfc.service.StudentService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import  com.dfc.constant.DataConstant;
+
+import static com.dfc.constant.DataConstant.*;
+
 
 /**
  * @author: zsh
@@ -27,10 +37,14 @@ import javax.servlet.http.HttpServletRequest;
  * @Description:
  */
 @RestController
-@Slf4j
 @RequestMapping("signin")
 public class SigninController {
 
+    private static Logger log = LoggerFactory.getLogger(SigninController.class);
+
+    private static SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+
+    private static SimpleDateFormat TODAY_SDF = new SimpleDateFormat("yyyy-MM-dd");
     @Resource
     SigninService signinService;
     @Resource
@@ -116,30 +130,73 @@ public class SigninController {
     }
 
     @RequestMapping(value = "/record",method = RequestMethod.POST)
-    public Result recordSign(String number,Integer courseCode,String timer,HttpServletRequest request) {
-        Result result = new Result();
+    public Result recordSign(@RequestParam("stuNumber") String number,Integer courseCode,String timer,HttpServletRequest request) throws ParseException {
+        Result result = new Result<Signin>();
         Signin signin = new Signin();
         if (number==null||courseCode==null){
             result.setMsg("学号或课程号为空值");
             result.setCode(400);
+            return result;
         }else {
+            Date date = new Date();
+            String todayDate = TODAY_SDF.format(date);
+            Signin todaySign = signinService.findByNumberAndCourseCodeAndSigninDate(number, courseCode, todayDate);
+            if (todaySign!=null){
+                result.setMsg("你今天已签到，不能重复签到");
+                result.setCode(204);
+                return  result;
+            }else{
+                Student student = studentService.findByNumber(number);
+                signin.setNumber(number);
+                signin.setName(student.getName());
+                signin.setClasses(student.getClasses());
 
-            Student student = studentService.findByNumber(number);
-            signin.setNumber(number);
-            signin.setName(student.getName());
-            signin.setClasses(student.getClasses());
+                Course course = courseService.findByCourseCode(courseCode);
+                Date signTime = sdf.parse(timer);
+                Date beginTime = sdf.parse(course.getStartTime());
+                Date endTime = sdf.parse(course.getEndTime());
+                if (signTime.after(endTime)){
+                    result.setMsg("已下课,签到失败");
+                    result.setCode(202);
+                    return  result;
+                }
 
-            Course course = courseService.findByCourseCode(courseCode);
-            signin.setCourseCode(courseCode);
-            signin.setCourseName(course.getName());
-            signin.setTeacherName(course.getTeacherName());
-            signin.setRoom(course.getRoom());
+
+                signin.setCourseCode(courseCode);
+                signin.setCourseName(course.getName());
+                signin.setTeacherName(course.getTeacherName());
+                signin.setRoom(course.getRoom());
+                signin.setSigninTime(timer);
+                signin.setSigninDate(todayDate);
 
 
-            signin.setSigninTime(timer);
-            //remoteAddr代表IP地址
-            String remoteAddr = request.getRemoteAddr();
-            signin.setIp(remoteAddr);
+
+                //remoteAddr代表IP地址
+                String remoteAddr = request.getRemoteAddr();
+                signin.setIp(remoteAddr);
+
+                if (signTime.after(beginTime)&&signTime.before(endTime)){
+
+                   long cha = signTime.getTime() - beginTime.getTime();
+                    String msg1= "签到成功,迟到"+ (cha % ND % NH / NM)+"分钟";
+                    signin.setSigninResult(msg1);
+                    signinService.save(signin);
+                    result.setMsg(msg1);
+                    result.setCode(199);
+                    return  result;
+                }else {
+                    signin.setSigninResult("签到成功");
+                    signinService.save(signin);
+                    result.setMsg("签到成功");
+                    result.setCode(200);
+                    result.setMessage(signin);
+                }
+
+
+
+
+            }
+
 
         }
         return  result;
@@ -210,4 +267,12 @@ public class SigninController {
         return modelAndView;
 
     }
+
+
+    private  void  addSignStatus(Signin signin){
+
+
+    }
+
+
 }

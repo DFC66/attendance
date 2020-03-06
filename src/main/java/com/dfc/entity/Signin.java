@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -58,11 +59,19 @@ public class Signin {
 
 
     /**
-     * 课程名
+     * 老师名
      */
     @Column(name = "teacher_name")
     private String teacherName;
 
+    /**
+     * 签到教室
+     */
+    @Column(name = "room")
+    private String room;
+    /**
+     * 星期几
+     */
     @Column(name = "week_day")
     private String weekDay;
 
@@ -80,13 +89,16 @@ public class Signin {
     /**
      * 签到时间
      */
+
     @Column(name = "signin_time")
     private String signinTime;
-    /**
-     * 签到教室
-     */
-    @Column(name = "room")
-    private String room;
+
+
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "signin_date")
+    private String signinDate;
+
 
 
     @CreatedDate
@@ -97,6 +109,17 @@ public class Signin {
     @Column(name = "update_time")
     private Date updateTime;
 
+    @Column(name = "signin_result")
+    private  String signinResult;
+
+
+    public String getSigninResult() {
+        return signinResult;
+    }
+
+    public void setSigninResult(String signinResult) {
+        this.signinResult = signinResult;
+    }
 
     public Integer getId() {
         return id;
@@ -176,5 +199,22 @@ public class Signin {
 
     public void setTeacherName(String teacherName) {
         this.teacherName = teacherName;
+    }
+
+    public String getWeekDay() {
+        return weekDay;
+    }
+
+    public void setWeekDay(String weekDay) {
+        this.weekDay = weekDay;
+    }
+
+
+    public String getSigninDate() {
+        return signinDate;
+    }
+
+    public void setSigninDate(String signinDate) {
+        this.signinDate = signinDate;
     }
 }

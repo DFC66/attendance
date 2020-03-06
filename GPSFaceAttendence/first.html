@@ -60,6 +60,14 @@
 			(function($, doc) {
 				$.init();
 
+                 if(localStorage.getItem('stuNumber')!=null){
+                 	$.preload({
+                 		id:'homePage',
+                 		url:'bottom-tab/homePage.html'
+                 	})
+                 }
+                  
+
 				$.plusReady(function() {
 
 					//重写back方法

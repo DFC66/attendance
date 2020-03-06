@@ -173,11 +173,19 @@
 		  var video,canvas,vendorUrl,interval;
 		  var time=0;
 		  
-		  var old_back = mui.back;
-		  mui.back = function() {
-		      clearInterval(interval);//清除定时器
-		  	old_back();
-		  }
+		  	var NotCompleteFlag = true;
+		  
+		 var old_back = mui.back;
+			mui.back = function() {
+				time = 0;
+				clearInterval(interval); //清除定时器
+				if(NotCompleteFlag) {
+					mui.toast('人脸添加失败，课程加入失败');
+				} else {
+					NotCompleteFlag = true;
+				}
+				old_back();
+			}
 		  
 		  window.addEventListener('num',function(event){
 		    //获得事件参数
@@ -287,7 +295,8 @@
 				success: function(data) {
 					console.log(JSON.stringify(data));
 					if(data.message!=null){
-						mui.toast(data.msg)
+						mui.toast(data.msg);
+					  NotCompleteFlag = true;
 						plus.webview.currentWebview().close();
 					}
 				},

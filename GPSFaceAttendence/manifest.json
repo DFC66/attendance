@@ -212,7 +212,8 @@
 				"refer": [
 					"course/course-detail.html",
 					"course/course-members.html",
-					"sign/maps_map.html"
+					"sign/maps_map.html",
+					"course/course-signRecord.html"
 				],
 				"priority": 0
 			},
@@ -228,7 +229,8 @@
 					"sign/maps_map_sub.html"
 				],
 				"refer": [
-					"sign/compareFace.html"
+					"sign/compareFace.html",
+					"sign/maps_map_bottom.html"
 				],
 				"priority": 0
 			},
@@ -252,7 +254,8 @@
 					"bottom-tab/me.html",
 					"student/WritePersonMessage.html",
 					"course/course-homePage.html",
-					"bottom-tab/course-detail.html"
+					"bottom-tab/course-detail.html",
+					"course/course-homePage2.html"
 				],
 				"priority": 0
 			},

@@ -93,7 +93,9 @@
 				setTimeout(function() {
 //					console.log('每次都运行');
 					map = new plus.maps.Map("map");
-					map.centerAndZoom(pcenter, 19);
+					map.showZoomControls( true );
+					map.setZoom(19);
+//					map.centerAndZoom(pcenter, 19);
 					createRoomCircle();
 
 					//                  初始化本人位置
@@ -141,6 +143,8 @@
 				var marker = new plus.maps.Marker(pcenter);
 
 				marker.setIcon("../imgs/room.png");
+				var bubble = new plus.maps.Bubble(thisCourse.name);
+				marker.setBubble(bubble,true);
 
 				//				marker.setLabel("看效果");
 
@@ -200,13 +204,27 @@
 					scrollIndicator: 'none',
 					background: 'transparent'
 				});
+				
+				var bsub = plus.webview.create('maps_map_bottom.html', 'bottom', {
+					bottom: 0,
+					height: '80px',
+					position: 'absolute',
+					scrollIndicator: 'none',
+					background: 'transparent'
+				});
 				ws.append(wsub);
+				ws.append(bsub);
 			}
 
 			function resetMap() {
 				//map.centerAndZoom(pcenter,12);
 				map.reset();
 			}
+			
+			function  locateRoom(){
+			map.centerAndZoom(pcenter,19);
+			}
+		
 
 			var faceSign = null;
 

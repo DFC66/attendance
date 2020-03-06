@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
+
 /**
  * @author: zsh
  * @Date:21:32 2018/5/10
@@ -17,4 +19,8 @@ public interface SigninDao extends JpaRepository<Signin,Integer>
         ,JpaSpecificationExecutor<Signin> {
     @Query(value = "select * from signin where time >= ?1 and time <= ?2 and ip = ?3",nativeQuery = true)
     Signin findSignin(@Param("start_time")String start_time, @Param("end_time")String end_time,@Param("ip")String ip);
+
+     Signin findByNumberAndCourseCodeAndSigninDate(String number, Integer courseCode, String signinDate);
+
+
 }

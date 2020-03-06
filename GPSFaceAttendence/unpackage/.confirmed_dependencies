@@ -1,100 +1,103 @@
 {
-	"student/StudentLogin.html": {
-		"refer": [
-			"main.html",
-			"bottom-tab/main.html",
-			"bottom-tab/homePage.html"
-		],
-		"resources": []
-	},
-	"main.html": {
-		"resources": [
-			"bottomtab/course.html"
-		],
-		"refer": [
-			"bottomtab/course.html",
-			"bottomtab/me.html"
-		]
-	},
-	"first.html": {
-		"refer": [
-			"student/StudentLogin.html",
-			"main.html",
-			"bottom-tab/main.html",
-			"bottom-tab/homePage.html",
-			"teacher/InsertMessage.html"
-		],
-		"resources": []
-	},
-	"bottomtab/course.html": {
-		"refer": [
-			"student/joinCourse.html"
-		],
-		"resources": []
-	},
-	"student/joinCourse.html": {
-		"refer": [
-			"student/addFace.html"
-		],
-		"resources": []
-	},
-	"course/course-homePage.html": {
-		"resources": [
-			"course/course-message.html",
-			"course/course-first.html"
-		],
-		"refer": [
-			"course/course-detail.html",
-			"course/course-message.html",
-			"course/course-members.html",
-			"course/course-first.html",
-			"sign/maps_map.html"
-		]
-	},
-	"course/course-first.html": {
-		"refer": [
-			"sign/maps_map.html"
-		],
-		"resources": []
-	},
-	"sign/maps_map.html": {
-		"resources": [
-			"sign/maps_map_sub.html"
-		],
-		"refer": [
-			"sign/maps_map_sub.html",
-			"sign/compareFace.html"
-		]
-	},
-	"bottom-tab/main.html": {
-		"resources": [
-			"bottom-tab/course.html"
-		],
-		"refer": [
-			"bottom-tab/me.html",
-			"bottom-tab/course.html",
-			"bottom-tab/map.html",
-			"bottom-tab/course-members.html"
-		]
-	},
-	"bottom-tab/homePage.html": {
-		"resources": [
-			"bottom-tab/course-members.html",
-			"bottom-tab/course.html"
-		],
-		"refer": [
-			"bottom-tab/me.html",
-			"bottom-tab/course-members.html",
-			"bottom-tab/course.html",
-			"student/WritePersonMessage.html",
-			"course/course-homePage.html",
-			"bottom-tab/course-detail.html"
-		]
-	},
-	"bottom-tab/course.html": {
-		"refer": [
-			"student/joinCourse.html"
-		],
-		"resources": []
-	}
+  "student/StudentLogin.html": {
+    "refer": [
+      "main.html",
+      "bottom-tab/main.html",
+      "bottom-tab/homePage.html"
+    ],
+    "resources": []
+  },
+  "main.html": {
+    "resources": [
+      "bottomtab/course.html"
+    ],
+    "refer": [
+      "bottomtab/course.html",
+      "bottomtab/me.html"
+    ]
+  },
+  "first.html": {
+    "refer": [
+      "student/StudentLogin.html",
+      "main.html",
+      "bottom-tab/main.html",
+      "bottom-tab/homePage.html",
+      "teacher/InsertMessage.html"
+    ],
+    "resources": []
+  },
+  "bottomtab/course.html": {
+    "refer": [
+      "student/joinCourse.html"
+    ],
+    "resources": []
+  },
+  "student/joinCourse.html": {
+    "refer": [
+      "student/addFace.html"
+    ],
+    "resources": []
+  },
+  "course/course-homePage.html": {
+    "resources": [
+      "course/course-message.html",
+      "course/course-first.html"
+    ],
+    "refer": [
+      "course/course-detail.html",
+      "course/course-message.html",
+      "course/course-members.html",
+      "course/course-first.html",
+      "sign/maps_map.html",
+      "course/course-signRecord.html"
+    ]
+  },
+  "course/course-first.html": {
+    "refer": [
+      "sign/maps_map.html"
+    ],
+    "resources": []
+  },
+  "sign/maps_map.html": {
+    "resources": [
+      "sign/maps_map_sub.html"
+    ],
+    "refer": [
+      "sign/maps_map_sub.html",
+      "sign/compareFace.html",
+      "sign/maps_map_bottom.html"
+    ]
+  },
+  "bottom-tab/main.html": {
+    "resources": [
+      "bottom-tab/course.html"
+    ],
+    "refer": [
+      "bottom-tab/me.html",
+      "bottom-tab/course.html",
+      "bottom-tab/map.html",
+      "bottom-tab/course-members.html"
+    ]
+  },
+  "bottom-tab/homePage.html": {
+    "resources": [
+      "bottom-tab/course-members.html",
+      "bottom-tab/course.html"
+    ],
+    "refer": [
+      "bottom-tab/me.html",
+      "bottom-tab/course-members.html",
+      "bottom-tab/course.html",
+      "student/WritePersonMessage.html",
+      "course/course-homePage.html",
+      "bottom-tab/course-detail.html",
+      "course/course-homePage2.html"
+    ]
+  },
+  "bottom-tab/course.html": {
+    "refer": [
+      "student/joinCourse.html"
+    ],
+    "resources": []
+  }
 }

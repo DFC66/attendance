@@ -12,6 +12,7 @@ import com.dfc.entity.Signin;
 import com.dfc.utils.SpecificationUtil;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * @author: zsh
@@ -65,5 +66,10 @@ public class SigninServiceImpl implements SigninService {
     public Signin findSignin(String start_time, String end_time, String ip) {
         Signin signin = signinDao.findSignin(start_time, end_time, ip);
         return signin;
+    }
+
+    @Override
+    public Signin findByNumberAndCourseCodeAndSigninDate(String number, Integer courseCode, String signinDate) {
+        return signinDao.findByNumberAndCourseCodeAndSigninDate(number,courseCode,signinDate);
     }
 }

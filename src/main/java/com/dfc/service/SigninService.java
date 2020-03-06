@@ -5,6 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import com.dfc.entity.Signin;
 
+import java.util.Date;
+
 /**
  * @author: zsh
  * @Date:21:33 2018/5/10
@@ -72,4 +74,8 @@ public interface SigninService {
 
     @Transactional
     Signin findSignin(String start_time,String end_time,String ip);
+
+    @Transactional
+    Signin findByNumberAndCourseCodeAndSigninDate(String number, Integer courseCode, String signinDate);
+
 }

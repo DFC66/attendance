@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			var day = new Date();
+//			console.log(day.format("HH:mm:ss"))
+//			console.log(day.toLocaleTimeString());
+//			console.log(day.getDate());
+			
+			var time = new Date();
+            console.log(day.getHours()-16+":"+day.getMinutes());
+		</script>
+	</body>
+
+</html>

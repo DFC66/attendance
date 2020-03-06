@@ -169,7 +169,6 @@
 			mui.init();
 			var all = this;
 			var stuNumber = localStorage.getItem('stuNumber');
-			var courseCode = 0;
 			var faceData = null;
 			var video, canvas, vendorUrl, interval;
 			var time = 0;
@@ -244,6 +243,9 @@
 				} else {
 					mui.alert("未知网络错误");
 				}
+				clearInterval(interval); //清除定时器
+				time = 0; //重新计时
+                plus.webview.currentWebview().close();
 			}
 
 			//添加自定义事件监听
@@ -261,6 +263,49 @@
 				courseData = myCourse;
 				console.log('666666666666666666666' + JSON.stringify(window.courseData));
 			});
+
+            function recordSign(){
+            	var time = new Date();
+            	let timeHour = time.getHours();
+            	let timeMinute = time.getMinutes();
+            	if( timeMinute<10){
+            		 timeMinute = "0"+ timeMinute;
+            	}
+            	if(timeHour<10){
+            		timeHour = "0"+timeHour;
+            	}
+            	
+           var now = timeHour+":"+timeMinute;	
+            	var url = getport()+'/signin/record';
+            mui.ajax(url, {
+					data: {
+						stuNumber:stuNumber,
+						courseCode:courseData.courseCode,
+						timer:now
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					success: function(data) {
+						console.log(JSON.stringify(data));
+						if(data!= null) {
+						mui.toast(data.msg);
+						plus.webview.getWebviewById('../sign/maps_map.html').close();
+						plus.webview.currentWebview().close();
+						} 
+//						else {
+//							mui.toast(data.msg);
+//						}
+
+					},
+					error: function(xhr, type, errorThrown) {
+
+						showError(type);
+
+					}
+				});
+            }
+
 
 			function compareFace(face_token1, tokens) {
 				var flag = false;
@@ -283,7 +328,7 @@
 							var judgeData = data.confidence;
 							if(judgeData > 80) {
 
-								mui.alert("能判断为同一个人， 置信值为 " + judgeData);
+								console.log("能判断为同一个人， 置信值为 " + judgeData);
 								flag = true;
 								NotCompleteFlag = false;
 							} else {
@@ -294,24 +339,23 @@
 							// mui.toast('上传成功');
 						},
 						error: function(xhr, type, errorThrown) {
-							if(type == "timeout") {
-								mui.alert("请求超时，请重试");
-							} else {
-								mui.alert("未知网络错误");
-							}
+							showError(type);
 						}
 					});
 
 					if(flag) {
-						mui.alert("开始输入数据库" );
-						plus.webview.getWebviewById('../sign/maps_map.html').close();
-						plus.webview.currentWebview().close();
+						console.log("开始输入数据库" );
+                         recordSign();
 						break;
-					} else {
-						flag = false;
-					}
+					} 
 
 				}
+                  if(flag==false){
+                  	mui.toast('人脸识别不是本人，签到失败');
+                  	plus.webview.currentWebview().close();
+                  }
+                 
+
 
 			}
 

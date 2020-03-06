@@ -4,9 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author: zsh
@@ -17,6 +21,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "course_result")
 @Data
+@EntityListeners(AuditingEntityListener.class)
 public class CourseResult  {
 //    private static final long serialVersionUID=1L;
 
@@ -44,6 +49,15 @@ public class CourseResult  {
     private Integer courseCode;
 
 
+    @CreatedDate
+    @Column(name = "create_time")
+    private Date createTime;
+
+    @LastModifiedDate
+    @Column(name = "update_time")
+    private Date updateTime;
+
+
     public String getNumber() {
         return number;
     }
@@ -60,8 +74,4 @@ public class CourseResult  {
         this.courseCode = courseCode;
     }
 
-    public CourseResult(String number, Integer courseCode) {
-        this.number = number;
-        this.courseCode = courseCode;
-    }
 }

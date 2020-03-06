@@ -19,5 +19,4 @@ public interface CourseResultDao extends JpaRepository<CourseResult,Integer>
 
       CourseResult findByCourseCodeAndNumber(Integer courseCode,String number);
 
-//     CourseResult findByNameAndTeacherName(String name, String teacherName);
 }

@@ -68,11 +68,6 @@ function atttendence(){
 	plus.webview.currentWebview().opener().evalJS('execute()');
 }
 
-function locateRoom(){
-	plus.webview.currentWebview().opener().evalJS('locateRoom()');
-}
-
-
 
 		</script>
 		<link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8"/>
@@ -83,7 +78,8 @@ html,body{
 		</style>
 	</head>
 	<body>
-		<div class="button" style="margin:.2em auto;width:50%" onclick="locateRoom()">定位课室</div>
+
+	   <div class="button2" style="margin:.2em auto;width:50%;margin-bottom:30px;" onclick="atttendence()">签  到</div>
 	
 	</body>
 </html>

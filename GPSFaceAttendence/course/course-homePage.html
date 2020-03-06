@@ -56,7 +56,8 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">{{course.name}}</h1>
 		</header>-->
-		<nav id="courseBottom" class="mui-bar mui-bar-tab">
+		<div id="courseBottom" class="mui-content">
+			<nav class="mui-bar mui-bar-tab">
 			<a id="defaultTab" class="mui-tab-item mui-active" href="course-first.html">
 				<span class="mui-icon mui-icon-home"></span>
 				<span class="mui-tab-label">首页</span>
@@ -69,16 +70,30 @@
 				<span class="mui-icon mui-icon-contact"></span>
 				<span class="mui-tab-label">课程成员</span>
 			</a>
+			
+			<a class="mui-tab-item" href="course-signRecord.html">
+				<span class="mui-icon mui-icon-extra-addpeople"></span>
+				<!--<span class="mui-tab-label"></span>-->
+			</a>
 
-			<!--<a class="mui-tab-item" href="course-detail.html">
+            <a class="mui-tab-item" href="course-signRecord.html">
+				<span class="mui-icon mui-icon-gear"></span>
+				<span class="mui-tab-label">签到记录</span>
+			</a>
+
+			<a class="mui-tab-item" href="course-detail.html">
 				<span class="mui-icon mui-icon-gear"></span>
 				<span class="mui-tab-label">详细信息</span>
-			</a>-->
+			</a>
 		</nav>
+		</div>
+		
 	</body>
 	<script src="../js/mui.min.js"></script>
 	<script src="../js/configurl.js"></script>
 	<script src="../js/vue.min.js"></script>
+	<script src="../js/common.js"></script>
+	<script src="../js/draw.js"></script>
 	<script>
 		mui.init({
 			swipeBack: true //启用右滑关闭功能
@@ -87,13 +102,14 @@
 //				id: 'maps_map.html'
 //			}]
 		});
-		var subpages = ['course-first.html', 'course-members.html'];
+		var subpages = ['course-first.html', 'course-members.html','course-signRecord.html','course-detail.html'];
 		var subpage_style = {
 			top: '0px',
 			bottom: '50px'
 		};
 
 		var detailPage = null;
+		var courseMsg = {};
 		var courseMain = new Vue({
 			el: '#courseBottom',
 			data: {
@@ -101,7 +117,9 @@
 				number: localStorage.getItem('stuNumber'),
 				course: {
 
-				}
+				},
+				code:''
+				
 			},
 			created() {
 				var all = this;
@@ -116,50 +134,23 @@
 					mui.fire(plus.webview.getWebviewById('course-first.html'), 'course-1', {
 						course: newVal
 					});
-//					if(!detailPage) {
-//						detailPage = plus.webview.getWebviewById('maps_map.html');
-//					}
-//					//触发详情页面的newsId事件
-//					mui.fire(detailPage, 'courseDetail', {
-//						course: newVal
-//					});
-
-				}
-			},
-			methods: {
-
-			}
-		});
-
-		var aniShow = {};
-		//创建子页面，首个选项卡页面显示，其它均隐藏；
-		mui.plusReady(function() {
-
-
-			//添加courseCode自定义事件监听
-			window.addEventListener('courseCode', function(event) {
-				var aCourse = null;
-
-				//获得事件参数
-				let singleCode = event.detail.courseCode;
-				//根据courseCode向服务器请求新闻详情
-				console.log('开始发送');
-
-				var url = getport() + '/course/getCourseDetail';
-
-				mui.ajax(url, {
+				},
+				code(newVal){
+					var all = this;
+					var url = getport() + '/course/getCourseDetail';
+				    mui.ajax(url, {
 					data: {
-						courseCode: singleCode
+						courseCode: newVal
 					},
 					async: false,
 					dataType: 'json', //服务器返回json格式数据
 					type: 'post', //HTTP请求类型
 					timeout: 10000, //超时时间设置为10秒；
 					success: function(data) {
-						console.log(JSON.stringify(data));
+						console.log('每次点击都获取课程数据'+JSON.stringify(data));
 						if(data.message != null) {
-							courseMain.course = data;
-							aCourse = data;
+							all.course = data;
+							courseMsg = data;
 						} else {
 							mui.toast(data.msg);
 						}
@@ -176,25 +167,116 @@
 					}
 				});
 
-//				if(aCourse != null) {
-//					mui.fire(plus.webview.getWebviewById('course-members.html'), 'course-2', {
-//						course: aCourse
-//					})
-//					mui.fire(plus.webview.getWebviewById('course-detail.html'), 'course-3', {
-//						course: aCourse
-//					})
-//				}
-				//		 else{
-				//		 	mui.alert('获取课程信息失败,请返回重试')
-				//		 }
+				}
+				
+				
+				
+			},
+			methods: {
 
-			});
+			}
+		});
 
+		var aniShow = {};
+		//创建子页面，首个选项卡页面显示，其它均隐藏；
+		mui.plusReady(function() {
 			var self = plus.webview.currentWebview();
-			for(var i = 0; i < 2; i++) {
+			
+				leftPos = Math.ceil((window.innerWidth - 60) / 2); // 设置凸起大图标为水平居中
+
+					/**	
+					 * drawNativeIcon 绘制带边框的半圆，
+					 * 实现原理：
+					 *   id为bg的tag 创建带边框的圆
+					 *   id为bg2的tag 创建白色矩形遮住圆下半部分，只显示凸起带边框部分
+					 * 	 id为iconBg的红色背景图
+					 *   id为icon的字体图标
+					 *   注意创建先后顺序，创建越晚的层级越高
+					 */
+					var drawNativeIcon = draw.drawNative('icon', {
+						bottom: '5px',
+						left: leftPos + 'px',
+						width: '60px',
+						height: '60px'
+					}, [{
+						tag: 'rect',
+						id: 'bg',
+						position: {
+							top: '1px',
+							left: '0px',
+							width: '100%',
+							height: '100%'
+						},
+						rectStyles: {
+							color: '#f7f7f7',
+							radius: '50%',
+							borderColor: '#ccc',
+							borderWidth: '1px'
+						}
+					}, {
+						tag: 'rect',
+						id: 'bg2',
+						position: {
+							bottom: '-0.5px',
+							left: '0px',
+							width: '100%',
+							height: '45px'
+						},
+						rectStyles: {
+							color: '#f7f7f7'
+						}
+					}, {
+						tag: 'rect',
+						id: 'iconBg',
+						position: {
+							top: '5px',
+							left: '5px',
+							width: '50px',
+							height: '50px'
+						},
+						rectStyles: {
+							color: '#d74b28',
+							radius: '50%'
+						}
+					}, {
+						tag: 'font',
+							id: 'icon',
+							text: '签到', //此为字体图标Unicode码'\e600'转换为'\ue600'
+							position: {
+								top: '0px',
+								left: '5px',
+								width: '50px',
+								height: '100%'
+							},
+							textStyles: {
+								fontSrc: '_www/fonts/iconfont.ttf',
+								align: 'center',
+								color: '#fff',
+								size: '17px'
+							}
+					}]);
+					// append 到父webview中
+					self.append(drawNativeIcon);
+
+					//自定义监听图标点击事件
+					var active_color = '#fff';
+					drawNativeIcon.addEventListener('click', function(e) {
+//						mui.alert('你点击了图标，你在此可以打开摄像头或者新窗口等自定义点击事件。', '悬浮球点击事件');
+                          let detail = courseMain.course.message;
+//                       let detail  = courseMsg.message;
+						console.log('点击就送' + JSON.stringify(detail));
+						showMaps(detail);
+
+					});
+			
+			
+			
+			
+			
+			for(var i = 0; i < 4; i++) {
 				var temp = {};
 				var sub = plus.webview.create(subpages[i], subpages[i], subpage_style);
-				console.log('现在才建页面');
+//				console.log('现在才建页面');
 				if(i > 0) {
 					sub.hide();
 				} else {
@@ -212,6 +294,9 @@
 		var title = document.getElementById("title");
 		//选项卡点击事件
 		mui('.mui-bar-tab').on('tap', 'a', function(e) {
+			let ee = e.detail;
+//			console.log(JSON.stringify(ee.center.x));
+			
 			var targetTab = this.getAttribute('href');
 			if(targetTab == activeTab) {
 				return;
@@ -237,7 +322,7 @@
 		//自定义事件，模拟点击“首页选项卡”
 		document.addEventListener('gohome', function() {
 			var defaultTab = document.getElementById("defaultTab");
-			console.log('这个加载了');
+//			console.log('这个加载了');
 
 			//模拟首页点击
 			mui.trigger(defaultTab, 'tap');
@@ -248,6 +333,35 @@
 				defaultTab.classList.add('mui-active');
 			}
 		});
+		
+		function showMaps(aCourse) {
+				if('Android' === plus.os.name && navigator.userAgent.indexOf('StreamApp') > 0) {
+					plus.nativeUI.toast('当前环境暂不支持地图插件');
+					return;
+				}
+				var ws = plus.webview.currentWebview();
+				var wm = plus.webview.getWebviewById(plus.runtime.appid);
+				//	wm&&wm.evalJS("preateClear()");
+
+				//					clicked('../sign/maps_map.html',false,true);
+				clickSend('../sign/maps_map.html', false, true, null, aCourse);
+
+			}
+		
+		
+		//添加courseCode自定义事件监听
+			window.addEventListener('courseCode', function(event) {
+				console.log('每次都点击吗？？？？？？？？？？？？？？？？？？？？？')
+
+				//获得事件参数
+				let singleCode = event.detail.courseCode;
+				//根据courseCode向服务器请求新闻详情
+				console.log('接收到'+singleCode);
+				courseMain.code =singleCode
+
+				
+			});
+
 	</script>
 
 </html>

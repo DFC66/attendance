@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
-				<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<title>new webview</title>
@@ -193,15 +194,16 @@
 			}
 			
 			.mui-plus.mui-plus-stream .mui-stream-hidden {
-				display: none ;
+				display: none;
 			}
 		</style>
 	</head>
+
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<h1 class="mui-title">我的</h1>
 		</header>
-		<div id="app"  class="mui-page-content">
+		<div id="app" class="mui-page-content">
 			<div class="mui-scroll-wrapper">
 				<div class="mui-scroll">
 					<ul class="mui-table-view">
@@ -213,10 +215,10 @@
 							</a>
 						</li>
 						<li class="mui-table-view-cell">
-							<a>学号<span id="stuNumber"  class="mui-pull-right">{{stu_number}}</span></a>
+							<a>学号<span id="stuNumber" class="mui-pull-right">{{stu_number}}</span></a>
 						</li>
 						<li class="mui-table-view-cell">
-							<a>姓名<span id="stuName" v-text="stu_name"  class="mui-pull-right">{{stu_name}}</span></a>
+							<a>姓名<span id="stuName" v-text="stu_name" class="mui-pull-right">{{stu_name}}</span></a>
 						</li>
 						<li class="mui-table-view-cell">
 							<a>用户名<span id="account" class="mui-pull-right">登陆失败，无法显示</span></a>
@@ -243,25 +245,23 @@
 				</div>
 			</div>
 		</div>
-<!--        <script src="../js/app.js"></script>
--->		
+		<!--        <script src="../js/app.js"></script>
+-->
 		<script src="../js/mui.min.js"></script>
-        <script src="../js/vue.min.js"></script>
+		<script src="../js/vue.min.js"></script>
 		<script src="../js/configurl.js"></script>
 		<!-- 引入登录注册JS文件 -->
 		<script type="text/javascript">
-//			mui.init();
+			//			mui.init();
 			(function($, doc) {
 
 				$.init();
 
-
 				$.plusReady(function() {
-
 
 					doc.getElementById('exitlogin').addEventListener("tap", function() {
 
-						if (mui.os.plus) {
+						if(mui.os.plus) {
 							var a = [{
 								title: "注销账号"
 							}, {
@@ -272,7 +272,7 @@
 								cancel: "取消",
 								buttons: a
 							}, function(b) {
-								switch (b.index) {
+								switch(b.index) {
 									case 0:
 										break;
 									case 1:
@@ -291,13 +291,12 @@
 							})
 						}
 					}, false);
-					
-					
+
 					$.oldBack = mui.back;
 					var backButtonPress = 0;
 					$.back = function(event) {
 						backButtonPress++;
-						if (backButtonPress > 1) {
+						if(backButtonPress > 1) {
 							plus.runtime.quit();
 						} else {
 							plus.nativeUI.toast('再按一次退出应用');
@@ -307,107 +306,95 @@
 						}, 1000);
 						return false;
 					};
-					
-					
-					
+
 				});
-//
-//
-//
-//
-//
-			
+				//
+				//
+				//
+				//
+				//
+
 			}(mui, document));
 
+			var app = new Vue({
+				el: '#app',
+				data: {
+					number: '',
+					stu_name: '测试',
+					stu_number: ''
+				},
+				created() {
+					var all = this;
+					if(window.plus) {
+						all.getMessage();
+					} else {
+						document.addEventListener("plusready", all.getMessage, false);
+					}
+					
 
+				},
+				mounted() {
+					//						 var all = this;
+					//						
+					//						all.getMessage();			
+				},
+				methods: {
+					getMessage: function() {
+						var all = this;
+						var url = getport() + '/student/findByOpenid';
+						var personInfoStr = localStorage.getItem('person');
+						var personInfo = JSON.parse(personInfoStr);
+						// console.log(personInfo.openid)
+						if(personInfoStr != null) {
+							if(personInfo.openid != null && personInfo.openid != undefined) {
 
+								mui.ajax(url, {
+									data: {
+										openid: personInfo.openid
+									},
 
-				var app = new Vue({
-					el: '#app',
-					data: {
-						number: '',
-						stu_name:'测试',
-						stu_number:''
-					},
-					created() {
-						 var all = this;
-						mui.plusReady(function(){
-			               all.getMessage();
-                        })       
-
-
-
-					},
-					mounted() {
-//						 var all = this;
-//						
-//						all.getMessage();			
-					},
-					methods: {
-						getMessage: function() {
-                            var all = this;
-							var url = getport() + '/student/findByOpenid';
-							var personInfoStr = localStorage.getItem('person');
-							var personInfo = JSON.parse(personInfoStr);
-							// console.log(personInfo.openid)
-							if (personInfoStr != null) {
-								if (personInfo.openid != null && personInfo.openid != undefined) {
-                                   
-                                    	mui.ajax(url, {
-										data: {
-											openid: personInfo.openid
-										},
-
-										dataType: 'json', //服务器返回json格式数据
-										type: 'post', //HTTP请求类型
-										timeout: 10000, //超时时间设置为10秒；
-										success: function(data) {
-											console.log(JSON.stringify(data));
-											if (data.message != null) {
-												all.stu_name = data.message.name;
-												all.stu_number= data.message.number;
-											}
-										},
-										error: function(xhr, type, errorThrown) {
-											if (type == "timeout") {
-												mui.alert("请求超时，请检查网络或重试");
-											} else {
-												mui.alert("未知网络错误");
-											}
+									dataType: 'json', //服务器返回json格式数据
+									type: 'post', //HTTP请求类型
+									timeout: 10000, //超时时间设置为10秒；
+									success: function(data) {
+										console.log(JSON.stringify(data));
+										if(data.message != null) {
+											all.stu_name = data.message.name;
+											all.stu_number = data.message.number;
 										}
+									},
+									error: function(xhr, type, errorThrown) {
+										if(type == "timeout") {
+											mui.alert("请求超时，请检查网络或重试");
+										} else {
+											mui.alert("未知网络错误");
+										}
+									}
 
+								});
 
-									});
-								
-                                    	
-                                    
-									
-								
-								}
-								
-
-								var personInfo = JSON.parse(personInfoStr);
-								// console.log(typeof personInfo);
-								document.getElementById('head-img1').src = personInfo.img;
-								document.getElementById('account').innerHTML = personInfo.nicheng;
-								document.getElementById('province').innerHTML = personInfo.province;
-								document.getElementById('city').innerHTML = personInfo.city;
-
-							} else {
-								document.getElementById('head-img1').src = '../imgs/weixin.png';
-								document.getElementById('account').innerHTML = '你还未登录';
-								document.getElementById('province').innerHTML = '你还未登录';
-								document.getElementById('city').innerHTML = '你还未登录';
 							}
-						}
 
+							var personInfo = JSON.parse(personInfoStr);
+							// console.log(typeof personInfo);
+							document.getElementById('head-img1').src = personInfo.img;
+							document.getElementById('account').innerHTML = personInfo.nicheng;
+							document.getElementById('province').innerHTML = personInfo.province;
+							document.getElementById('city').innerHTML = personInfo.city;
+
+						} else {
+							document.getElementById('head-img1').src = '../imgs/weixin.png';
+							document.getElementById('account').innerHTML = '你还未登录';
+							document.getElementById('province').innerHTML = '你还未登录';
+							document.getElementById('city').innerHTML = '你还未登录';
+						}
 					}
 
-				})
-			
+				}
+
+			})
 		</script>
 
-		
-
 	</body>
+
 </html>
