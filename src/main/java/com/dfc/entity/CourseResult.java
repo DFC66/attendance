@@ -49,6 +49,11 @@ public class CourseResult  {
     private Integer courseCode;
 
 
+    @Column(name = "is_deleted")
+    private Integer isDeleted;
+
+
+
     @CreatedDate
     @Column(name = "create_time")
     private Date createTime;
@@ -74,4 +79,11 @@ public class CourseResult  {
         this.courseCode = courseCode;
     }
 
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
+    }
 }

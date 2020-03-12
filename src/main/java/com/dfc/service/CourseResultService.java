@@ -11,4 +11,11 @@ public interface CourseResultService {
 
     @Transactional
     void  save(CourseResult courseResult);
+
+    @Transactional
+    void updateIsDeletedStatus(CourseResult courseResult);
+
+
+    @Transactional
+     void exitCourse(String number,Integer courseCode);
 }

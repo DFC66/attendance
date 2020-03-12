@@ -53,8 +53,8 @@ public class CourseController {
 
 
     @RequestMapping(value = "/addCourse", method = RequestMethod.POST)
-    public Result addCourse(@RequestBody Course course) throws Exception {
-//        String contentType = request.getContentType();
+    public Result addCourse(@RequestBody Course course,HttpServletRequest request) throws Exception {
+        String contentType = request.getContentType();
 //        storageApi.uploadByServletRequest(request,"courseImg");
         Result result = new Result<Course>();
 
@@ -65,6 +65,7 @@ public class CourseController {
         } else {
             Integer courseCode = getCourseCode(courseService);
             course.setCourseCode(courseCode);
+            course.setSigninStatus(1);
             courseService.save(course);
             result.setCode(200);
             result.setMsg("添加课程成功!");
@@ -73,6 +74,10 @@ public class CourseController {
 
         return result;
     }
+
+
+
+
 
      @Transactional
     @RequestMapping(value = "/joinCourse", method = RequestMethod.POST)
@@ -87,7 +92,7 @@ public class CourseController {
             courseResult.setCourseCode(courseCode);
             courseResult.setNumber(number);
             CourseResult joinCourse = courseResultService.joinCourse(courseResult);
-            if (joinCourse != null) {
+            if (joinCourse != null&&joinCourse.getIsDeleted()==1) {
                 result.setCode(300);
                 result.setMsg("你已加入此课程");
             } else {
@@ -102,15 +107,26 @@ public class CourseController {
 
     @Transactional
     @RequestMapping(value = "/addFace", method = RequestMethod.POST)
-    public Result addFaceToDB(String number, Integer courseCode) throws Exception {
+    public Result addFaceToDB(String number, Integer courseCode)  {
         Result result = new Result<CourseResult>();
           CourseResult courseResult = new CourseResult();
           courseResult.setNumber(number);
           courseResult.setCourseCode(courseCode);
-        courseResultService.save(courseResult);
-        result.setCode(200);
-        result.setMsg("课程添加成功");
-        result.setMessage(courseResult);
+        CourseResult isJoinCourse = courseResultService.joinCourse(courseResult);
+        if (isJoinCourse!=null){
+             courseResultService.updateIsDeletedStatus(courseResult);
+            result.setCode(200);
+            result.setMsg("课程添加成功");
+            result.setMessage(courseResult);
+        }else {
+            courseResult.setIsDeleted(1);
+            courseResultService.save(courseResult);
+            result.setCode(200);
+            result.setMsg("课程添加成功");
+            result.setMessage(courseResult);
+
+        }
+
         return result;
     }
 
@@ -134,6 +150,24 @@ public class CourseController {
 
 
     @Transactional
+    @RequestMapping(value = "/getAllCourse", method = RequestMethod.POST)
+    public Result getAllCourse(){
+        Result result = new Result<>();
+        List<Course> allCourse = courseService.findAll();
+        if (allCourse.size()>0){
+            result.setCode(200);
+            result.setMsg("找到所有的课程了");
+            result.setMessage(allCourse);
+        }else{
+            result.setCode(404);
+            result.setMsg("表显示错误");
+        }
+        return result;
+    }
+
+
+
+    @Transactional
     @RequestMapping(value = "/getCourseDetail", method = RequestMethod.POST)
     public Result getCourseDetail(Integer courseCode) throws Exception {
         Result result = new Result<>();
@@ -150,6 +184,30 @@ public class CourseController {
         return result;
     }
 
+
+
+
+    @Transactional
+    @RequestMapping(value = "/exitCourse", method = RequestMethod.POST)
+    public Result exitCourse(String number,Integer courseCode)  {
+        Result result = new Result<CourseResult>();
+        courseResultService.exitCourse(number,courseCode);
+        CourseResult courseResult = new CourseResult();
+        courseResult.setNumber(number);
+        courseResult.setCourseCode(courseCode);
+        CourseResult isJoinCourse = courseResultService.joinCourse(courseResult);
+        if (isJoinCourse.getIsDeleted()==0){
+            result.setCode(200);
+            result.setMsg("课程退出成功");
+            result.setMessage(isJoinCourse);
+        }else{
+            result.setCode(204);
+            result.setMsg("课程退出失败了");
+            result.setMessage(isJoinCourse);
+        }
+
+        return  result;
+    }
 
 
 

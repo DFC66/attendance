@@ -176,8 +176,7 @@
 			var courseData = null;
 
 			var NotCompleteFlag = true;
-			
-			
+
 			var old_back = mui.back;
 			mui.back = function() {
 				time = 0;
@@ -218,16 +217,15 @@
 						if(data.faces.length > 0) {
 							clearInterval(interval); //清除定时器
 							var fk = data.faces[0].face_token;
-							mui.toast('识别出存在人脸');
+							//							mui.toast('识别出存在人脸');
 							var tokens = faceData.face_tokens;
 							compareFace(fk, tokens);
 
-						} else if(time > 9) {
+						} else if(time > 14) {
 							clearInterval(interval); //清除定时器
 							time = 0; //重新计时
 							mui.toast('无法识别出人脸,请重新签到');
 							plus.webview.currentWebview().close();
-							// plus.webview.open("addFace.html"); 
 						}
 					},
 					error: function(xhr, type, errorThrown) {
@@ -237,15 +235,30 @@
 
 			}
 
+			//自动拍照
+			function getface2() {
+				time++;
+				//				console.log('开始人脸');
+				//绘制canvas图形
+				canvas.getContext('2d').drawImage(video, 0, 0, 100, 100);
+				//把canvas图像转为img图片
+				var bdata = canvas.toDataURL("image/png");
+				//img.src = canvas.toDataURL("image/png");
+				var base64 = bdata.split(',')[1]; //照片压缩成base位数据
+                var token = faceData.face_tokens[0]; //比较单一faceToken
+//              console.log(token);
+                compareFaceNew(base64,token);
+			}
+
 			function showError(type) {
 				if(type == "timeout") {
 					mui.alert("请求超时，请检查网络或重试");
 				} else {
-					mui.alert("未知网络错误");
+					mui.alert("未知网络错误,服务器出错");
 				}
 				clearInterval(interval); //清除定时器
 				time = 0; //重新计时
-                plus.webview.currentWebview().close();
+				plus.webview.currentWebview().close();
 			}
 
 			//添加自定义事件监听
@@ -264,38 +277,38 @@
 				console.log('666666666666666666666' + JSON.stringify(window.courseData));
 			});
 
-            function recordSign(){
-            	var time = new Date();
-            	let timeHour = time.getHours();
-            	let timeMinute = time.getMinutes();
-            	if( timeMinute<10){
-            		 timeMinute = "0"+ timeMinute;
-            	}
-            	if(timeHour<10){
-            		timeHour = "0"+timeHour;
-            	}
-            	
-           var now = timeHour+":"+timeMinute;	
-            	var url = getport()+'/signin/record';
-            mui.ajax(url, {
+			function recordSign() {
+				var time = new Date();
+				let timeHour = time.getHours();
+				let timeMinute = time.getMinutes();
+				if(timeMinute < 10) {
+					timeMinute = "0" + timeMinute;
+				}
+				if(timeHour < 10) {
+					timeHour = "0" + timeHour;
+				}
+
+				var now = timeHour + ":" + timeMinute;
+				var url = getport() + '/signin/record';
+				mui.ajax(url, {
 					data: {
-						stuNumber:stuNumber,
-						courseCode:courseData.courseCode,
-						timer:now
+						stuNumber: stuNumber,
+						courseCode: courseData.courseCode,
+						timer: now
 					},
 					dataType: 'json', //服务器返回json格式数据
 					type: 'post', //HTTP请求类型
 					timeout: 10000, //超时时间设置为10秒；
 					success: function(data) {
 						console.log(JSON.stringify(data));
-						if(data!= null) {
-						mui.toast(data.msg);
-						plus.webview.getWebviewById('../sign/maps_map.html').close();
-						plus.webview.currentWebview().close();
-						} 
-//						else {
-//							mui.toast(data.msg);
-//						}
+						if(data != null) {
+							mui.toast(data.msg);
+							plus.webview.getWebviewById('../sign/maps_map.html').close();
+							plus.webview.currentWebview().close();
+						}
+						//						else {
+						//							mui.toast(data.msg);
+						//						}
 
 					},
 					error: function(xhr, type, errorThrown) {
@@ -304,8 +317,66 @@
 
 					}
 				});
-            }
+			}
 
+			function compareFaceNew(base64, token) {
+
+				let url = "https://api-cn.faceplusplus.com/facepp/v3/compare";
+				//				for(var i = 0; i < tokens.length; i++) {
+
+				mui.ajax(url, {
+					data: {
+						api_key: "CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA",
+						api_secret: "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3",
+						image_base64_1: base64,
+						face_token2: token
+					},
+					//						async: false,
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					success: function(data) {
+						console.log('人脸直接比对2333333333333' + JSON.stringify(data));
+						if(data.faces1.length > 0) {
+							
+							var judgeData = data.confidence;
+							if(judgeData > 80) {
+								console.log("开始输入数据库");
+								clearInterval(interval); //清除定时器
+								recordSign();
+								console.log("能判断为同一个人， 置信值为 " + judgeData);
+								NotCompleteFlag = false;
+							} else {
+								mui.toast('人脸识别不是本人，签到失败');
+								NotCompleteFlag = false;
+								plus.webview.currentWebview().close();
+								console.log("不能判断为同一个人， 置信值为 " + judgeData);
+							}
+
+						} else if(time > 9) {
+							clearInterval(interval); //清除定时器
+							time = 0; //重新计时
+							mui.toast('无法识别出人脸,请重新签到');
+							plus.webview.currentWebview().close();
+						}
+
+					},
+					error: function(xhr, type, errorThrown) {
+						showError(type);
+					}
+				});
+				//					if(flag) {
+				//						console.log("开始输入数据库");
+				//						recordSign();
+				//						break;
+				//					}
+
+				//				}
+
+				//				if(flag == false) {
+				//					
+				//				}
+			}
 
 			function compareFace(face_token1, tokens) {
 				var flag = false;
@@ -319,7 +390,7 @@
 							face_token1: face_token1,
 							face_token2: tokens[i]
 						},
-						async: false,
+						//						async: false,
 						dataType: 'json', //服务器返回json格式数据
 						type: 'post', //HTTP请求类型
 						timeout: 10000, //超时时间设置为10秒；
@@ -343,19 +414,17 @@
 						}
 					});
 
-					if(flag) {
-						console.log("开始输入数据库" );
-                         recordSign();
-						break;
-					} 
-
 				}
-                  if(flag==false){
-                  	mui.toast('人脸识别不是本人，签到失败');
-                  	plus.webview.currentWebview().close();
-                  }
-                 
+				if(flag) {
+					console.log("开始输入数据库");
+					recordSign();
+					break;
+				}
 
+				if(flag == false) {
+					mui.toast('人脸识别不是本人，签到失败');
+					plus.webview.currentWebview().close();
+				}
 
 			}
 
@@ -389,12 +458,13 @@
 					//getface(); 
 					//                  console.log('返回'+ (video.paused))
 
-					video.addEventListener('play', function() {
-						//                          alert("开始播放");
-						interval = setInterval(getface, 1000);
-					});
+					//					video.addEventListener('play', function() {
+					//						//                          alert("开始播放");
+					//						interval = setInterval(getface, 1000);
+					//					});
 
-					//					interval = setInterval(getface, 1000);
+					interval = setInterval(getface2, 2000);
+					console.log('这里运行了');
 
 					/*//手动拍照
 					var checkButton = doc.getElementById('check');

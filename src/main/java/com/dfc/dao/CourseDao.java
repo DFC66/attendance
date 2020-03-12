@@ -24,8 +24,9 @@ public interface CourseDao extends JpaRepository<Course,Integer>
 
      Course findByCourseCode(Integer courseCode);
 
-    @Query(value = "select c.*  from  course c inner  join course_result cr  on c.course_code =cr.course_code where cr.number = ?1",nativeQuery = true)
+    @Query(value = "select c.*  from  course c inner  join course_result cr  on c.course_code =cr.course_code where cr.number = ?1 and cr.is_deleted = '1'",nativeQuery = true)
     List<Course> findMyCourse(String number);
+
 
 
     Course findByNameAndTeacherName(String name, String teacherName);

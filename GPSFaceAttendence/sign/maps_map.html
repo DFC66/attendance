@@ -12,8 +12,12 @@
 
 		<script src="../js/configurl.js"></script>
 		<script src="../js/mui.min.js"></script>
-		<script type="text/javascript">
-			mui.init();
+		<script type="text/javascript">mui.init({
+//						preloadPages: [{
+//							url: 'compareFace.html',
+//							id: 'compareFace.html'
+//						}]			
+			});
 			var ws = null,
 				wo = null;
 			var em = null,
@@ -36,10 +40,7 @@
 		window.addEventListener('courseDetail',function(event){
 		  //获得事件参数
 		  thisCourse= event.detail.course;
-       
-		  
-		
-		           
+                 
 		});
 
 			// H5 plus事件处理
@@ -50,19 +51,19 @@
 				// 获取窗口对象
 				ws = plus.webview.currentWebview();
 				thisCourse = ws.course;
-				if(myNumber != null) {
-					myFaceData = queryFaceSet(myNumber);
-				} else {
-					mui.alert('人脸信息获取失败');
-					
-					
-				}
+				myFaceData = ws.faceData;
+				
+//				if(myNumber != null) {
+//					myFaceData = queryFaceSet(myNumber);
+//				} else {
+//					mui.alert('人脸信息获取失败');					
+//				}
 
 
 
 
 				console.log(JSON.stringify(thisCourse));
-
+                  console.log('获得了我的脸部信息'+JSON.stringify(myFaceData));
 				    if(thisCourse==null||thisCourse==undefined){
 				    	mui.toast('人脸信息获取失败');
 				    	plus.webview.currentWebview().close();
@@ -169,13 +170,13 @@
 						api_secret: "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3",
 						outer_id: uniqueName
 					},
-					async: false,
+//					async: false,
 					dataType: 'json', //服务器返回json格式数据
 					type: 'post', //HTTP请求类型
 					timeout: 10000, //超时时间设置为10秒；
 					success: function(data) {
 						// console.log(typeof data.face_tokens);
-						// console.log(JSON.stringify(data.face_tokens));
+						 console.log('获取脸部数据'+JSON.stringify(data));
 						myData = data;
 						return myData;
 
@@ -237,12 +238,14 @@
 						//在范围内，可以签到，打开人脸识别界面
                         console.log('开始人脸识别'+JSON.stringify(myFaceData));
 
-						mui.openWindow({
+//               var faceWindow = plus.webview.getWebviewById('compareFace.html');
+//               console.log('看一下窗口的值'+faceWindow);
+//               if(faceWindow!=null){
+//               	faceWindow.show();
+//               }else{
+                 		mui.openWindow({
 							id: 'compareFace.html',
 							url: 'compareFace.html',
-//							extra: {
-//								face: JSON.stringify(myFaceData)
-//							},
 							show: {
 								autoShow: false
 							}
@@ -252,6 +255,9 @@
 							face:myFaceData,
 						    course:thisCourse});
 						
+//               }
+                 
+					
 
 					} else {
 						mui.toast('预测你离签到点还有'+(distance-getDistance()).toFixed(2)+'米，不在签到范围内,不能签到');

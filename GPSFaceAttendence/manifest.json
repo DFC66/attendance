@@ -10,7 +10,7 @@
     "icons" : {
         "72" : "icon.png"
     },
-    "launch_path" : "first.html", /*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
+    "launch_path" : "teacher/allCourse.html", /*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
     "developer" : {
         "name" : "", /*开发者名称*/
         "email" : "", /*开发者邮箱地址*/
@@ -263,6 +263,23 @@
 				"resources": [],
 				"refer": [
 					"student/joinCourse.html"
+				],
+				"priority": 0
+			},
+			"teacher/allCourse.html": {
+				"resources": [],
+				"refer": [
+					"student/joinCourse.html",
+					"teacher/ManageCourse-main.html"
+				],
+				"priority": 0
+			},
+			"teacher/ManageCourse-main.html": {
+				"resources": [
+					"teacher/ManageCourse1.html"
+				],
+				"refer": [
+					"teacher/ManageCourse2.html"
 				],
 				"priority": 0
 			}

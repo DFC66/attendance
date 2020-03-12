@@ -24,4 +24,14 @@ public class CourseResultServiceImpl implements CourseResultService {
     public void save(CourseResult courseResult) {
         courseResultDao.save(courseResult);
     }
+
+    @Override
+    public void updateIsDeletedStatus(CourseResult courseResult) {
+           courseResultDao.updateIsDeletedStatus(courseResult.getNumber(),courseResult.getCourseCode());
+    }
+
+    @Override
+    public void exitCourse(String number, Integer courseCode) {
+        courseResultDao.exitCourse(number,courseCode);
+    }
 }

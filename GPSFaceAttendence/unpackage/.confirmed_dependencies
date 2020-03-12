@@ -99,5 +99,21 @@
       "student/joinCourse.html"
     ],
     "resources": []
+  },
+  "teacher/allCourse.html": {
+    "refer": [
+      "student/joinCourse.html",
+      "teacher/ManageCourse-main.html"
+    ],
+    "resources": []
+  },
+  "teacher/ManageCourse-main.html": {
+    "resources": [
+      "teacher/ManageCourse1.html"
+    ],
+    "refer": [
+      "teacher/ManageCourse2.html",
+      "teacher/ManageCourse1.html"
+    ]
   }
 }

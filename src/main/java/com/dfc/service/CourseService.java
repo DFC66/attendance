@@ -30,6 +30,9 @@ public interface CourseService {
     Page<Course> findAll(Pageable pageable);
 
     @Transactional
+    List<Course> findAll();
+
+    @Transactional
     Page<Course> findByCondition(String condition, Integer pn);
 
     @Transactional

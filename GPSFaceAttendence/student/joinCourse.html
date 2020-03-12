@@ -143,24 +143,21 @@
 		<script src="../js/mui.min.js"></script>
 		<script>
 			mui.init({
-				// preloadPages: [{
-				// 	url: 'addFace.html',
-				// 	id: 'addFace.html',
-				// 	// styles: {}, //窗口参数
-				// 	// extras: {}, //自定义扩展参数
-				// 	// subpages: [{}, {}] //预加载页面的子页面
-				// }],
-				// preloadLimit: 5 //预加载窗口数量限制(一旦超出,先进先出)默认不限制
+
 			});
 			
 			
-			var old_back = mui.back;
-			mui.back = function() {
-			         plus.webview.getWebviewById('course.html').reload();
-					old_back();
-				
+//			var old_back = mui.back;
+//			mui.back = function() {
+//			         plus.webview.getWebviewById('course.html').reload();
+//					old_back();
+//				
+//			
+//			}
 			
-			}
+			
+			
+			
 			
 			var app = new Vue({
 				el: '#app',
@@ -169,7 +166,7 @@
 					codeLength: 4,
 					telDisabled: false,
 					focused: false,
-					number: localStorage.getItem('StuNumber'),
+					number: localStorage.getItem('stuNumber'),
 					camaraFlag: false
 				},
 				created() {

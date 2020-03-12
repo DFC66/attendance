@@ -58,29 +58,16 @@
 		</header>-->
 		<div id="courseBottom" class="mui-content">
 			<nav class="mui-bar mui-bar-tab">
-				<a id="defaultTab" class="mui-tab-item mui-active" href="course-first.html">
+				<a id="defaultTab" class="mui-tab-item mui-active" href="ManageCourse1.html">
 					<span class="mui-icon mui-icon-home"></span>
 					<span class="mui-tab-label">首页</span>
 				</a>
-				<!--<a class="mui-tab-item" href="#tabbar-with-chat">
-				<span class="mui-icon mui-icon-email"><span class="mui-badge">9</span></span>
-				<span class="mui-tab-label">消息</span>
-			</a>-->
-				<a class="mui-tab-item" href="course-members.html">
-					<span class="mui-icon mui-icon-contact"></span>
-					<span class="mui-tab-label">课程成员</span>
-				</a>
-
+		
 				<a class="mui-tab-item">
 					<span class="mui-icon mui-icon-extra-card"></span>
 				</a>
 
-				<a class="mui-tab-item" href="course-signRecord.html">
-					<span class="mui-icon mui-icon-gear"></span>
-					<span class="mui-tab-label">签到记录</span>
-				</a>
-
-				<a class="mui-tab-item" href="course-detail.html">
+				<a class="mui-tab-item" href="ManageCourse2.html">
 					<span class="mui-icon mui-icon-gear"></span>
 					<span class="mui-tab-label">详细信息</span>
 				</a>
@@ -101,7 +88,21 @@
 			//				id: 'maps_map.html'
 			//			}]
 		});
-		var subpages = ['course-first.html', 'course-members.html', 'course-signRecord.html', 'course-detail.html'];
+	window.addEventListener('code',function(event){
+  
+        var id = event.detail.course;
+        console.log('输出看看'+JSON.stringify(id));
+ //关闭等待框
+						plus.nativeUI.closeWaiting();
+						//显示当前页面
+						plus.webview.currentWebview().show('pop-in');
+//						mui.currentWebview.show();
+});
+		
+		
+		
+		
+		var subpages = ['ManageCourse1.html',  'ManageCourse2.html'];
 		var subpage_style = {
 			top: '0px',
 			bottom: '50px'
@@ -121,26 +122,27 @@
 				faceData: {
 
 				},
-				signFlag:false
+				signFlag:false,
+				openFlag:true,
 
 			},
 			created() {
 				console.log('窗口被创建了');
 				var all = this;
-				this.queryFaceSet(all.number);
+//				this.queryFaceSet(all.number);
 			},
 			mounted() {
 				//			console.log("mounted加载")
 			},
 			watch: {
 				course(newVal) {
-					//					console.log('发生了变化' + JSON.stringify(newVal));
-					//					mui.fire(plus.webview.getWebviewById('course-first.html'), 'course-1', {
-					//						course: newVal
-					//					});
+			         
 				},
 				code(newVal) {
 
+				},
+				openFlag(newVal,oldVal){
+					
 				}
 
 			},
@@ -309,21 +311,13 @@
 					showMaps(detail, faceData);
 				}
 
-				//						mui.alert('你点击了图标，你在此可以打开摄像头或者新窗口等自定义点击事件。', '悬浮球点击事件');
-				//				let detail = courseMain.course.message;
-				//                       let detail  = courseMsg.message;
-				//				console.log('点击就送' + JSON.stringify(courseMain.course));
-				//				console.log('可以点击就送全局变量' + JSON.stringify(window.courseMsg));
-				//
-				//				let faceData = courseMain.faceData;
-				//				showMaps(detail, faceData);
 
 			});
 
-			for(var i = 0; i < 4; i++) {
+			for(var i = 0; i < 2; i++) {
 				var temp = {};
 				var sub = plus.webview.create(subpages[i], subpages[i], subpage_style);
-								console.log('每次都建页面');
+				console.log('每次都建页面');
 				if(i > 0) {
 					sub.hide();
 				} else {

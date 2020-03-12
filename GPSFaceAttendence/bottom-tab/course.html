@@ -20,14 +20,23 @@
 			.mui-media-body2 {
 				font-size: 14px;
 				font-weight: 500;
-				line-height: 20px;
+				/*line-height: 20px;*/
 				margin-bottom: 0;
 				margin-left: 44px;
 				color: #333;
+				display: flex;
 			}
 			
+			
+			.mui-media-object2{
+						line-height: 42px;
+    max-width: 42px;
+    
+			}
+	
 			.wenzi {
 				float: left;
+				width: 60%;
 			}
 			
 			.mypoint {
@@ -35,12 +44,19 @@
 				float: right;
 				/* vertical-align: middle; */
 				/* text-align: right; */
-				display: inline-block;
-				font-size: 22px;
+				display: fixed;
+				font-size: 18px;
 				font-style: italic;
-				margin-right: 5px;
+				margin-right: 15px;
 				align-self: center;
+				max-height: 80px;
 				/* position: absolute; */
+			}
+			
+			.main{
+				width: 100%;
+				display: block;
+				text-align: center;
 			}
 		</style>
 
@@ -49,29 +65,56 @@
 	<body>
 
 		<header class="mui-bar mui-bar-nav">
-			<!-- <h1 class="mui-title">检索</h1> -->
-			<button id="joinCourse" onclick=" openJoin()" class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">加入课程</button>
+			<button id="joinCourse" class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">加入课程</button>
 		</header>
 		<div id="content" class="mui-content">
-			<ul id="table" class="mui-table-view">
-				<li v-for="course in myCourses" v-if="myCourses.length>0" v-bind:id="course.courseCode" class="mui-table-view-cell">
-					<img id="imgurl" class="mui-media-object mui-pull-left" src="../imgs/ppp.png" alt="">
-					<div class="mui-media-body2">
-						<div class="wenzi">
-							<p id="major" class="mui-ellipsis">{{course.room}}</p>
-							<span id="course"> {{course.name}}</span>
-							<h4 id="cteacher" style="margin-top: 10px;"> {{course.teacherName}}</h4>
-						</div>
-						<div class="mypoint">
-							<span>{{course.startTime}}~{{course.endTime}}</span>
-						</div>
+
+			<div class="mui-scroll">
+				<ul id="table" class="mui-table-view">
+					<div id="refreshContainer" class=" mui-scroll-wrapper">
+
 					</div>
-				</li>
-				<li v-if="myCourses.length<1">
-					<div style="text-align: center;margin-top: 20px;">
-						<h4>你还没有加入课程</h4></div>
-				</li>
-			</ul>
+					<li v-for="course in myCourses" v-if="myCourses.length>0" v-bind:id="course.courseCode" class="mui-table-view-cell">
+						<img id="imgurl" class="mui-media-object2 mui-pull-left" src="../imgs/ppp.png" alt="">
+						<div class="mui-media-body2">
+							<div class="wenzi">
+								<h4>{{course.name}}</h4>
+								<span>{{course.room}}</span>
+								<!--<p class="mui-ellipsis">{{course.teacherName}}</p>-->
+							</div>
+							<div class="mypoint mui-navigate-right ">
+								<span  class="main" >{{course.startTime}}~{{course.endTime}}</span>
+								<!--<span class="mui-ellipsis" class="main"></span>-->
+								<p class="mui-ellipsis">{{course.today}}</p>
+							</div>
+						</div>
+					</li>
+					
+					<li v-if="myCourses.length<1">
+						<div style="text-align: center;margin-top: 20px;">
+							<h3>你还没有加入课程</h3>
+							<button type="button" class="mui-btn" @click="getCourse(content.number)">刷新</button>
+						</div>
+					</li>
+					
+					<!--<li class="mui-table-view-cell">
+						<img id="imgurl" class="mui-media-object2 mui-pull-left" src="../imgs/ppp.png" alt="">
+						<div class="mui-media-body2">
+							<div class="wenzi">
+								<h4>{{course.name}}</h4>
+								<span>{{course.room}}</span>
+								<p class="mui-ellipsis">{{course.teacherName}}</p>
+							</div>
+							<div class="mypoint mui-navigate-right ">
+								<span  class="main" >{{course.startTime}}~{{course.endTime}}</span>
+								<!--<span class="mui-ellipsis" class="main"></span>
+								<p class="mui-ellipsis">{{course.today}}</p>
+							</div>
+						</div>
+					</li>-->
+					
+				</ul>
+			</div>
 
 		</div>
 		<script src="../js/configurl.js"></script>
@@ -79,9 +122,84 @@
 		<script src="../js/vue.min.js"></script>
 
 		<script type="text/javascript">
-			mui.init(
+			mui.init({
+				pullRefresh: {
 
-			);
+					container: "#refreshContainer", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+
+					down: {
+
+						auto: false, //可选,默认false.首次加载自动下拉刷新一次
+
+						contentdown: "下拉可以刷新", //可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
+
+						 contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+
+						contentrefresh: "正在刷新...", //可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+						offset: '20px', //可选 默认0px,下拉刷新控件的起始位置
+						contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容；
+
+						 callback: function() {
+
+							setTimeout(function() { //定时器，提升用户体验
+								let url = getport() + '/course/getMyCourse';
+
+								mui.ajax(url, {
+									data: {
+										number: content.number
+									},
+									dataType: 'json', //服务器返回json格式数据
+									type: 'post', //HTTP请求类型
+									timeout: 10000, //超时时间设置为10秒；
+									success: function(data) {
+										console.log(JSON.stringify(data));
+										var newCourse = data.message;
+										var newDataLength = newCourse.length;
+										if(content.myCourses.length != newDataLength) {
+											if(newDataLength > content.myCourses.length) {
+												for(var i = content.myCourses.length; i < newDataLength; i++) {
+													content.myCourses.push(newCourse[i]);
+												}
+											} else {
+												content.myCourses = newCourse;
+											}
+										} else {
+											mui.toast('没有数据刷新');
+										}
+										mui('#refreshContainer').pullRefresh().endPulldownToRefresh(); //完成刷新
+
+									},
+									error: function(xhr, type, errorThrown) {
+
+										if(type == "timeout") {
+											mui.alert("请求超时，请检查网络或重试");
+										} else {
+											mui.alert("未知网络错误");
+										}
+										mui('#refreshContainer').pullRefresh().endPulldownToRefresh(); //完成刷新
+									}
+								});
+
+								 
+
+							}, 1000);
+
+						} //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+
+					}
+
+				}
+
+			});
+
+			function callfunction() {
+
+			}
+
+			document.getElementById('joinCourse').addEventListener('tap', function() {
+				openJoin();
+
+			});
 
 			var detailPage = null;
 			mui.plusReady(function() {
@@ -100,44 +218,50 @@
 					}, 1000);
 					return false;
 				};
-				
-				
+
 				//添加列表项的点击事件
 				mui('.mui-table-view').on('tap', '.mui-table-view-cell', function(e) {
+					console.log('course页点击了');
 					var id = this.getAttribute('id');
-					console.log(detailPage)
+					//					console.log(detailPage)
 					//获得详情页面
-					if(!detailPage) {
-//						plus.webview.create('../course/course-homepage.html', 'course-homePage.html');
-						detailPage = plus.webview.getWebviewById('course-homePage.html');
-					}
-					//触发详情页面的newsId事件
-					mui.fire(detailPage, 'courseCode', {
-						courseCode: id
-					});
+					//					if(!detailPage) {
+					////						plus.webview.create('../course/course-homepage.html', 'course-homePage.html');
+					//						detailPage = plus.webview.getWebviewById('course-homePage.html');
+					//					}
+
 					//打开详情页面          
 					mui.openWindow({
 						id: 'course-homePage.html',
-						url:'../course/course-homepage.html'
+						url: '../course/course-homepage.html',
+						show: {
+							autoShow: false
+						}
+					});
+
+					//触发详情页面的newsId事件
+					mui.fire(plus.webview.getWebviewById('course-homePage.html'), 'courseCode', {
+						courseCode: id
 					});
 				});
 
 			})
 
-//			if(window.plus) {
-//				tapLook()
-//			} else {
-//				document.addEventListener("plusready", tapLook, false);
-//			}
+			//			if(window.plus) {
+			//				tapLook()
+			//			} else {
+			//				document.addEventListener("plusready", tapLook, false);
+			//			}
 
 			function tapLook() {
 				//添加列表项的点击事件
 				mui('.mui-table-view').on('tap', '.mui-table-view-cell', function(e) {
+					console.log('course页点击了');
 					var id = this.getAttribute('id');
-					console.log(detailPage)
+					//					console.log(detailPage)
 					//获得详情页面
 					if(!detailPage) {
-//						plus.webview.create('../course/course-homepage.html', 'course-homePage.html');
+						//						plus.webview.create('../course/course-homepage.html', 'course-homePage.html');
 						detailPage = plus.webview.getWebviewById('course-homePage.html');
 					}
 					//触发详情页面的newsId事件
@@ -147,7 +271,14 @@
 					//打开详情页面          
 					mui.openWindow({
 						id: 'course-homePage.html',
-						url:'../course/course-homepage.html'
+						url: '../course/course-homepage.html'
+//						 show:{
+//                         autoShow:true,//页面loaded事件发生后自动显示，默认为true
+//                         aniShow:{
+//                         	AnimationTypeShow:"pop-in"
+//                         }//页面显示动画，默认为”slide-in-right“；
+////                         duration:animationTime//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+//                       }
 					});
 				});
 			}
@@ -215,12 +346,26 @@
 
 			})
 
+
+           var join = null;
 			function openJoin() {
-				mui.openWindow({
-					url: '../student/joinCourse.html',
-					id: 'joinCourse.html',
-					createNew: false
-				});
+				console.log('点击了');
+				join = plus.webview.getWebviewById('joinCourse.html');
+				console.log(join);
+				
+//				mui.openWindow({
+//					url: '../student/joinCourse.html',
+//					id: 'joinCourse.html'
+//				});
+              var target  =  plus.webview.create('../student/joinCourse.html','joinCourse.html');
+                 target.addEventListener("loaded", function(){
+
+                     console.log( "New Window loaded!" );
+
+                     target.show("pop-in");
+
+                }, false );
+
 				// mui.toast(localStorage.getItem('StuNumber'));
 			}
 		</script>

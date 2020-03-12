@@ -80,17 +80,19 @@ w.clicked=function(id,wa,ns,ws){
 };
 
 
-w.clickSend=function(id,wa,ns,ws,MyCourse){
+w.clickSend=function(id,wa,ns,ws,MyCourse,face){
 	if(openw){//避免多次打开同一个页面
 		return null;
 	}
 	if(w.plus){
+		console.log('执行创建');
 		wa&&(waiting=plus.nativeUI.showWaiting());
 		ws=ws||{};
 		ws.scrollIndicator||(ws.scrollIndicator='none');
 		ws.scalable||(ws.scalable=false);
 		var pre='';//'http://192.168.1.178:8080/h5/';
-		openw=plus.webview.create(pre+id,id,ws,{course:MyCourse});
+		openw=plus.webview.create(pre+id,id,ws,{course:MyCourse,
+		                                        faceData:face});
 		ns||openw.addEventListener('loaded',function(){//页面加载完成后才显示
 //		setTimeout(function(){//延后显示可避免低端机上动画时白屏
 			openw.show(as);
@@ -102,6 +104,7 @@ w.clickSend=function(id,wa,ns,ws,MyCourse){
 		},false);
 		return openw;
 	}else{
+		console.log('执行打开啊啊啊啊啊啊啊啊啊啊啊啊');
 		w.open(id);
 	}
 	return null;

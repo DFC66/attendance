@@ -202,6 +202,28 @@ public class SigninController {
         return  result;
     }
 
+
+    @RequestMapping(value = "/hasTodaySigned",method = RequestMethod.POST)
+    public Result hasTodaySigned(@RequestParam("stuNumber") String number,Integer courseCode) throws ParseException {
+        Result result = new Result<Signin>();
+        Date date = new Date();
+        String todayDate = TODAY_SDF.format(date);
+        Signin todaySign = signinService.findByNumberAndCourseCodeAndSigninDate(number, courseCode, todayDate);
+        if (todaySign!=null){
+            result.setMsg("你今天已签到，不能重复签到");
+            result.setCode(204);
+            result.setMessage(todaySign);
+        }else{
+            result.setMsg("你今天未签到");
+            result.setCode(200);
+        }
+
+
+        return  result;
+    }
+
+
+
     @RequestMapping(value = "/delete",method = RequestMethod.GET)
     public Result deleteOne(Integer id){
         Result result = new Result();

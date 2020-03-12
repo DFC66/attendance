@@ -1,8 +1,11 @@
 package com.dfc.entity;
 
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @author: zsh
@@ -86,7 +89,17 @@ public class Course {
 
 
     @Column(name = "signin_status")
-    private String signinStatus;
+    private Integer signinStatus;
+
+
+    @CreatedDate
+    @Column(name = "create_time")
+    private Date createTime;
+
+    @LastModifiedDate
+    @Column(name = "update_time")
+    private Date updateTime;
+
 
     public Integer getId() {
         return id;
@@ -184,11 +197,11 @@ public class Course {
         this.teacherName = teacherName;
     }
 
-    public String getSigninStatus() {
+    public Integer getSigninStatus() {
         return signinStatus;
     }
 
-    public void setSigninStatus(String signinStatus) {
+    public void setSigninStatus(Integer signinStatus) {
         this.signinStatus = signinStatus;
     }
 }
