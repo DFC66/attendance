@@ -1,180 +1,345 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 
 	<head>
 		<meta charset="utf-8">
-		<title>Hello MUI</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-
-		<link rel="stylesheet" href="../css/mui.min.css">
+		<link href="../css/iconfont.css" rel="stylesheet" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
 		<style>
-			html,body {
-				background-color: #efeff4;
-			}
-			.title{
-				margin: 20px 15px 10px;
+			.title {
+				padding: 20px 15px 10px;
 				color: #6d6d72;
 				font-size: 15px;
-			}
-			 .oa-contact-cell.mui-table .mui-table-cell {
-				padding: 11px 0;
-				vertical-align: middle;
+				background-color: #fff;
 			}
 			
-			.oa-contact-cell {
-				position: relative;
-				margin: -11px 0;
+			.mui-media-body2 {
+				font-size: 14px;
+				font-weight: 500;
+				/*line-height: 20px;*/
+				margin-bottom: 0;
+				margin-left: 44px;
+				color: #333;
+				display: flex;
 			}
-	
-			.oa-contact-avatar {
-				width: 75px;
+			
+			.mui-media-object2 {
+				line-height: 42px;
+				max-width: 42px;
 			}
-			.oa-contact-avatar img {
-				border-radius: 50%;
-			}
-			.oa-contact-content {
-				width: 100%;
-			}
-			.oa-contact-name {
-				margin-right: 20px;
-			}
-			.oa-contact-name, oa-contact-position {
+			
+			.wenzi {
 				float: left;
+				width: 60%;
 			}
+			
+			.mypoint {
+				height: 100%;
+				float: right;
+				/* vertical-align: middle; */
+				/* text-align: right; */
+				display: fixed;
+				font-size: 18px;
+				font-style: italic;
+				margin-right: 15px;
+				align-self: center;
+				max-height: 80px;
+				/* position: absolute; */
+			}
+			
+			.main {
+				width: 100%;
+				display: block;
+				text-align: center;
+			}
+			
+			
 		</style>
+
 	</head>
 
 	<body>
+        <div id="content">
 		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title"></h1>
+			<button id="addUser" class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">添加用户</button>
+			<h1 v-if="course.signinStatus==1" class="mui-title">当前可以签到</h1>
+			<h1 v-if="course.signinStatus==1==0" class="mui-title">当前不可以签到</h1>
+			<h1 v-if="course.signinStatus==1==null" class="mui-title">签到状态出错</h1>
 		</header>
-		<div id="all" class="mui-content">
-			<div class="title">
-			</div>
+		<div  class="mui-content">
 
-			<ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
+			<ul id="table" class="mui-table-view">
+
+				<!--<li v-for="course in myCourses" v-if="myCourses.length>0" v-bind:id="course.courseCode" class="mui-table-view-cell" @click="jump(course)">
+					<img id="imgurl" class="mui-media-object2 mui-pull-left" v-lazy="img">
+					<div class="mui-media-body2">
+						<div class="wenzi">
+							<h4>课程号：{{course.courseCode}}</h4>
+							<span>{{course.name}}</span>
+							<p class="mui-ellipsis">{{course.teacherName}}</p>
+							<span class="mui-ellipsis" class="main">{{course.room}}</span>
+						</div>
+						<div class="mypoint mui-navigate-right ">
+							<span class="main">{{course.startTime}}~{{course.endTime}}</span>
+							<p v-if="course.signinStatus==1" class="mui-ellipsis">签到已开启</p>
+							<p v-if="course.signinStatus==0" class="mui-ellipsis">签到已关闭</p>
+						</div>
+					</div>
+				</li>-->
+
+				<!--<li v-if="myCourses.length<1" class="mui-table-view-cell">
+					<div style="text-align: center;margin-top: 20px;">
+						<h3>没有找到课程</h3>
+						<button type="button" class="mui-btn" @click="getAllCourse">刷新</button>
+					</div>
+				</li>-->
+
 				<li class="mui-table-view-cell">
-					<div class="mui-slider-cell">
-						<div class="oa-contact-cell mui-table">
-							<div class="oa-contact-avatar mui-table-cell">
-								<img src="../images/60x60.gif" />
-							</div>
-							<div class="oa-contact-content mui-table-cell">
-								<div class="mui-clearfix">
-									<h4 class="oa-contact-name">叶文洁</h4>
-									<span class="oa-contact-position mui-h6">董事长</span>
-								</div>
-								<p class="oa-contact-email mui-h6">
-									yewenjie@sina.com
-								</p>
-							</div>
+					<img id="imgurl" class="mui-media-object2 mui-pull-left" v-lazy="img">
+					<div class="mui-media-body2">
+						<div class="wenzi">
+							<h4>{{course.courseCode}}</h4>
+							<span>333333333</span>
+							<p class="mui-ellipsis">44444444</p>
+						</div>
+						<div class="mypoint mui-navigate-right ">
+							<p class="mui-ellipsis">{{tip}}</p>
 						</div>
 					</div>
 				</li>
-				<li class="mui-table-view-cell">
-					<div class="mui-slider-cell">
-						<div class="oa-contact-cell mui-table">
-							<div class="oa-contact-avatar mui-table-cell">
-								<img src="../images/60x60.gif" />
-							</div>
-							<div class="oa-contact-content mui-table-cell">
-								<div class="mui-clearfix">
-									<h4 class="oa-contact-name">艾AA</h4>
-									<span class="oa-contact-position mui-h6">总经理</span>
-								</div>
-								<p class="oa-contact-email mui-h6">
-									aaa@163.com
-								</p>
-							</div>
-						</div>
-					</div>
-				</li>
-				<li class="mui-table-view-cell">
-					<div class="mui-slider-cell">
-						<div class="oa-contact-cell mui-table">
-							<div class="oa-contact-avatar mui-table-cell">
-								<img src="../images/60x60.gif" />
-							</div>
-							<div class="oa-contact-content mui-table-cell">
-								<div class="mui-clearfix">
-									<h4 class="oa-contact-name">罗辑</h4>
-									<span class="oa-contact-position mui-h6">员工</span>
-								</div>
-								<p class="oa-contact-email mui-h6">
-									luoji@126.com
-								</p>
-							</div>
-						</div>
-					</div>
-				</li>
-				<li class="mui-table-view-cell">
-					<div class="mui-slider-cell">
-						<div class="oa-contact-cell mui-table">
-							<div class="oa-contact-avatar mui-table-cell">
-								<img src="../images/60x60.gif" />
-							</div>
-							<div class="oa-contact-content mui-table-cell">
-								<div class="mui-clearfix">
-									<h4 class="oa-contact-name">云天明</h4>
-									<span class="oa-contact-position mui-h6">员工</span>
-								</div>
-								<p class="oa-contact-email mui-h6">
-									ytm@163.com
-								</p>
-							</div>
-						</div>
-					</div>
-				</li>
-				<li class="mui-table-view-cell">
-					<div class="mui-slider-cell">
-						<div class="oa-contact-cell mui-table">
-							<div class="oa-contact-avatar mui-table-cell">
-								<img src="../images/60x60.gif" />
-							</div>
-							<div class="oa-contact-content mui-table-cell">
-								<div class="mui-clearfix">
-									<h4 class="oa-contact-name">史强</h4>
-									<span class="oa-contact-position mui-h6">员工</span>
-								</div>
-								<p class="oa-contact-email mui-h6">
-									shiqiang@gmail.com
-								</p>
-							</div>
-						</div>
-					</div>
-				</li>
+
 			</ul>
+
 		</div>
-	</body>
-	<script src="../js/mui.min.js"></script>
-	<script src="../js/vue.min.js"></script>
-	<script>
-		mui.init({
-			swipeBack:true //启用右滑关闭功能
-		});
-				var content = 	new Vue({
-				el: '#all',
-				data: {
-					number: localStorage.getItem('stuNumber'),
-					myCourses: []
-				}
-		  })
-		
-		
-		//添加自定义事件监听
-		window.addEventListener('course-3',function(event){
+</div>
+		</div>
+		<script src="../js/configurl.js"></script>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script src="../js/vue-lazyload.js"></script>
+
+		<script type="text/javascript">
+	mui.init({
+						//				pullRefresh: {
+						//
+						//					container: "#container", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+						//
+						//					down: {
+						//
+						//						auto: false, //可选,默认false.首次加载自动下拉刷新一次
+						//
+						//						contentdown: "下拉可以刷新", //可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
+						//
+						//						 contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+						//
+						//						contentrefresh: "正在刷新...", //可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+						//						offset: '30px', //可选 默认0px,下拉刷新控件的起始位置
+						//						contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容；
+						//
+						//						 callback: function() {
+						//                                console.log('进来了吗');
+						//							setTimeout(function() { //定时器，提升用户体验
+						//								let url = getport() + '/course/getAllCourse';
+						//
+						//								mui.ajax(url, {
+						//									data: {
+						//
+						//									},
+						//									dataType: 'json', //服务器返回json格式数据
+						//									type: 'post', //HTTP请求类型
+						//									timeout: 10000, //超时时间设置为10秒；
+						//									success: function(data) {
+						//										console.log(JSON.stringify(data));
+						//										var newCourse = data.message;
+						//										var newDataLength = newCourse.length;
+						//										if(content.myCourses.length != newDataLength) {
+						//											if(newDataLength > content.myCourses.length) {
+						//												for(var i = content.myCourses.length; i < newDataLength; i++) {
+						//													content.myCourses.push(newCourse[i]);
+						//												}
+						//											} else {
+						//												content.myCourses = newCourse;
+						//											}
+						//										} else {
+						//											mui.toast('没有数据刷新');
+						//										}
+						//										mui('#container').pullRefresh().endPulldownToRefresh(); //完成刷新
+						//
+						//									},
+						//									error: function(xhr, type, errorThrown) {
+						//
+						//										if(type == "timeout") {
+						//											mui.alert("请求超时，请检查网络或重试");
+						//										} else {
+						//											mui.alert("未知网络错误");
+						//										}
+						//										mui('#container').pullRefresh().endPulldownToRefresh(); //完成刷新
+						//									}
+						//								});
+						//
+						//								 
+						//
+						//							}, 1000);
+						//
+						//						} //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+						//
+						//					}
+						//
+						//				}
+
+					});
+
+
+			Vue.use(VueLazyload, {
+				preLoad: 1.3,
+				error: '../imgs/error.png',
+				loading: '../imgs/loading.gif',
+				attempt: 1
+			});
+
+//添加自定义事件监听
+		window.addEventListener('manage1',function(event){
 		  //获得事件参数
 		  var data = event.detail.course;
-       
-		  
-		
-		           
+         
+          content.course = data;
+           console.log('界面1收到66666'+JSON.stringify(content.course));
 		});
-		
-		
-		
-	</script>
+
+
+			document.getElementById('addUser').addEventListener('tap', function() {
+				openAddUser();
+				console.log(localStorage.getItem('person'));
+				console.log(content.buttonFlag);
+			});
+
+			mui.plusReady(function() {
+
+			
+			})
+
+			//			if(window.plus) {
+			//				
+			//			} else {
+			//				document.addEventListener("plusready", tapLook, false);
+			//			}
+			var detailPage = null;
+			var content = new Vue({
+				el: '#content',
+				data: {
+					img: 'http://thirdqq.qlogo.cn/g?b=oidb&k=Qo7kIdQ1omu8gwGaZFe6IA&s=100&t=1565432648',
+					number: localStorage.getItem('stuNumber'),
+				    course: {},
+					tip: ''
+				},
+				created() {
+//				
+//					//					console.log('創建了一次');
+//					var all = this;
+////					console.log('加载了');
+//					if(window.plus) {
+//						all.getAllCourse();
+//					} else {
+//						document.addEventListener("plusready", all.getAllCourse, false);
+//					}
+
+				},
+				watch: {
+					//					number(newValue) {
+					//						console.log('学号发生了变化');
+					//						if(newValue != '' || newValue != null) {
+					//							this.getCourse(newValue);
+					//						}
+					//					}
+				},
+				mounted() {
+
+				},
+				methods: {
+					getAllCourse: function() {
+						var all = this;
+						//						console.log('开始获取课程数据')
+
+						var url = getport() + '/course/getAllCourse';
+
+						mui.ajax(url, {
+							data: {
+
+							},
+							dataType: 'json', //服务器返回json格式数据
+							type: 'post', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							success: function(data) {
+								console.log(JSON.stringify(data));
+								var courseData = data.message;
+								all.myCourses = courseData;
+
+							},
+							error: function(xhr, type, errorThrown) {
+
+								if(type == "timeout") {
+									mui.alert("请求超时，请检查网络或重试");
+								} else {
+									mui.alert("未知网络错误");
+								}
+
+							}
+						});
+
+					},
+					jump: function(thcourse) {
+						var all = this;
+						//						alert(courseCode);
+//						//获得详情页面
+//						if(!detailPage) {
+//							detailPage = plus.webview.getWebviewById('ManageCourse-main.html');
+//						}
+						//打开详情页面          
+					mui.openWindow({
+						id: 'ManageCourse-main.html',
+						url: 'ManageCourse-main.html',
+						show: {
+							autoShow: false
+						}
+					});
+						//触发详情页面的newsId事件
+						mui.fire(plus.webview.getWebviewById('ManageCourse-main.html'), 'code', {
+							course: thcourse
+						});
+//						//打开详情页面          
+//						mui.openWindow({
+//							id: 'ManageCourse-main.html'
+//						});
+
+					}
+
+				}
+
+			})
+
+			function openAddUser() {
+				//             mui.plusReady(function(){
+				//             	var target  =  plus.webview.create('../student/joinCourse.html','joinCourse.html');
+				//               target.addEventListener("loaded", function(){
+				//
+				//                   console.log( "New Window loaded!" );
+				//
+				//                   target.show("pop-in");
+				//
+				//                  }, false );			
+				//             })
+
+				mui.openWindow({
+					url: '../student/joinCourse.html',
+					id: 'joinCourse.html'
+				})
+
+			}
+		</script>
+	</body>
+
 </html>

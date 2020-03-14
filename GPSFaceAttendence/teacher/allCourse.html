@@ -245,7 +245,7 @@
 					//					console.log('創建了一次');
 					var all = this;
 
-					console.log('加载了');
+					console.log('所有课程都加载了');
 
 					if(window.plus) {
 						all.getAllCourse();
@@ -263,7 +263,7 @@
 					//					}
 				},
 				mounted() {
-
+					
 				},
 				methods: {
 					getAllCourse: function() {
@@ -297,24 +297,9 @@
 						});
 
 					},
-					elementCreate: function(count) {
-						var fragment = document.createDocumentFragment();
-						var li;
-						for(var i = 0; i < count; i++) {
-							li = document.createElement('li');
-							li.className = 'mui-table-view-cell mui-media';
-							li.innerHTML = '<img id="imgurl" class="mui-media-object2 mui-pull-left" data-lazyload="http://thirdqq.qlogo.cn/g?b=oidb&k=Qo7kIdQ1omu8gwGaZFe6IA&s=100&t=1565432648" ><div class="mui-media-body2"><div class="wenzi"><h4>222222</h4><span>333333333</span><p class="mui-ellipsis">44444444</p></div><div class="mypoint mui-navigate-right "><p class="mui-ellipsis">qwe</p></div></div>';
-							fragment.appendChild(li);
-						}
-						return fragment;
-					},
 					jump: function(thcourse) {
 						var all = this;
-						//						alert(courseCode);
-//						//获得详情页面
-//						if(!detailPage) {
-//							detailPage = plus.webview.getWebviewById('ManageCourse-main.html');
-//						}
+
 						//打开详情页面          
 					mui.openWindow({
 						id: 'ManageCourse-main.html',
@@ -327,16 +312,22 @@
 						mui.fire(plus.webview.getWebviewById('ManageCourse-main.html'), 'code', {
 							course: thcourse
 						});
-//						//打开详情页面          
-//						mui.openWindow({
-//							id: 'ManageCourse-main.html'
-//						});
+
 
 					}
 
 				}
 
 			})
+
+         function   getAll(){
+         	content.getAllCourse();
+         }
+
+
+            function  openAddCourse(){}
+
+
 
 			function openAddUser() {
 				//             mui.plusReady(function(){
@@ -354,7 +345,6 @@
 					url: '../student/joinCourse.html',
 					id: 'joinCourse.html'
 				})
-
 			}
 		</script>
 	</body>

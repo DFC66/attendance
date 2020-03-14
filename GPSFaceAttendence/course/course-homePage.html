@@ -101,137 +101,22 @@
 			//				id: 'maps_map.html'
 			//			}]
 		});
-		var subpages = ['course-first.html', 'course-members.html', 'course-signRecord.html', 'course-detail.html'];
-		var subpage_style = {
-			top: '0px',
-			bottom: '50px'
-		};
+		
+//
+//		if(window.plus) {
+//			initData();
+//		} else {
+//			document.addEventListener("plusready", initData, false);
+//		}
 
-		var detailPage = null;
-		var courseMsg = {};
-		var courseMain = new Vue({
-			el: '#courseBottom',
-			data: {
-				id: null,
-				number: localStorage.getItem('stuNumber'),
-				course: {
 
-				},
-				code: '',
-				faceData: {
-
-				},
-				signFlag:false
-
-			},
-			created() {
-				console.log('窗口被创建了');
-				var all = this;
-				this.queryFaceSet(all.number);
-			},
-			mounted() {
-				//			console.log("mounted加载")
-			},
-			watch: {
-				course(newVal) {
-					//					console.log('发生了变化' + JSON.stringify(newVal));
-					//					mui.fire(plus.webview.getWebviewById('course-first.html'), 'course-1', {
-					//						course: newVal
-					//					});
-				},
-				code(newVal) {
-
-				}
-
-			},
-			methods: {
-				queryFaceSet: function(uniqueName) {
-					var all = this;
-					//				var myData = {};
-					var url = "https://api-cn.faceplusplus.com/facepp/v3/faceset/getdetail";
-					mui.ajax(url, {
-						data: {
-							api_key: "CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA",
-							api_secret: "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3",
-							outer_id: uniqueName
-						},
-						//					async: false,
-						dataType: 'json', //服务器返回json格式数据
-						type: 'post', //HTTP请求类型
-						timeout: 10000, //超时时间设置为10秒；
-						success: function(data) {
-							// console.log(typeof data.face_tokens);
-							console.log('获取脸部数据' + JSON.stringify(data));
-							all.faceData = data;
-
-						},
-						error: function(xhr, type, errorThrown) {
-							console.log(type);
-							console.log(errorThrown);
-
-						}
-					});
-
-				}
-			}
-		});
-	
-      var judgeUrl = getport() + '/signin/hasTodaySigned';
-		function judgeTodaySign(paramNumber, paramCode) {
-			var signFlag = false;
-			mui.ajax(judgeUrl, {
-				data: {
-					stuNumber: paramNumber,
-					courseCode: paramCode,
-
-				},
-				async: false,
-				dataType: 'json', //服务器返回json格式数据
-				type: 'post', //HTTP请求类型
-				timeout: 10000, //超时时间设置为10秒；
-				success: function(data) {
-					mui.toast(data.msg);
-					if(data.code == 200) {
-						signFlag = true;
-
-					}
-				},
-				error: function(xhr, type, errorThrown) {
-
-					if(type == "timeout") {
-						mui.alert("请求超时，请检查网络或重试");
-					} else {
-						mui.alert("未知网络错误,服务器出错");
-					}
-
-				}
-			});
-
-			return signFlag;
-		}
-
-		var aniShow = {};
-		//创建子页面，首个选项卡页面显示，其它均隐藏；
-		mui.plusReady(function() {
+     var signButton =null;
+     
+		function initData() {
 			var self = plus.webview.currentWebview();
-
-			//			var old_back = mui.back;
-			//			mui.back = function() {
-			//				plus.webview.currentWebview().hide("auto", 300); //隐藏当前页面，这里300是隐藏页面的动画时间，单位毫秒，可自定义
-			//			}
-
 			leftPos = Math.ceil((window.innerWidth - 60) / 2); // 设置凸起大图标为水平居中
 
-			/**	
-			 * drawNativeIcon 绘制带边框的半圆，
-			 * 实现原理：
-			 *   id为bg的tag 创建带边框的圆
-			 *   id为bg2的tag 创建白色矩形遮住圆下半部分，只显示凸起带边框部分
-			 * 	 id为iconBg的红色背景图
-			 *   id为icon的字体图标
-			 *   注意创建先后顺序，创建越晚的层级越高
-			 */
-			var drawNativeIcon = draw.drawNative('icon', {
+			var drawNativeIcon = draw.drawNative('signIcon', {
 				bottom: '5px',
 				left: leftPos + 'px',
 				width: '60px',
@@ -295,35 +180,187 @@
 			}]);
 			// append 到父webview中
 			self.append(drawNativeIcon);
-
-			//自定义监听图标点击事件
-			var active_color = '#fff';
-
+            console.log('签到按钮画好了');
+            signButton = plus.nativeObj.View.getViewById('signIcon');  
 			drawNativeIcon.addEventListener('click', function(e) {
-				let detail = courseMain.course.message;
-				if(judgeTodaySign(courseMain.number, detail.courseCode)) {
-					console.log('点击就送' + JSON.stringify(courseMain.course));
-					console.log('可以点击就送全局变量' + JSON.stringify(window.courseMsg));
 
-					let faceData = courseMain.faceData;
-					showMaps(detail, faceData);
+				var detail = courseMain.course;
+				console.log('传course数据怎么回事？？？？？？？？？？？？？？？' + JSON.stringify(courseMain.course));
+				console.log('每次点击都看一下' + courseMain.course.courseCode);
+				if(canSign(detail.courseCode)) {
+					if(judgeTodaySign(courseMain.number, detail.courseCode)) {
+						console.log('点击就送哈哈哈哈' + JSON.stringify(courseMain.course));
+						//						console.log('可以点击就送全局变量' + JSON.stringify(window.courseMsg));
+
+						let faceData = courseMain.faceData;
+						showMaps(detail, faceData);
+					}
+				} else {
+					mui.toast('教师未开启签到，不能签到');
 				}
 
-				//						mui.alert('你点击了图标，你在此可以打开摄像头或者新窗口等自定义点击事件。', '悬浮球点击事件');
-				//				let detail = courseMain.course.message;
-				//                       let detail  = courseMsg.message;
-				//				console.log('点击就送' + JSON.stringify(courseMain.course));
-				//				console.log('可以点击就送全局变量' + JSON.stringify(window.courseMsg));
-				//
-				//				let faceData = courseMain.faceData;
-				//				showMaps(detail, faceData);
 
 			});
+		}
 
+ 
+
+
+		var subpages = ['course-first.html', 'course-members.html', 'course-signRecord.html', 'course-detail.html'];
+		var subpage_style = {
+			top: '0px',
+			bottom: '50px'
+		};
+
+		var detailPage = null;
+		var courseMsg = {};
+		var courseMain = new Vue({
+			el: '#courseBottom',
+			data: {
+				id: null,
+				number: localStorage.getItem('stuNumber'),
+				course: {
+
+				},
+				code: '',
+				faceData: {
+
+				},
+				signFlag: false,
+				teacherOpen:false
+			},
+			created() {
+				console.log('课程主窗口被创建了');
+				var all = this;
+				this.queryFaceSet(all.number);
+			},
+			mounted() {
+				//			console.log("mounted加载")
+			},
+			watch: {
+				course(newVal) {
+					//					console.log('发生了变化' + JSON.stringify(newVal));
+					//					mui.fire(plus.webview.getWebviewById('course-first.html'), 'course-1', {
+					//						course: newVal
+					//					});
+				},
+				code(newVal) {
+
+				}
+
+			},
+			methods: {
+				queryFaceSet: function(uniqueName) {
+					var all = this;
+					//				var myData = {};
+					var url = "https://api-cn.faceplusplus.com/facepp/v3/faceset/getdetail";
+					mui.ajax(url, {
+						data: {
+							api_key: "CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA",
+							api_secret: "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3",
+							outer_id: uniqueName
+						},
+						//					async: false,
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						success: function(data) {
+							// console.log(typeof data.face_tokens);
+							console.log('获取脸部数据' + JSON.stringify(data));
+							all.faceData = data;
+
+						},
+						error: function(xhr, type, errorThrown) {
+							console.log(type);
+							console.log(errorThrown);
+
+						}
+					});
+
+				}
+			}
+		});
+
+		function judgeTodaySign(paramNumber, paramCode) {
+			var judgeUrl = getport() + '/signin/hasTodaySigned';
+			var signFlag = false;
+			mui.ajax(judgeUrl, {
+				data: {
+					stuNumber: paramNumber,
+					courseCode: paramCode,
+
+				},
+				async: false,
+				dataType: 'json', //服务器返回json格式数据
+				type: 'post', //HTTP请求类型
+				timeout: 10000, //超时时间设置为10秒；
+				success: function(data) {
+					mui.toast(data.msg);
+					if(data.code == 200) {
+						signFlag = true;
+
+					}
+				},
+				error: function(xhr, type, errorThrown) {
+
+					if(type == "timeout") {
+						mui.alert("请求超时，请检查网络或重试");
+					} else {
+						mui.alert("未知网络错误,服务器出错");
+					}
+
+				}
+			});
+
+			return signFlag;
+		}
+
+		function canSign(Ccode) {
+			var canSignUrl = getport() + '/course/getCourseDetail';
+			
+			mui.ajax(canSignUrl, {
+				data: {
+					courseCode: Ccode
+				},
+//				async: false,
+				dataType: 'json', //服务器返回json格式数据
+				type: 'post', //HTTP请求类型
+				timeout: 10000, //超时时间设置为10秒；
+				success: function(data) {
+					console.log('每次点击都获取课程数据6666666666' + JSON.stringify(data));
+					if(data.message != null) {
+						var getData = data.message;
+//						courseMain.course = getData;
+						if(getData.signinStatus == 1) {
+							courseMain.teacherOpen=true;
+						}
+					}
+				},
+				error: function(xhr, type, errorThrown) {
+
+					if(type == "timeout") {
+						mui.alert("请求超时，请检查网络或重试");
+					} else {
+						mui.alert("未知网络错误");
+					}
+
+				}
+			});
+
+			
+		}
+
+
+
+		var aniShow = {};
+		//创建子页面，首个选项卡页面显示，其它均隐藏；
+		mui.plusReady(function() {
+			var self = plus.webview.currentWebview();
+			
 			for(var i = 0; i < 4; i++) {
 				var temp = {};
 				var sub = plus.webview.create(subpages[i], subpages[i], subpage_style);
-								console.log('每次都建页面');
+				console.log('每次都建页面');
 				if(i > 0) {
 					sub.hide();
 				} else {
@@ -332,6 +369,98 @@
 				}
 				self.append(sub);
 			}
+			
+			leftPos = Math.ceil((window.innerWidth - 60) / 2); // 设置凸起大图标为水平居中
+
+			var drawNativeIcon = draw.drawNative('signIcon', {
+				bottom: '5px',
+				left: leftPos + 'px',
+				width: '60px',
+				height: '60px'
+			}, [{
+				tag: 'rect',
+				id: 'bg',
+				position: {
+					top: '1px',
+					left: '0px',
+					width: '100%',
+					height: '100%'
+				},
+				rectStyles: {
+					color: '#f7f7f7',
+					radius: '50%',
+					borderColor: '#ccc',
+					borderWidth: '1px'
+				}
+			}, {
+				tag: 'rect',
+				id: 'bg2',
+				position: {
+					bottom: '-0.5px',
+					left: '0px',
+					width: '100%',
+					height: '45px'
+				},
+				rectStyles: {
+					color: '#f7f7f7'
+				}
+			}, {
+				tag: 'rect',
+				id: 'iconBg',
+				position: {
+					top: '5px',
+					left: '5px',
+					width: '50px',
+					height: '50px'
+				},
+				rectStyles: {
+					color: '#d74b28',
+					radius: '50%'
+				}
+			}, {
+				tag: 'font',
+				id: 'icon',
+				text: '签到', //此为字体图标Unicode码'\e600'转换为'\ue600'
+				position: {
+					top: '0px',
+					left: '5px',
+					width: '50px',
+					height: '100%'
+				},
+				textStyles: {
+					fontSrc: '_www/fonts/iconfont.ttf',
+					align: 'center',
+					color: '#fff',
+					size: '17px'
+				}
+			}]);
+			// append 到父webview中
+			self.append(drawNativeIcon);
+            console.log('签到按钮画好了');
+            signButton = plus.nativeObj.View.getViewById('signIcon');  
+			drawNativeIcon.addEventListener('click', function(e) {
+
+				var detail = courseMain.course;
+				console.log('传course数据怎么回事？？？？？？？？？？？？？？？' + JSON.stringify(courseMain.course));
+//				console.log('每次点击都看一下' + courseMain.course.courseCode);
+				canSign(detail.courseCode);
+				if(courseMain.teacherOpen) {
+					if(judgeTodaySign(courseMain.number, detail.courseCode)) {
+						console.log('点击就送哈哈哈哈' + JSON.stringify(courseMain.course));
+						//						console.log('可以点击就送全局变量' + JSON.stringify(window.courseMsg));
+
+						let faceData = courseMain.faceData;
+						showMaps(detail, faceData);
+					}
+				} else {
+					mui.toast('教师未开启签到，不能签到');
+				}
+
+
+			});
+			
+			
+			
 
 		});
 		//当前激活选项
@@ -393,70 +522,31 @@
 
 		}
 
-
-
-	
 		//添加courseCode自定义事件监听
-		window.addEventListener('courseCode', function(event) {
+		window.addEventListener('enterOne', function(event) {
 			console.log('每次都点击吗？？？？？？？？？？？？？？？？？？？？？')
-
 			//获得事件参数
-			let singleCode = event.detail.courseCode;
-			//根据courseCode向服务器请求新闻详情
-			console.log('接收到' + singleCode);
+			var oneCourse = event.detail.course
 
-			console.log('看一下vue里的值' + courseMain.code);
+			//根据courseCode向服务器请求新闻详情
+			courseMain.code = oneCourse.courseCode;
+			courseMain.course = oneCourse;
 
 			console.log('看看全局变量啦啦啦啦啦啦啦啦' + JSON.stringify(courseMain.course));
-
-			//				if(courseMain.code!=singleCode){
-			courseMain.code = singleCode
-			var url = getport() + '/course/getCourseDetail';
-			mui.ajax(url, {
-				data: {
-					courseCode: courseMain.code
-				},
-				//					async: false,
-				dataType: 'json', //服务器返回json格式数据
-				type: 'post', //HTTP请求类型
-				timeout: 10000, //超时时间设置为10秒；
-				success: function(data) {
-					console.log('每次点击都获取课程数据' + JSON.stringify(data));
-					if(data.message != null) {
-						courseMain.course = data;
-						courseMsg = data;
-					
-						mui.fire(plus.webview.getWebviewById('course-first.html'), 'course-1', {
-							course: data
-						});
-						mui.fire(plus.webview.getWebviewById('course-signRecord.html'), 'course-3', {
-							course: data
-						});
-						mui.fire(plus.webview.getWebviewById('course-detail.html'), 'course-4', {
-							course: data
-						});
-						//关闭等待框
-						plus.nativeUI.closeWaiting();
-						//显示当前页面
-						mui.currentWebview.show();
-
-					} else {
-						mui.toast(data.msg);
-					}
-
-				},
-				error: function(xhr, type, errorThrown) {
-
-					if(type == "timeout") {
-						mui.alert("请求超时，请检查网络或重试");
-					} else {
-						mui.alert("未知网络错误");
-					}
-
-				}
+			mui.fire(plus.webview.getWebviewById('course-first.html'), 'course-1', {
+				course: oneCourse
 			});
+			mui.fire(plus.webview.getWebviewById('course-signRecord.html'), 'course-3', {
+				course: oneCourse
+			});
+			mui.fire(plus.webview.getWebviewById('course-detail.html'), 'course-4', {
+				course: oneCourse
+			});
+			//关闭等待框
+			plus.nativeUI.closeWaiting();
+			//显示当前页面
+			plus.webview.currentWebview().show('pop-in');
 
-			//				}
 
 		});
 	</script>

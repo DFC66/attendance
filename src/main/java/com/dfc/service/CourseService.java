@@ -47,5 +47,6 @@ public interface CourseService {
     @Transactional
     List<Course> findMyCourse(String number);
 
-
+    @Transactional
+    Integer updateSignInStatus(Integer status,Integer courseCode);
 }

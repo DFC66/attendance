@@ -14,49 +14,48 @@
 			.mui-card .mui-control-content {
 				padding: 10px;
 			}
-
+			
 			.mui-control-content {
 				height: 510px;
 			}
-
+			
 			.xuanxiangka {
 				height: 100%;
 			}
-
+			
 			.searchkuang {
 				padding-top: 7.5px;
 				padding-left: 3px;
 				display: -webkit-box;
 				-webkit-box-orient: horizontal;
 			}
-
+			
 			.shaixuan {
 				padding-top: 1px;
 				padding-left: 3px;
 				display: -webkit-box;
 				-webkit-box-orient: horizontal;
 			}
-
+			
 			.searchleft {
 				-webkit-box-flex: 3.2;
 			}
-
+			
 			.twotab {
 				-webkit-box-flex: 2.5;
 			}
-
+			
 			.searchbtn {
 				margin-left: 2px;
 				-webkit-box-flex: 0.7;
-
 			}
-
+			
 			.shaixuanbtn {
 				margin-left: 4px;
 				-webkit-box-flex: 0.1;
 				/* height: 100%; */
 			}
-
+			
 			.mui-media-body2 {
 				font-size: 16px;
 				font-weight: 500;
@@ -66,46 +65,46 @@
 				padding-left: 50px;
 				color: #333
 			}
-
+			
 			.mui-media-object2 {
 				line-height: 80px;
 				max-width: 80px;
 				height: 80px
 			}
-
+			
 			.imagecss {
 				height: 180px;
 				width: 120px;
 				/* text-align: center; */
 				background-color: #C4C4C4;
 			}
-
+			
 			.divimagecss {
 				padding-top: 10px;
 			}
-
+			
 			.divtimecss {
 				/* padding-top: 20px; */
 				padding: 3px 10px
 			}
-
+			
 			.component {
 				padding: 10px;
 			}
-
+			
 			.mui-btn2 {
 				font-size: 9pt;
 				padding: 8px 10px
 			}
-
+			
 			.color {
 				background: #0062CC;
 			}
-
+			
 			.oneLine {
 				display: inline-block;
 			}
-
+			
 			.location {
 				float: right;
 				width: 70%;
@@ -119,7 +118,7 @@
 				justify-content: center;
 				/*定义div1的里的元素水平居中*/
 			}
-
+			
 			.mui-input-row label {
 				font-family: 'Helvetica Neue', Helvetica, sans-serif;
 				line-height: 1.1;
@@ -127,31 +126,27 @@
 				width: 30%;
 				padding: 11px 10px;
 			}
-
+			
 			.dataSize {
 				font-size: 16px;
 			}
 		</style>
 	</head>
 
-
-
 	<body>
-
-
-
 
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/jquery-3.3.1.min.js"></script>
 		<script src="../js/configurl.js"></script>
 		<script src="../js/mui.picker.min.js"></script>
-
-
 		<script type="text/javascript">
-			function submit(){
+			mui.init();
+			var mask = mui.createMask(); //遮罩层
+
+			function submit() {
 				var btnArray = ['确认', '取消'];
 				mui.confirm(' ', '确认添加课程吗？', btnArray, function(e) {
-					if (e.index == 0) {
+					if(e.index == 0) {
 						//ajax网络请求 预约
 						submitCourse();
 					} else {
@@ -159,8 +154,7 @@
 					}
 				})
 			}
-			
-			
+
 			function submitCourse() {
 				getGeocode();
 				// console.log(document.getElementById('result0').getAttribute("value"));
@@ -175,11 +169,11 @@
 				var start_time = document.getElementById('result0').getAttribute("value");
 				var end_time = document.getElementById('result1').getAttribute("value");
 				console.log(start_time);
-				if (c_name == '' || t_name == '' || r_name == '' || start_time == null || end_time == null) {
+				if(c_name == '' || t_name == '' || r_name == '' || start_time == null || end_time == null) {
 					mui.alert('信息不能为空');
-				} else if (CompareDate(start_time, end_time)) {
+				} else if(CompareDate(start_time, end_time)) {
 					mui.alert('结束时间不能大于等于开始时间');
-				} 
+				}
 				// else if (imgPath == '') {
 
 				// 	mui.alert('上传图片不能为空');
@@ -188,7 +182,7 @@
 				else {
 
 					// uploadMessage(imgPath, c_name, t_name, r_name, longitude, latitude, startTime, endTime);
-                               uploadBaseMessage(c_name, t_name, r_name, longitude, latitude, start_time, end_time);
+					uploadBaseMessage(c_name, t_name, r_name, longitude, latitude, start_time, end_time);
 
 				}
 			}
@@ -214,7 +208,7 @@
 
 				document.getElementById('longitude').innerText = longt;
 				document.getElementById('latitude').innerText = lat;
-				mui.toast('位置在'+position.addresses);
+				mui.toast('位置在' + position.addresses);
 
 				// var alt = codns.altitude; //获取到当前位置的海拔信息；
 				// str += "海拔：" + alt + "\n";
@@ -239,18 +233,12 @@
 						geocode: true
 					});
 
-
 				})
 
 			}
 
-
-
-
-
-
 			function choosePhoto(event) {
-				if (mui.os.plus) {
+				if(mui.os.plus) {
 					var a = [{
 						title: '拍照'
 					}, {
@@ -260,7 +248,7 @@
 						cancel: '取消',
 						buttons: a
 					}, function(b) {
-						switch (b.index) {
+						switch(b.index) {
 							case 0:
 								break;
 
@@ -353,60 +341,61 @@
 				mainImg.src = imgPath;
 			}
 
+			function uploadBaseMessage(c_name, t_name, r_name, longitude, latitude, start_time, end_time) {
 
-			function uploadBaseMessage( c_name, t_name, r_name, longitude, latitude, start_time, end_time) {
-				
 				var myurl = getport() + '/course/addCourse';
-                        var course = {
-                        	"name": c_name,
-                        	"teacherName": t_name,
-                        	"room": r_name,
-                        	"longitude": longitude,
-                        	"latitude": latitude,
-                        	"startTime": start_time,
-                        	"endTime": end_time
-                        }
-                        mui.ajax(myurl, {
-                        	contentType: "application/json",
-                        	data: JSON.stringify(course),
-                        	dataType: 'json', //服务器返回json格式数据
-                        	type: 'post', //HTTP请求类型
-                        	timeout: 10000, //超时时间设置为10秒；
-                        	success: function(data) {
-                        		console.log(JSON.stringify(data));
-                        		// messageCode = data.code;
-                        
-                        		if (data.code == 200) {
-                        			mui.toast(data.msg);
+				var course = {
+					"name": c_name,
+					"teacherName": t_name,
+					"room": r_name,
+					"longitude": longitude,
+					"latitude": latitude,
+					"startTime": start_time,
+					"endTime": end_time
+				}
+				mui.ajax(myurl, {
+					contentType: "application/json",
+					data: JSON.stringify(course),
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					beforeSend: function() {
+						plus.nativeUI.showWaiting('正在上传数据');
+						mask.show(); //显示遮罩层
+					},
+					complete: function() {
+						plus.nativeUI.closeWaiting();
+						mask.closed(); //关闭遮罩层
+					},
+					success: function(data) {
+						console.log(JSON.stringify(data));
+						// messageCode = data.code;
+
+						if(data.code == 200) {
+							mui.toast(data.msg);
 							plus.webview.currentWebview().close(); //本窗口关闭
-                        		}else {
+						} else {
 							mui.alert(data.msg);
-						 }
-                        
-                        	},
-                        	error: function(xhr, type, errorThrown) {
-                        		if (type == "timeout") {
-                        			mui.alert("请求超时，请检查网络或重试");
-                        		} else {
-                        			mui.alert("未知网络错误");
-                        		}
-                        		console.log(type);
-                        		// console.log(errorThrown);
-                        	}
-                        });
-                      
+						}
+
+					},
+					error: function(xhr, type, errorThrown) {
+						if(type == "timeout") {
+							mui.alert("请求超时，请检查网络或重试");
+						} else {
+							mui.alert("未知网络错误");
+						}
+						console.log(type);
+						// console.log(errorThrown);
+					}
+				});
+
 			}
 
+			//                function judgeCourseExist(){
+			// var url = getport() + '/course/judgeCourseExists';
 
-        //                function judgeCourseExist(){
-				    // var url = getport() + '/course/judgeCourseExists';
-				     
-				     
-			     // }
-                                 
-
-
-
+			// }
 
 			function uploadMessage(file, c_name, t_name, r_name, longitude, latitude, start_time, end_time) {
 
@@ -417,7 +406,7 @@
 					var task = plus.uploader.createUpload(url, {
 						method: "POST"
 					}, function(t, status) {
-						if (status == 200) {
+						if(status == 200) {
 							console.log(t.responseText);
 							// if (t.responseText == "success") {
 							// 	console.log("上传成功：" + t.responseText);
@@ -440,8 +429,6 @@
 							mui.alert('服务器连接失败');
 						}
 
-
-
 					});
 					var course = {
 						"name": c_name,
@@ -453,14 +440,12 @@
 						"end_name": end_time
 					}
 
-
 					var code = getRandomCode(10);
 					task.addData("course", JSON.stringify(course));
 
 					// task.addData("cname", c_name);
 					// task.addData("tname", t_name);
 					// task.addData("rname", r_name);
-
 
 					task.addFile(file, {
 						key: "file",
@@ -472,17 +457,14 @@
 				})
 			}
 
-
-
-
 			function getRandomCode(length) {
-				if (length > 0) {
+				if(length > 0) {
 					var data = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
 						"K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f",
 						"g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
 					];
 					var nums = "";
-					for (var i = 0; i < length; i++) {
+					for(var i = 0; i < length; i++) {
 						var r = parseInt(Math.random() * 61);
 						nums += data[r];
 					}
@@ -492,29 +474,8 @@
 				}
 			}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 			window.onload = getGeocode();
 		</script>
-
 
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
@@ -561,18 +522,13 @@
 			<div class="divtimecss" align="center">
 				<button id='result0' data-options='{"type":"time"}' type="button" class="mui-btn mui-btn-primary mui-btn-outlined">上课时间</button>
 				<label>~</label>
-				<button id='result1' data-options='{"type":"time"}' type="button" class="mui-btn mui-btn-primary mui-btn-outlined "
-				 style="">下课时间</button>
+				<button id='result1' data-options='{"type":"time"}' type="button" class="mui-btn mui-btn-primary mui-btn-outlined " style="">下课时间</button>
 			</div>
-
-
 
 			<div class="mui-content-padded">
 				<button id='submit' onclick="submit()" class="mui-btn mui-btn-block mui-btn-primary">提交</button>
 			</div>
 		</div>
-
-
 
 		<script>
 			(function($) {
@@ -584,7 +540,7 @@
 					btn.addEventListener('tap', function() {
 						// console.log("进来了");
 						var _self = this;
-						if (_self.picker) {
+						if(_self.picker) {
 							_self.picker.show(function(rs) {
 								btn.innerText = rs.text;
 								btn.value = rs.text;
@@ -601,7 +557,6 @@
 							 * 示例为了简洁，将 options 放在了按钮的 dom 上
 							 * 也可以直接通过代码声明 optinos 用于实例化 DtPicker
 							 */
-
 
 							_self.picker = new $.DtPicker(options);
 							_self.picker.show(function(rs) {
@@ -634,16 +589,6 @@
 
 					}, false);
 				});
-
-
-
-
-
-
-
-
-
-
 
 			})(mui);
 		</script>

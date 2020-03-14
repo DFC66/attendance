@@ -74,7 +74,7 @@
 					<div id="refreshContainer" class=" mui-scroll-wrapper">
 
 					</div>
-					<li v-for="course in myCourses" v-if="myCourses.length>0" v-bind:id="course.courseCode" class="mui-table-view-cell">
+					<li v-for="course in myCourses" v-if="myCourses.length>0" v-bind:id="course.courseCode" class="mui-table-view-cell" @click="jumpToCourse(course)"  >
 						<img id="imgurl" class="mui-media-object2 mui-pull-left" src="../imgs/ppp.png" alt="">
 						<div class="mui-media-body2">
 							<div class="wenzi">
@@ -219,31 +219,10 @@
 					return false;
 				};
 
-				//添加列表项的点击事件
-				mui('.mui-table-view').on('tap', '.mui-table-view-cell', function(e) {
-					console.log('course页点击了');
-					var id = this.getAttribute('id');
-					//					console.log(detailPage)
-					//获得详情页面
-					//					if(!detailPage) {
-					////						plus.webview.create('../course/course-homepage.html', 'course-homePage.html');
-					//						detailPage = plus.webview.getWebviewById('course-homePage.html');
-					//					}
+//				//添加列表项的点击事件
+//				mui('.mui-table-view').on('tap', '.mui-table-view-cell', function(e) {
 
-					//打开详情页面          
-					mui.openWindow({
-						id: 'course-homePage.html',
-						url: '../course/course-homepage.html',
-						show: {
-							autoShow: false
-						}
-					});
-
-					//触发详情页面的newsId事件
-					mui.fire(plus.webview.getWebviewById('course-homePage.html'), 'courseCode', {
-						courseCode: id
-					});
-				});
+//				});
 
 			})
 
@@ -252,36 +231,6 @@
 			//			} else {
 			//				document.addEventListener("plusready", tapLook, false);
 			//			}
-
-			function tapLook() {
-				//添加列表项的点击事件
-				mui('.mui-table-view').on('tap', '.mui-table-view-cell', function(e) {
-					console.log('course页点击了');
-					var id = this.getAttribute('id');
-					//					console.log(detailPage)
-					//获得详情页面
-					if(!detailPage) {
-						//						plus.webview.create('../course/course-homepage.html', 'course-homePage.html');
-						detailPage = plus.webview.getWebviewById('course-homePage.html');
-					}
-					//触发详情页面的newsId事件
-					mui.fire(detailPage, 'courseCode', {
-						courseCode: id
-					});
-					//打开详情页面          
-					mui.openWindow({
-						id: 'course-homePage.html',
-						url: '../course/course-homepage.html'
-//						 show:{
-//                         autoShow:true,//页面loaded事件发生后自动显示，默认为true
-//                         aniShow:{
-//                         	AnimationTypeShow:"pop-in"
-//                         }//页面显示动画，默认为”slide-in-right“；
-////                         duration:animationTime//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
-//                       }
-					});
-				});
-			}
 
 			var content = new Vue({
 				el: '#content',
@@ -341,22 +290,43 @@
 
 						}
 
-					}
+					},
+					jumpToCourse : function(tapCourse){
+//						console.log('course页点击了');
+					//打开详情页面          
+					mui.openWindow({
+						id: 'course-homePage.html',
+						url: '../course/course-homepage.html',
+						show: {
+							autoShow: false
+						}
+					});
+					//触发详情页面的newsId事件
+					mui.fire(plus.webview.getWebviewById('course-homePage.html'), 'enterOne', {
+						course: tapCourse
+					});
+			
+					
+				
+				
+				   
 				}
 
+               }
 			})
+
+
+          function refreshCourse(){
+          	content.getCourse(localStorage.getItem('stuNumber'));
+          }
 
 
            var join = null;
 			function openJoin() {
 				console.log('点击了');
-				join = plus.webview.getWebviewById('joinCourse.html');
-				console.log(join);
+//				join = plus.webview.getWebviewById('joinCourse.html');
+//				console.log(join);
 				
-//				mui.openWindow({
-//					url: '../student/joinCourse.html',
-//					id: 'joinCourse.html'
-//				});
               var target  =  plus.webview.create('../student/joinCourse.html','joinCourse.html');
                  target.addEventListener("loaded", function(){
 

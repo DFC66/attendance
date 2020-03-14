@@ -202,10 +202,30 @@ public class CourseController {
             result.setMessage(isJoinCourse);
         }else{
             result.setCode(204);
-            result.setMsg("课程退出失败了");
+            result.setMsg("课程退出失败");
             result.setMessage(isJoinCourse);
         }
 
+        return  result;
+    }
+
+
+    @Transactional
+    @RequestMapping(value = "/updateSignStatus", method = RequestMethod.POST)
+    public Result updateSignStatus(Integer status,Integer courseCode) {
+        Result result = new Result<Course>();
+        Integer isSuccess = null;
+        if (status==1){
+            isSuccess = courseService.updateSignInStatus(0, courseCode);
+        }else if (status==0){
+            isSuccess = courseService.updateSignInStatus(1, courseCode);
+        }
+        result.setCode(2000000);
+        result.setMsg(String.valueOf(isSuccess));
+        Course course = courseService.findByCourseCode(courseCode);
+        if (course!=null){
+            result.setMessage(course);
+        }
         return  result;
     }
 

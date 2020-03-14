@@ -22,7 +22,8 @@
       "main.html",
       "bottom-tab/main.html",
       "bottom-tab/homePage.html",
-      "teacher/InsertMessage.html"
+      "teacher/InsertMessage.html",
+      "teacher/AllCourse.html"
     ],
     "resources": []
   },
@@ -114,6 +115,11 @@
     "refer": [
       "teacher/ManageCourse2.html",
       "teacher/ManageCourse1.html"
+    ]
+  },
+  "teacher/AllCourse.html": {
+    "refer": [
+      "teacher/ManageCourse-main.html"
     ]
   }
 }

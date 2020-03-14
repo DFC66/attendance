@@ -54,117 +54,12 @@
 			(function() {
 				
 
-//				mui.plusReady(function() {
-//					
-//
-//				});
+
 
 			})();
-//            drawIcon();
-              
-              
-              function drawIcon(){
-              	console.log('开始画');
-              	var self = plus.webview.currentWebview(),
-						leftPos = Math.ceil((window.innerWidth) / 2); // 设置凸起大图标为水平居中
-					/**	
-					 * drawNativeIcon 绘制带边框的半圆，
-					 * 实现原理：
-					 *   id为bg的tag 创建带边框的圆
-					 *   id为bg2的tag 创建白色矩形遮住圆下半部分，只显示凸起带边框部分
-					 * 	 id为iconBg的红色背景图
-					 *   id为icon的字体图标
-					 *   注意创建先后顺序，创建越晚的层级越高
-					 */
-					var drawNativeIcon = util.drawNative('icon', {
-						bottom: '10px',
-						left: '50%',
-						width: '60px',
-						height: '60px'
-					}, [{
-							tag: 'rect',
-							id: 'bg',
-							position: {
-								top: '1px',
-								left: '0px',
-								width: '100%',
-								height: '100%'
-							},
-							rectStyles: {
-								color: '#fff',
-								radius: '50%',
-								borderColor: '#ccc',
-								borderWidth: '1px'
-							},
-						},
-						//					{
-						//						tag: 'rect',
-						//						id: 'bg2',
-						//						position: {
-						//							bottom: '-0.5px',
-						//							left: '0px',
-						//							width: '100%',
-						//							height: '45px'
-						//						},
-						//						rectStyles: {
-						//							color: '#fff'
-						//						}
-						//					}, 
-						{
-							tag: 'rect',
-							id: 'iconBg',
-							position: {
-								top: '5px',
-								left: '5px',
-								width: '50px',
-								height: '50px'
-							},
-							rectStyles: {
-								color: '#d74b28',
-								radius: '50%'
-							}
-						}, {
-							tag: 'font',
-							id: 'icon',
-							text: '签到', //此为字体图标Unicode码'\e600'转换为'\ue600'
-							position: {
-								top: '0px',
-								left: '5px',
-								width: '50px',
-								height: '100%'
-							},
-							textStyles: {
-								fontSrc: '_www/fonts/iconfont.ttf',
-								align: 'center',
-								color: '#fff',
-								size: '17px'
-							}
-						}
-					]);
-					// append 到父webview中
-					self.append(drawNativeIcon);
 
-					//自定义监听图标点击事件
-					var active_color = '#fff';
-					drawNativeIcon.addEventListener('click', function(e) {
-						//						mui.alert('你点击了图标，你在此可以打开摄像头或者新窗口等自定义点击事件。', '悬浮球点击事件');
-
-						//						console.log(JSON.stringify(whole.course));
-//						if(changeFlag){
-							let detail = whole.course.message;
-						console.log('点击就送' + JSON.stringify(detail));
-						showMaps(detail);
-//						}
-						
-					
-					
-					
-					});
-					// 中间凸起图标绘制及监听点击完毕
-              }
               
-              
-
+            
 			//添加自定义事件监听
 			window.addEventListener('course-1', function(event) {
 				//获得事件参数
@@ -230,7 +125,7 @@
 				},
 				watch: {
 					course(newVal) {
-						console.log('界面1马上发生了变化' + JSON.stringify(newVal));
+//						console.log('界面1马上发生了变化' + JSON.stringify(newVal));
 					}
 				},
 				methods: {

@@ -261,8 +261,9 @@
 				//获得事件参数
 				var thisCourse = event.detail.course;
 				//根据courseCode向服务器请求
-				console.log('界面3收到' + thisCourse);
-				thisMessage.course = thisCourse.message;
+		
+				thisMessage.course = thisCourse;
+				console.log('界面4收到' + JSON.stringify(thisMessage.course));
 			});
 
 			function submit() {
@@ -295,15 +296,11 @@
 						console.log(JSON.stringify(data));
 						mui.toast(data.msg);
 						if(data.message.isDeleted==0){
+							plus.webview.getWebviewById('course.html').evalJS('refreshCourse()');
 							plus.webview.getWebviewById('course-homePage.html').close();
 							
 						}
-						
-						//								if(data.message != null) {
-						//									mui.toast(data.msg);
-						//									NotCompleteFlag = true;
-						//									plus.webview.currentWebview().close();
-						//								}
+		
 					},
 					error: function(xhr, type, errorThrown) {
 						if(type == "timeout") {

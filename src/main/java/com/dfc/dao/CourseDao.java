@@ -3,6 +3,7 @@ package com.dfc.dao;
 import com.dfc.entity.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -28,6 +29,11 @@ public interface CourseDao extends JpaRepository<Course,Integer>
     List<Course> findMyCourse(String number);
 
 
-
     Course findByNameAndTeacherName(String name, String teacherName);
+
+    @Modifying
+    @Query(value = "update course set signin_status = ?1 where course_code = ?2",nativeQuery = true)
+    Integer updateSignInStatus(Integer status,Integer courseCode);
+
+
 }
