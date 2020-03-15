@@ -53,13 +53,12 @@
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">{{course.name}}</h1>
+			<h1 id="title" class="mui-title">我的课程</h1>
 		</header>
 		<nav class="mui-bar mui-bar-tab">
-			<a id="defaultTab" class="mui-tab-item mui-active" href="course.html">
+			<a id="defaultTab" class="mui-tab-item mui-active" href="myCourse.html">
 				<span class="mui-icon mui-icon-home"></span>
-				<span class="mui-tab-label">首页</span>
+				<span class="mui-tab-label">我的课程</span>
 			</a>
 
 			<a class="mui-tab-item" href="me.html">
@@ -137,7 +136,7 @@
 //			})
 		});
 
-		var subpages = ['course.html', 'me.html'];
+		var subpages = ['myCourse.html', 'me.html'];
 		var subpage_style = {
 			top: '0px',
 			bottom: '50px'
@@ -187,7 +186,7 @@
 				return;
 			}
 			//更换标题
-			// title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
+//			 title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
 			//显示目标选项卡
 			//若为iOS平台或非首次显示，则直接显示
 			if(mui.os.ios || aniShow[targetTab]) {

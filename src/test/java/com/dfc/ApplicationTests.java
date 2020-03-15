@@ -21,11 +21,16 @@ public class ApplicationTests {
 
 	@Test
 	public void contextLoads() {
-		Signin signin = new Signin();
-		signin.setCourseCode(8816);
-        signinService.save(signin);
-
+//		Signin signin = new Signin();
+//		signin.setCourseCode(8816);
+//        signinService.save(signin);
+//		System.out.println(WebConfig.getFilePath("/hahaha"));
 
 	}
+
+
+
+
+
 
 }

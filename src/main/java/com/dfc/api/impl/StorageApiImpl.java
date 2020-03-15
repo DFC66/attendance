@@ -1,10 +1,12 @@
 package com.dfc.api.impl;
 
 
+import com.dfc.WebConfig;
 import com.dfc.api.StorageApi;
 import com.dfc.api.entity.UploadResult;
 import com.dfc.util.BaseCommonUtil;
 import com.dfc.util.BizException;
+import com.dfc.util.ImageUtil;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -24,6 +26,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import static com.dfc.constant.DataConstant.PATH_SPLIT;
+
 
 /**
  * @author aiyou
@@ -33,6 +37,12 @@ public class StorageApiImpl implements StorageApi, ApplicationContextAware {
 
     @Value("${file-service.profile}")
     private String homePath;
+
+    @Value("${file-service.netAddress}")
+    private String netFilesPath;
+
+
+
 
 //    @Autowired
 //    private DocumentInfoBO documentInfoBO;
@@ -56,6 +66,7 @@ public class StorageApiImpl implements StorageApi, ApplicationContextAware {
     @Override
     public UploadResult uploadByServletRequest(HttpServletRequest request, String folder) throws Exception {
         String encoding = "utf-8";
+        String path = this.homePath;
         request.setCharacterEncoding(encoding);
 
         DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -260,6 +271,25 @@ public class StorageApiImpl implements StorageApi, ApplicationContextAware {
         return null;
     }
 
+    @Override
+    public String uploadFaceImage(Integer courseCode,String stuNumber, String folder, String base64) throws IOException {
+
+        String dictoryPath = WebConfig.getFilePath(courseCode,folder);
+        makeSureFolderExists2(dictoryPath);
+        String fileName ="学号__"+stuNumber+BaseCommonUtil.uuid() + ".png";
+        String imgFilePath = dictoryPath + PATH_SPLIT + fileName;
+
+        boolean b = ImageUtil.GenerateImage(base64, imgFilePath);
+        if (b){
+            String modulePath = WebConfig.getModulePath(courseCode, folder);
+           String faceNetUrl = this.netFilesPath + PATH_SPLIT+modulePath+ PATH_SPLIT+fileName;
+           return  faceNetUrl;
+        }else{
+            return null;
+        }
+
+    }
+
     private static void makeSureFolderExists(String filePath) {
         String folderPath = filePath.substring(0, filePath.lastIndexOf("/"));
         File folder = new File(folderPath);
@@ -267,6 +297,16 @@ public class StorageApiImpl implements StorageApi, ApplicationContextAware {
             folder.mkdirs();
         }
     }
+
+    public static void makeSureFolderExists2(String folderPath) {
+//        String folderPath = filePath.substring(0, filePath.lastIndexOf("/"));
+        File folder = new File(folderPath);
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+    }
+
+
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {

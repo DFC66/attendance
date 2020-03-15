@@ -9,6 +9,7 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<link href="../css/iconfont.css" rel="stylesheet" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/preViewImg.css" rel="stylesheet" />
 		<style>
 			.title {
 				padding: 20px 15px 10px;
@@ -58,25 +59,26 @@
 				display: block;
 				text-align: center;
 			}
+			.mui-bar-nav ~ .mui-content .mui-pull-top-pocket{  
+            top: 180px !important;  
+           }
+			
 		</style>
 
 	</head>
 
 	<body>
 
-		<header class="mui-bar mui-bar-nav">
+		<!--<header class="mui-bar mui-bar-nav">
 			<button id="joinCourse" class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">加入课程</button>
-		</header>
-		<div id="content" class="mui-content">
+		</header>-->
+		<div id="content" class="mui-content mui-scroll-wrapper" >
 
-			<div class="mui-scroll">
-				<ul id="table" class="mui-table-view">
-					<div id="refreshContainer" class=" mui-scroll-wrapper">
-
-					</div>
-					<li v-for="course in myCourses" v-if="myCourses.length>0" v-bind:id="course.courseCode" class="mui-table-view-cell" @click="jumpToCourse(course)"  >
-						<img id="imgurl" class="mui-media-object2 mui-pull-left" src="../imgs/ppp.png" alt="">
-						<div class="mui-media-body2">
+				<ul id="table" class="mui-table-view ">
+					
+					<li v-for="course in myCourses" v-if="myCourses.length>0" v-bind:id="course.courseCode" class="mui-table-view-cell"   >
+						<img id="imgurl" class="mui-media-object2 mui-pull-left"  v-bind:src="course.imgPath"    data-preview-src="">
+						<div class="mui-media-body2" @click="jumpToCourse(course)">
 							<div class="wenzi">
 								<h4>{{course.name}}</h4>
 								<span>{{course.room}}</span>
@@ -120,23 +122,26 @@
 		<script src="../js/configurl.js"></script>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/vue.min.js"></script>
-
+		
+	    <script src="../js/mui.zoom.js"></script>
+	    <script src="../js/mui.previewimage.js"></script>
+	    
 		<script type="text/javascript">
 			mui.init({
 				pullRefresh: {
 
-					container: "#refreshContainer", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+					container: "#content", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
 
 					down: {
-
+//                      style:'circle',//必选，下拉刷新样式，目前支持原生5+ ‘circle’ 样式
 						auto: false, //可选,默认false.首次加载自动下拉刷新一次
-
+                        color:'#2BD009', //可选，默认“#2BD009” 下拉刷新控件颜色
 						contentdown: "下拉可以刷新", //可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
 
 						 contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
 
 						contentrefresh: "正在刷新...", //可选，正在刷新状态时，下拉刷新控件上显示的标题内容
-						offset: '20px', //可选 默认0px,下拉刷新控件的起始位置
+//						offset: '300px', //可选 默认0px,下拉刷新控件的起始位置
 						contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容；
 
 						 callback: function() {
@@ -166,7 +171,7 @@
 										} else {
 											mui.toast('没有数据刷新');
 										}
-										mui('#refreshContainer').pullRefresh().endPulldownToRefresh(); //完成刷新
+										mui('#content').pullRefresh().endPulldownToRefresh(); //完成刷新
 
 									},
 									error: function(xhr, type, errorThrown) {
@@ -176,7 +181,7 @@
 										} else {
 											mui.alert("未知网络错误");
 										}
-										mui('#refreshContainer').pullRefresh().endPulldownToRefresh(); //完成刷新
+										mui('#content').pullRefresh().endPulldownToRefresh(); //完成刷新
 									}
 								});
 
@@ -192,14 +197,15 @@
 
 			});
 
-			function callfunction() {
 
-			}
+           mui.previewImage();
 
-			document.getElementById('joinCourse').addEventListener('tap', function() {
-				openJoin();
+		
 
-			});
+//			document.getElementById('joinCourse').addEventListener('tap', function() {
+//				openJoin();
+//
+//			});
 
 			var detailPage = null;
 			mui.plusReady(function() {

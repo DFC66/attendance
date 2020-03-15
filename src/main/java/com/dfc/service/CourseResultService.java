@@ -3,6 +3,8 @@ package com.dfc.service;
 import com.dfc.entity.CourseResult;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface CourseResultService {
 
 
@@ -18,4 +20,7 @@ public interface CourseResultService {
 
     @Transactional
      void exitCourse(String number,Integer courseCode);
+
+    @Transactional
+    List<CourseResult> getCourseStudent(Integer courseCode);
 }

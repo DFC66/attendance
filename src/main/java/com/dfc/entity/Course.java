@@ -3,6 +3,7 @@ package com.dfc.entity;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,6 +16,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "course")
+@EntityListeners(AuditingEntityListener.class)
 public class Course {
     /**
      * 课程的id
@@ -35,7 +37,7 @@ public class Course {
      * 课程图片路径
      */
     @Column(name = "img_path")
-    private Integer imgPath;
+    private String imgPath;
 
 
     /**
@@ -117,11 +119,11 @@ public class Course {
         this.courseCode = courseCode;
     }
 
-    public Integer getImgPath() {
+    public String getImgPath() {
         return imgPath;
     }
 
-    public void setImgPath(Integer imgPath) {
+    public void setImgPath(String imgPath) {
         this.imgPath = imgPath;
     }
 

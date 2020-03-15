@@ -3,7 +3,8 @@ project:
 # 项目相关配置
 file-service:
   # 文件路径
-  profile: E:/profile/
+  profile: E://profile
+  netAddress: http://192.168.2.109:6060/attendence
 server:
   port: 80
   tomcat:

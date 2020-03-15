@@ -7,6 +7,8 @@ import org.hibernate.criterion.Example;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CourseResultServiceImpl implements CourseResultService {
 
@@ -27,11 +29,16 @@ public class CourseResultServiceImpl implements CourseResultService {
 
     @Override
     public void updateIsDeletedStatus(CourseResult courseResult) {
-           courseResultDao.updateIsDeletedStatus(courseResult.getNumber(),courseResult.getCourseCode());
+           courseResultDao.updateIsDeletedStatus(courseResult.getFaceImg(),courseResult.getNumber(),courseResult.getCourseCode());
     }
 
     @Override
     public void exitCourse(String number, Integer courseCode) {
         courseResultDao.exitCourse(number,courseCode);
+    }
+
+    @Override
+    public List<CourseResult> getCourseStudent(Integer courseCode) {
+        return  courseResultDao.findThisCourseStudents(courseCode);
     }
 }

@@ -1,181 +1,217 @@
 <!DOCTYPE html>
 <html>
 
-    <head>
-        <meta charset="utf-8">
-       <!-- <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<head>
+		<meta charset="utf-8">
+		<!-- <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black"> -->
-	   <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-        <title></title>
-        <link href="../css/mui.min.css" rel="stylesheet" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
 
-        <style>
-            body,
-            div,
-            dl,
-            dt,
-            dd,
-            ul,
-            ol,
-            li,
-            h1,
-            h2,
-            h3,
-            h4,
-            h5,
-            h6,
-            pre,
-            code,
-            form,
-            fieldset,
-            legend,
-            input,
-            textarea,
-            p,
-            blockquote,
-            th,
-            td,
-            hr,
-            button,
-            article,
-            aside,
-            details,
-            figcaption,
-            figure,
-            footer,
-            header,
-            hgroup,
-            menu,
-            nav,
-            section,
-            br {
-                margin: 0;
-                padding: 0;
-            }
-            
-            body {
-                font-family: "microsoft yahei";
-                color: #FFFFFF;
-                overflow-x: hidden;
-                overflow-y: hidden;
-                background: #333333;
-            }
-            .mui-bar{
-                background: #333333;
-                box-shadow: none;
-            }
-            .back{
-                font-size: 22px;
-                height: 100px;
-                line-height: 100px;
-                padding:0 10px;
-                border: 0px solid red;
-                margin-left: 10px;
-            }
-            .back img{    
-                width: 12px;
-                height: 24px;
-            }
-            .mui-content{
-                width: 60%;
-                margin: 80px auto 50px auto;
-                background:#333333 ;
-                text-align: center;
-                border: 0px solid red;
-            }
-            .mui-content div{
-                width: 100%;
-                background:#333333 ;
-                border: 0px solid red;
-            }
-            .mui-content label{                
-                color: #FFFFFF;
-                text-align: center;
-                border: 0px solid red;
-            }
-            .mui-btn {
-                padding: 10px;
-                width: 80%;
-                margin: auto;
-            }
-            .mui-content-setting1 {
-                width: 100%;
-                background: #333333;
-                border: 0px solid red;
-                padding: 0 10px;
-                font-size: 20px;
-                float: left;
-            }
-            .button {
-                background: url(icon/setting/button.png) no-repeat;
-                background-size: 100% 100%;
-                -moz-background-size: 100% 100%;
-                font-size: 20px;
-                width: 80%;
-                height: 50px;
-                margin: auto;
-                line-height: 50px;
-                border: none;
-                color: #FFFFFF;
-            }
-            video{
-                transform: rotateY(180deg);
-                -webkit-transform: rotateY(180deg);    /* Safari 和 Chrome */
-                -moz-transform: rotateY(180deg);
-            }
-        </style>
-    </head>
+		<style>
+			body,
+			div,
+			dl,
+			dt,
+			dd,
+			ul,
+			ol,
+			li,
+			h1,
+			h2,
+			h3,
+			h4,
+			h5,
+			h6,
+			pre,
+			code,
+			form,
+			fieldset,
+			legend,
+			input,
+			textarea,
+			p,
+			blockquote,
+			th,
+			td,
+			hr,
+			button,
+			article,
+			aside,
+			details,
+			figcaption,
+			figure,
+			footer,
+			header,
+			hgroup,
+			menu,
+			nav,
+			section,
+			br {
+				margin: 0;
+				padding: 0;
+			}
+			
+			body {
+				font-family: "microsoft yahei";
+				color: #FFFFFF;
+				overflow-x: hidden;
+				overflow-y: hidden;
+				background: #333333;
+			}
+			
+			.mui-bar {
+				background: #333333;
+				box-shadow: none;
+			}
+			
+			.back {
+				font-size: 22px;
+				height: 100px;
+				line-height: 100px;
+				padding: 0 10px;
+				border: 0px solid red;
+				margin-left: 10px;
+			}
+			
+			.back img {
+				width: 12px;
+				height: 24px;
+			}
+			
+			.mui-content {
+				width: 60%;
+				margin: 80px auto 50px auto;
+				background: #333333;
+				text-align: center;
+				border: 0px solid red;
+			}
+			
+			.mui-content div {
+				width: 100%;
+				background: #333333;
+				border: 0px solid red;
+			}
+			
+			.mui-content label {
+				color: #FFFFFF;
+				text-align: center;
+				border: 0px solid red;
+			}
+			
+			.mui-btn {
+				padding: 10px;
+				width: 80%;
+				margin: auto;
+			}
+			
+			.mui-content-setting1 {
+				width: 100%;
+				background: #333333;
+				border: 0px solid red;
+				padding: 0 10px;
+				font-size: 20px;
+				float: left;
+			}
+			
+			.button {
+				background: url(icon/setting/button.png) no-repeat;
+				background-size: 100% 100%;
+				-moz-background-size: 100% 100%;
+				font-size: 20px;
+				width: 80%;
+				height: 50px;
+				margin: auto;
+				line-height: 50px;
+				border: none;
+				color: #FFFFFF;
+			}
+			
+			video {
+				transform: rotateY(180deg);
+				-webkit-transform: rotateY(180deg);
+				/*Safari 和 Chrome */
+				-moz-transform: rotateY(180deg);
+			}
+			
+			.mui-content2 {
+				width: 75%;
+				margin: 80px auto 35px auto;
+				background: #333333;
+				text-align: center;
+				border: 0px solid red;
+				height: 100%;
+			}
+			
+			.mui-content {
+				width: 60%;
+				margin: 80px auto 50px auto;
+				background: #333333;
+				text-align: center;
+				border: 0px solid red;
+			}
+			
+			.imagecss {
+				height: 180px;
+				width: 120px;
+				/* text-align: center; */
+				/*background-color: #C4C4C4;*/
+			}
+		</style>
+	</head>
 
-    <body>
-        <!-- <header class="mui-bar mui-bar-nav">
-            <div id='user' class="mui-pull-left">
-                <div class="mui-pull-left back" onclick="back()">
-                    <img class="mui-icon-back" src="icon/main/back.png" />
-                </div>
-            </div>
-            <span class="mui-title">人脸识别登录</span>
-       </header> -->
-                 
-        <div id="content"  class="mui-content">
-            <div style="margin: auto;margin-bottom: 50px; ">
-                <video id="video" width="100%" height="100%" style="border: 0px solid red;margin: auto;"></video>
-                <canvas id='canvas' width="100%" height="100px" style="display: none;"></canvas>                
-                <!--<img id='img' src=''>-->
-		    <!-- <span>{{number}}</span> -->
-            </div>    
-            <label>请正对手机进行人脸验证</label>
-        </div>    
-        <!--<div class="mui-content-setting1">
+	<body>
+      <header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title"></h1>
+		</header>
+
+  <div id="content" class="mui-content2">
+			<div style="margin: auto;margin-bottom: 50px; width: 240px;height: 360px">
+				<video id="video" width="100%" height="100%" style="border: 0px solid red;margin: auto;"></video>
+				<canvas id='canvas' width="100%" height="100px" style="display: none;"></canvas>
+				<!--<img id='img' src='' style="display: none;">-->
+			
+			</div>
+			<label>请正对手机进行人脸验证</label>
+		</div>
+		<!--<div class="mui-content-setting1">
             <div id='check' class="button mui-text-center">人脸识别</div>
         </div>-->
-        <script src="../js/jquery-3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../js/mui.min.js"></script>
-	  <script src="../js/vue.min.js"></script>
-	  <script src="../js/configurl.js"></script>
-	  
-        <script>
-		  
-		  // new Vue({
-		  // 	el: '#content',
-		  // 	data: {
-		  // 		number: localStorage.getItem('StuNumber'),
-		  // 	},
-		  // 	created() {
-		           
-		  // 	}
-		  
-		  //     })
-		  var all =this;
-		  var stuNumber = localStorage.getItem('stuNumber');
-		  var courseCode = null;
-		  
-		  var video,canvas,vendorUrl,interval;
-		  var time=0;
-		  
-		  	var NotCompleteFlag = true;
-		  
-		 var old_back = mui.back;
+		<script src="../js/jquery-3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script src="../js/configurl.js"></script>
+
+		<script>
+			// new Vue({
+			// 	el: '#content',
+			// 	data: {
+			// 		number: localStorage.getItem('StuNumber'),
+			// 	},
+			// 	created() {
+
+			// 	}
+
+			//     })
+			var all = this;
+
+			var stuNumber = localStorage.getItem('stuNumber');
+
+//			var stuNumber = 666666;
+
+			var courseCode = 0;
+
+			//		  var file = document.getElementById('img');
+
+			var video, canvas, vendorUrl, interval, provider, MyImg;
+			var time = 0;
+
+			var NotCompleteFlag = true;
+
+			var old_back = mui.back;
 			mui.back = function() {
 				time = 0;
 				clearInterval(interval); //清除定时器
@@ -186,215 +222,345 @@
 				}
 				old_back();
 			}
-		  
-		  window.addEventListener('num',function(event){
-		    //获得事件参数
-		    courseCode = event.detail.aCodes;
-		     
-		  });
-		  
-		  
-		 
-            //自动拍照
-            function getface(){
-                time++;            
-                
-                //绘制canvas图形
-                canvas.getContext('2d').drawImage(video, 0, 0, 100, 100);
-                //把canvas图像转为img图片
-                var bdata = canvas.toDataURL("image/png");
-                //img.src = canvas.toDataURL("image/png");
-                var base64 = bdata.split(',')[1];//照片压缩成base位数据
-                //提交至接口匹配人脸库  
-		    var url = "https://api-cn.faceplusplus.com/facepp/v3/detect";
-		    mui.ajax(url, {
-		    	data: {
-		    		api_key: "CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA",
-		    		api_secret: "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3",
-		    		image_base64: base64
-		    	},
-		    	dataType: 'json', //服务器返回json格式数据
-		    	type: 'post', //HTTP请求类型
-		    	timeout: 10000, //超时时间设置为10秒；
-		    	success: function(data) {
-		    		console.log('成功连接api！');
-				console.log(courseCode+'------------------'+stuNumber);
-		    		console.log(JSON.stringify(data));
-		    		if (data.faces.length >0) {
-		    			clearInterval(interval);//清除定时器
-		    			var fk = data.faces[0].face_token;
-					mui.toast('识别出存在人脸');
-					if(stuNumber!=null&&courseCode!=0){
-		    			    CreateAddFaceSet(stuNumber, fk);
-		    			}else{
-					     console.log('课程号和学号出错')
-					}		    		
-		    			
-		    		} else if (time>9){
-					clearInterval(interval);//清除定时器
-					time=0;//重新计时
-					mui.toast('无法识别出人脸,请重新输入课程码');
-					plus.webview.currentWebview().close();
-		    		      // plus.webview.open("addFace.html"); 
-		    		}
-		    	},
-		    	error: function(xhr, type, errorThrown) {
-		    		showError(type);
-		    	}
-		    });
-		    
-		    
-		    
-            }
-		
-		
-		function CreateAddFaceSet(uniqueName, imgtoken) {
-			var url = "https://api-cn.faceplusplus.com/facepp/v3/faceset/create";
-			mui.ajax(url, {
-				data: {
-					api_key: "CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA",
-					api_secret: "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3",
-					outer_id: uniqueName,
-					face_tokens: imgtoken,
-					force_merge: 1
-				},
-				dataType: 'json', //服务器返回json格式数据
-				type: 'post', //HTTP请求类型
-				timeout: 10000, //超时时间设置为10秒；
-				success: function(data) {
-					console.log(JSON.stringify(data));
-					if(JSON.stringify(data).indexOf("error_message")==-1){
-						mui.toast('人脸上传成功');
-						joinDataBase(stuNumber,courseCode)
-						
-					}else{
-						mui.toast('人脸上传失败，请重试');
-						plus.webview.currentWebview().close();
-					}
-					
-				},
-				error: function(xhr, type, errorThrown) {
-					showError(type);
-				}
-			});
-		
-		
-		}
-		
-		function joinDataBase(number,courseCode){
-			var url = getport() + '/course/addFace';
-			mui.ajax(url, {
-				data: {
-					number: number,
-					courseCode: courseCode
-				},
-                         // contentType: "application/json",
-				dataType: 'json', //服务器返回json格式数据
-				type: 'post', //HTTP请求类型
-				timeout: 10000, //超时时间设置为10秒；
-				success: function(data) {
-					console.log(JSON.stringify(data));
-					if(data.message!=null){
-						mui.toast(data.msg);
-					  NotCompleteFlag = true;
-						plus.webview.currentWebview().close();
-					}
-				},
-				error: function(xhr, type, errorThrown) {
-					if (type == "timeout") {
-						mui.alert("请求超时，请检查网络或重试");
-					} else {
-						mui.alert("未知网络错误");
-					}
-				}
-			});
-		}
-		
-		
-		
-		
-		function faceDetectAdd(base64, faceSetname) {
 
-			var url = "https://api-cn.faceplusplus.com/facepp/v3/detect";
-			mui.ajax(url, {
-				data: {
-					api_key: "CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA",
-					api_secret: "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3",
-					image_base64: base64
-					// 				return_landmark:"1",
-					// 				return_attributes:"gender,age,smiling,headpose,facequality,blur,eyestatus,emotion,ethnicity,beauty,mouthstatus,eyegaze,skinstatus"
-				},
-				dataType: 'json', //服务器返回json格式数据
-				type: 'post', //HTTP请求类型
-				timeout: 10000, //超时时间设置为10秒；
-				success: function(data) {
-					console.log('成功！');
-		
-					console.log(JSON.stringify(data));
-					if (data.faces.length == 0) {
-						mui.alert('该图片无法识别出人脸，请更换图片或重试');
-		
-					} else {
-		
-						var fk = data.faces[0].face_token;
-						CreateAddFaceSet(faceSetname, fk);
-		
-						mui.toast('识别出存在人脸');
-					}
-				},
-				error: function(xhr, type, errorThrown) {
-					showError(type);
-				}
+			window.addEventListener('num', function(event) {
+				//获得事件参数
+				courseCode = event.detail.aCodes;
+
 			});
-		}
-		
-		function showError(type){
-			if (type == "timeout") {
-				mui.alert("请求超时，请检查网络或重试");
-			} else {
-				mui.alert("未知网络错误");
+          var detectUrl = "https://api-cn.faceplusplus.com/facepp/v3/detect";
+			//自动拍照
+			function getface() {
+				time++;
+				console.log('Image宽是' + video.videoWidth + ',    高是' + video.videoHeight);	
+				//绘制canvas图形
+				canvas.getContext('2d').drawImage(video, 0, 0, 100, 100);
+				//把canvas图像转为img图片
+				var bdata = canvas.toDataURL("image/png");
+				console.log('数据类型是' + typeof bdata);
+				//              console.log('video高是'+provider.height+',    宽是'+provider.width);
+				var base64 = bdata.split(',')[1]; //照片压缩成base位数据
+				//提交至接口匹配人脸库  
+				
+				mui.ajax(detectUrl, {
+					data: {
+						api_key: "CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA",
+						api_secret: "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3",
+						image_base64: base64
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					success: function(data) {
+						console.log('成功连接api！');
+						console.log(courseCode + '------------------' + stuNumber);
+						console.log(JSON.stringify(data));
+						if(data.faces.length > 0) {
+							if(data.face_num>1){
+								mui.toast('检测到多张人脸，请重新加入课程');
+								plus.webview.currentWebview().close();
+							}
+							
+							clearInterval(interval); //清除定时器
+							var fk = data.faces[0].face_token;
+							console.log('识别出存在人脸啦啦啦啦啦啦啦啦拉啦');
+							if(stuNumber != null && courseCode != 0) {
+
+								//                       var catchImage = new Image();
+								//	                     catchImage.src = canvas.toDataURL("image/png");//canvas的api中的toDataURL（）保存图像
+//
+
+
+								//						 put(stuNumber,courseCode,catchImage);
+								
+			
+						        createAddFaceSet(stuNumber, fk);
+
+							} else {
+								console.log('课程号和学号出错')
+							}
+
+						} else if(time > 9) {
+							clearInterval(interval); //清除定时器
+							time = 0; //重新计时
+							mui.toast('无法识别出人脸,请重新输入课程码');
+							plus.webview.currentWebview().close();
+							// plus.webview.open("addFace.html"); 
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						showError(type);
+					}
+				});
+
 			}
-		}
-		
-		
-            
-            (function($, doc) {
-                $.init(); 
-		    
-		    
-                $.plusReady(function() {
-                    video = doc.getElementById('video'),
-                    canvas = doc.getElementById('canvas'),
-                    vendorUrl = window.URL || window.webkitURL;
-                        
-                    //初始化摄像头：媒体对象；仅支持android，ios11.0一下系统均不支持
-                    navigator.getMedia =navigator.getUserMedia || navagator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 
-                    navigator.getMedia({
-                        video: true, //使用摄像头对象
-                        audio: false //不适用音频
-                    }, function(strem) {
-                        video.src = vendorUrl.createObjectURL(strem);
-                        video.play();
-                    }, function(error) {
-                        alert(error);
-                    });
-                    //getface(); 
-                    
-                    interval=setInterval(getface,1000);
-                    
-                    /*//手动拍照
-                    var checkButton = doc.getElementById('check');
-                    checkButton.addEventListener('tap', function(event) {
-                        
-                    });*/
-                });
-            }(mui, document));
-		
-		
-		
-		
-        </script>
-    </body>
+			function createFaceImage() {
+                var  imageDatas = null;
+				var faceImage = document.createElement('canvas');
+				faceImage.width = 240;
+				faceImage.height = 360;
+				faceImage.getContext('2d').drawImage(video, 0, 0, 240, 360);
+				var wholeFace = faceImage.toDataURL("image/png"); //canvas的api中的toDataURL（）保存图像
+				imageDatas = wholeFace.split(',')[1];
+				return imageDatas;
+			}
+
+			//将base64转换为文件
+			var dataURLtoBlob = function(dataurl, filename) {
+				var arr = dataurl.split(','),
+					mime = arr[0].match(/:(.*?);/)[1],
+					bstr = atob(arr[1]),
+					n = bstr.length,
+					u8arr = new Uint8Array(n);
+				while(n--) {
+					u8arr[n] = bstr.charCodeAt(n);
+				}
+				return new Blob([u8arr], {
+					type: mime
+				});
+			}
+
+			function createAddFaceSet(uniqueName, imgtoken) {
+				var url = "https://api-cn.faceplusplus.com/facepp/v3/faceset/create";
+				mui.ajax(url, {
+					data: {
+						api_key: "CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA",
+						api_secret: "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3",
+						outer_id: uniqueName,
+						face_tokens: imgtoken,
+						force_merge: 1
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					success: function(data) {
+						console.log(JSON.stringify(data));
+						if(JSON.stringify(data).indexOf("error_message") == -1) {
+							mui.toast('人脸上传成功');
+//							joinDataBase(stuNumber, courseCode)
+                          var faceImage = createFaceImage();
+                                  if(faceImage!=null){
+                                  	addMessage(stuNumber, courseCode, faceImage);
+                                  }else{
+                                  	mui.toast('脸部截图失败');
+                                  	plus.webview.currentWebview().close();
+                                  }
+
+						} else {
+							mui.toast('人脸上传失败，请重试');
+							plus.webview.currentWebview().close();
+						}
+
+					},
+					error: function(xhr, type, errorThrown) {
+						showError(type);
+					}
+				});
+
+			}
+
+			function joinDataBase(number, courseCode) {
+				var url = getport() + '/course/addFace';
+				mui.ajax(url, {
+					data: {
+						number: number,
+						courseCode: courseCode
+					},
+					// contentType: "application/json",
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					success: function(data) {
+						console.log(JSON.stringify(data));
+						if(data.message != null) {
+							mui.toast(data.msg);
+							NotCompleteFlag = true;
+							plus.webview.currentWebview().close();
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						if(type == "timeout") {
+							mui.alert("请求超时，请检查网络或重试");
+						} else {
+							mui.alert("未知网络错误");
+						}
+					}
+				});
+			}
+
+			function addMessage(myNumber, courseCode, img) {
+				var url = getport() + '/course/addFace';
+				mui.ajax(url, {
+					data: {
+						thisNumber: myNumber,
+						courseCode: courseCode,
+						base64: img
+					},
+					// contentType: "application/json",
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					success: function(data) {
+
+//						clearInterval(interval); //清除定时器
+
+						console.log(JSON.stringify(data));
+						if(data.message != null) {
+							mui.toast(data.msg);
+							NotCompleteFlag = true;
+							plus.webview.currentWebview().close();
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						if(type == "timeout") {
+							mui.alert("请求超时，请检查网络或重试");
+						} else {
+							mui.alert("未知网络错误");
+						}
+					}
+				});
+			}
+
+			function put(myNumber, courseCode, img) {
+				var wait = plus.nativeUI.showWaiting("正在上传");
+				var addFaceUrl = getport() + '/course/addFace';
+				var task = plus.uploader.createUpload(addFaceUrl, {
+					method: "POST"
+				}, function(t, status) {
+
+					console.log(t.responseText);
+					if(status == 200) {
+						// document.getElementById('').innerText = t.responseText;
+						mui.alert('上传成功');
+						wait.close();
+						// 							if(t.responseText=="success"){
+						// 								console.log("上传成功：" + t.responseText);
+						// 								mui.alert('上传成功');
+						// 								wait.close();
+						// 								// mui.back();
+						// 							}else if(t.responseText=="failed"){
+						// 				
+						// 								mui.alert('上传失败');
+						// 								wait.close();
+						// 							}else{
+						// 								mui.alert('未知原因');
+						// 							}
+
+					} else {
+						console.log("上传失败：" + status);
+						wait.close();
+						mui.alert('服务器连接失败');
+					}
+
+				});
+
+				var code = getRandomCode(10);
+				// task.addData("mymessage", message);
+				task.addData("thisNumber", myNumber);
+				task.addData("courseCode", courseCode);
+				//				   task.addData("api_key",);
+
+				task.addFile(img, {
+					key: "file",
+					name: code,
+					mime: "image/png"
+				});
+				task.start();
+
+			}
+
+			function getRandomCode(length) {
+				if(length > 0) {
+					var data = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+					var nums = "";
+					for(var i = 0; i < length; i++) {
+						var r = parseInt(Math.random() * 61);
+						nums += data[r];
+					}
+					return nums;
+				} else {
+					return false;
+				}
+			}
+
+			function faceDetectAdd(base64, faceSetname) {
+
+				var url = "https://api-cn.faceplusplus.com/facepp/v3/detect";
+				mui.ajax(url, {
+					data: {
+						api_key: "CX2aigbTpCnnDqf0F2O-0_78hfVIvlxA",
+						api_secret: "NodN9bNE113YiOweX6hnOgtjLxHY_uJ3",
+						image_base64: base64
+						// 				return_landmark:"1",
+						// 				return_attributes:"gender,age,smiling,headpose,facequality,blur,eyestatus,emotion,ethnicity,beauty,mouthstatus,eyegaze,skinstatus"
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					success: function(data) {
+						console.log('成功！');
+
+						console.log(JSON.stringify(data));
+						if(data.faces.length == 0) {
+							mui.alert('该图片无法识别出人脸，请更换图片或重试');
+
+						} else {
+
+							var fk = data.faces[0].face_token;
+							CreateAddFaceSet(faceSetname, fk);
+
+							mui.toast('识别出存在人脸');
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						showError(type);
+					}
+				});
+			}
+
+			function showError(type) {
+				if(type == "timeout") {
+					mui.alert("请求超时，请检查网络或重试");
+				} else {
+					mui.alert("未知网络错误");
+				}
+			}
+
+			(function($, doc) {
+				$.init();
+
+				$.plusReady(function() {
+					MyImg = doc.getElementById('img');
+					video = doc.getElementById('video'),
+						canvas = doc.getElementById('canvas'),
+						provider = doc.getElementById('get'),
+						vendorUrl = window.URL || window.webkitURL;
+
+					//初始化摄像头：媒体对象；仅支持android，ios11.0一下系统均不支持
+					navigator.getMedia = navigator.getUserMedia || navagator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+
+					navigator.getMedia({
+						video: true, //使用摄像头对象
+						audio: false //不适用音频
+					}, function(strem) {
+						video.src = vendorUrl.createObjectURL(strem);
+						video.play();
+					}, function(error) {
+						alert(error);
+					});
+					//getface(); 
+
+					interval = setInterval(getface, 2000);
+
+					/*//手动拍照
+					var checkButton = doc.getElementById('check');
+					checkButton.addEventListener('tap', function(event) {
+					    
+					});*/
+				});
+			}(mui, document));
+		</script>
+	</body>
 
 </html>

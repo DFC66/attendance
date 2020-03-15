@@ -1,27 +1,34 @@
 package com.dfc.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.dfc.WebConfig;
 import com.dfc.api.StorageApi;
-import com.dfc.entity.CourseResult;
+import com.dfc.api.entity.UploadResult;
+import com.dfc.entity.*;
 import com.dfc.service.CourseResultService;
+import com.dfc.service.StudentService;
+import com.dfc.util.BaseCommonUtil;
 import com.dfc.util.HttpsUtil;
+import com.dfc.util.ImageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import com.dfc.entity.Course;
-import com.dfc.entity.Result;
 import com.dfc.service.CourseService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+
 
 /**
  * @author: zsh
@@ -33,6 +40,9 @@ import java.util.Random;
 @RequestMapping("/course")
 public class CourseController {
 
+//    @Value("${file-service.profile}")
+//    private String homePath;
+
     @Resource
     CourseService courseService;
 
@@ -41,6 +51,9 @@ public class CourseController {
 
     @Autowired
     private StorageApi storageApi;
+
+    @Autowired
+    private StudentService studentService;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Result add(Course course) {
@@ -67,6 +80,8 @@ public class CourseController {
             course.setCourseCode(courseCode);
             course.setSigninStatus(1);
             courseService.save(course);
+            String folder = WebConfig.getFilePath(course.getCourseCode(), null);
+            ImageUtil.makeSureFolderExists(folder);
             result.setCode(200);
             result.setMsg("添加课程成功!");
         }
@@ -106,15 +121,27 @@ public class CourseController {
     }
 
     @Transactional
-    @RequestMapping(value = "/addFace", method = RequestMethod.POST)
-    public Result addFaceToDB(String number, Integer courseCode)  {
+    @RequestMapping(value = "/addFace")
+    public Result addFaceToDB(String thisNumber, Integer courseCode,String base64,HttpServletRequest request)  {
+//       String name =  multipartFile.getOriginalFilename();
+        String contentType = request.getContentType();
         Result result = new Result<CourseResult>();
-          CourseResult courseResult = new CourseResult();
-          courseResult.setNumber(number);
+        CourseResult courseResult = new CourseResult();
+        String faceImageSrc = null;
+        try {
+             faceImageSrc = storageApi.uploadFaceImage(courseCode, thisNumber, "student", base64);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (faceImageSrc!=null){
+            courseResult.setFaceImg(faceImageSrc);
+        }
+          courseResult.setNumber(thisNumber);
           courseResult.setCourseCode(courseCode);
         CourseResult isJoinCourse = courseResultService.joinCourse(courseResult);
         if (isJoinCourse!=null){
              courseResultService.updateIsDeletedStatus(courseResult);
+             courseResult.setIsDeleted(1);
             result.setCode(200);
             result.setMsg("课程添加成功");
             result.setMessage(courseResult);
@@ -126,7 +153,6 @@ public class CourseController {
             result.setMessage(courseResult);
 
         }
-
         return result;
     }
 
@@ -229,7 +255,34 @@ public class CourseController {
         return  result;
     }
 
+    @Transactional
+    @RequestMapping(value = "/getCourseStudent", method = RequestMethod.POST)
+    public Result getCourseStudent(Integer courseCode) {
+        Result result = new Result();
+        List<CourseStudent> courseMembers = new ArrayList<>();
+        List<CourseResult> courseStudents = courseResultService.getCourseStudent(courseCode);
+        if (courseStudents.size()>0){
+            for (int i = 0; i < courseStudents.size(); i++) {
+                CourseStudent courseStudent = new CourseStudent();
+                CourseResult courseResult = courseStudents.get(i);
 
+                Student studentDetail = studentService.findByNumber(courseResult.getNumber());
+                courseStudent.setStudent(studentDetail);
+                courseStudent.setFaceImg(courseResult.getFaceImg());
+                courseMembers.add(courseStudent);
+            }
+            result.setMessage(courseMembers);
+            result.setMsg("找到该课程所有学生了");
+            result.setCode(200);
+            return  result;
+
+        }else {
+            result.setMsg("该课程还没有学生");
+            result.setCode(199);
+            return  result;
+        }
+
+    }
 
 
 

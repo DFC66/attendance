@@ -9,6 +9,7 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
 		<link rel="stylesheet" href="../css/mui.min.css">
+		<link href="../css/preViewImg.css" rel="stylesheet" />
 		<style>
 			html,body {
 				background-color: #efeff4;
@@ -43,29 +44,35 @@
 			.oa-contact-name, oa-contact-position {
 				float: left;
 			}
+	 .L_center_img img{
+		 max-height:50px;
+		 max-width: 300px; 
+		 vertical-align:middle;
+	 }
+			
+			
 		</style>
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav">
+		<!--<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title"></h1>
-		</header>
-		<div id="all" class="mui-content">
-			<div class="title">
-			</div>
-
-			<ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
-				<li class="mui-table-view-cell">
+			<h1 class="mui-title">课程成员</h1>
+		</header>-->
+		
+		<div id="content" class="mui-content mui-scroll-wrapper">
+		   <div class="mui-scroll">
+			<ul  class="mui-table-view mui-table-view-striped mui-table-view-condensed ">
+				<li v-for="oneStudent in courseStudent" v-if="courseStudent.length>0"   class="mui-table-view-cell" >
 					<div class="mui-slider-cell">
 						<div class="oa-contact-cell mui-table">
 							<div class="oa-contact-avatar mui-table-cell">
-								<img src="../images/60x60.gif" />
+								<img style=" max-height:50px; max-width: 40px; "  v-bind:src="oneStudent.faceImg"    data-preview-src=""/>
 							</div>
 							<div class="oa-contact-content mui-table-cell">
 								<div class="mui-clearfix">
-									<h4 class="oa-contact-name">叶文洁</h4>
-									<span class="oa-contact-position mui-h6">董事长</span>
+									<h4 class="oa-contact-name">{{oneStudent.student.name}}</h4>
+									<span class="oa-contact-position mui-h6">{{oneStudent.student.number}}</span>
 								</div>
 								<p class="oa-contact-email mui-h6">
 									yewenjie@sina.com
@@ -74,101 +81,153 @@
 						</div>
 					</div>
 				</li>
-				<li class="mui-table-view-cell">
+				
+				<li v-for="oneStudent in courseStudent" v-if="courseStudent.length<1"   class="mui-table-view-cell" >
 					<div class="mui-slider-cell">
 						<div class="oa-contact-cell mui-table">
-							<div class="oa-contact-avatar mui-table-cell">
-								<img src="../images/60x60.gif" />
-							</div>
-							<div class="oa-contact-content mui-table-cell">
-								<div class="mui-clearfix">
-									<h4 class="oa-contact-name">艾AA</h4>
-									<span class="oa-contact-position mui-h6">总经理</span>
-								</div>
-								<p class="oa-contact-email mui-h6">
-									aaa@163.com
-								</p>
-							</div>
+							该课程还没有学生
 						</div>
 					</div>
 				</li>
-				<li class="mui-table-view-cell">
-					<div class="mui-slider-cell">
-						<div class="oa-contact-cell mui-table">
-							<div class="oa-contact-avatar mui-table-cell">
-								<img src="../images/60x60.gif" />
-							</div>
-							<div class="oa-contact-content mui-table-cell">
-								<div class="mui-clearfix">
-									<h4 class="oa-contact-name">罗辑</h4>
-									<span class="oa-contact-position mui-h6">员工</span>
-								</div>
-								<p class="oa-contact-email mui-h6">
-									luoji@126.com
-								</p>
-							</div>
-						</div>
-					</div>
-				</li>
-				<li class="mui-table-view-cell">
-					<div class="mui-slider-cell">
-						<div class="oa-contact-cell mui-table">
-							<div class="oa-contact-avatar mui-table-cell">
-								<img src="../images/60x60.gif" />
-							</div>
-							<div class="oa-contact-content mui-table-cell">
-								<div class="mui-clearfix">
-									<h4 class="oa-contact-name">云天明</h4>
-									<span class="oa-contact-position mui-h6">员工</span>
-								</div>
-								<p class="oa-contact-email mui-h6">
-									ytm@163.com
-								</p>
-							</div>
-						</div>
-					</div>
-				</li>
-				<li class="mui-table-view-cell">
-					<div class="mui-slider-cell">
-						<div class="oa-contact-cell mui-table">
-							<div class="oa-contact-avatar mui-table-cell">
-								<img src="../images/60x60.gif" />
-							</div>
-							<div class="oa-contact-content mui-table-cell">
-								<div class="mui-clearfix">
-									<h4 class="oa-contact-name">史强</h4>
-									<span class="oa-contact-position mui-h6">员工</span>
-								</div>
-								<p class="oa-contact-email mui-h6">
-									shiqiang@gmail.com
-								</p>
-							</div>
-						</div>
-					</div>
-				</li>
-			</ul>
+				
+           </ul>
+           </div>
 		</div>
 	</body>
-	<script src="../js/mui.min.js"></script>
-	<script src="../js/vue.min.js"></script>
-	<script>
-		mui.init({
-			swipeBack:true //启用右滑关闭功能
-		});
-//				var content = 	new Vue({
-//				el: '#all',
-//				data: {
-//					number: localStorage.getItem('stuNumber'),
-//					myCourses: []
-//				}
-//		  })
-//		
+	<script src="../js/configurl.js"></script>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/vue.min.js"></script>
 		
+	    <script src="../js/mui.zoom.js"></script>
+	    <script src="../js/mui.previewimage.js"></script>
+	<script>
+		
+			mui.init({
+				swipeBack:true, //启用右滑关闭功能,
+				pullRefresh: {
+
+					container: "#content", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+
+					down: {
+//                      style:'circle',//必选，下拉刷新样式，目前支持原生5+ ‘circle’ 样式
+						auto: false, //可选,默认false.首次加载自动下拉刷新一次
+                        color:'#2BD009', //可选，默认“#2BD009” 下拉刷新控件颜色
+						contentdown: "下拉可以刷新", //可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
+
+						contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+
+						contentrefresh: "正在刷新...", //可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+//						offset: '300px', //可选 默认0px,下拉刷新控件的起始位置
+						contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容；
+
+						 callback: function() {
+
+							setTimeout(function() { //定时器，提升用户体验
+								let url = getport() + '/course/getCourseStudent';
+
+								mui.ajax(url, {
+									data: {
+										courseCode: content.thisCourseCode
+									},
+									dataType: 'json', //服务器返回json格式数据
+									type: 'post', //HTTP请求类型
+									timeout: 10000, //超时时间设置为10秒；
+									success: function(data) {
+										console.log(JSON.stringify(data));
+										var newCourse = data.message;
+										var newDataLength = newCourse.length;
+										if(content.courseStudent.length != newDataLength) {
+											if(newDataLength > content.courseStudent.length) {
+												for(var i = content.courseStudent.length; i < newDataLength; i++) {
+													content.courseStudent.push(newCourse[i]);
+												}
+											} else {
+												content.courseStudent = newCourse;
+											}
+										} else {
+											mui.toast('没有数据刷新');
+										}
+										mui('#content').pullRefresh().endPulldownToRefresh(); //完成刷新
+
+									},
+									error: function(xhr, type, errorThrown) {
+
+										if(type == "timeout") {
+											mui.alert("请求超时，请检查网络或重试");
+										} else {
+											mui.alert("未知网络错误");
+										}
+										mui('#content').pullRefresh().endPulldownToRefresh(); //完成刷新
+									}
+								});
+
+								 
+
+							}, 1000);
+
+						} 
+
+					}
+
+				}
+
+			});
+
+
+           mui.previewImage();
+
+		
+		
+		
+		
+		
+		
+		
+		var content = 	new Vue({
+				el: '#content',
+				data: {
+					number: localStorage.getItem('stuNumber'),
+					thisCourseCode:0,
+					courseStudent:[]
+				},
+				watch:{
+					courseStudent(newVal){
+						console.log(JSON.stringify(newVal));
+					}
+				}
+		  })
+		
+		var CSUrl = getport() + '/course/getCourseStudent';
 		//添加自定义事件监听
 		window.addEventListener('manage2',function(event){
 		  //获得事件参数
 		  var data = event.detail.course;
           console.log('界面2收到'+JSON.stringify(data));
+          content.thisCourseCode = parseInt(data.courseCode)  ;
+          
+					mui.ajax(CSUrl, {
+								data: {
+									courseCode: parseInt(data.courseCode)
+								},
+								dataType: 'json', //服务器返回json格式数据
+								type: 'post', //HTTP请求类型
+								timeout: 10000, //超时时间设置为10秒；
+								success: function(data) {
+									console.log(JSON.stringify(data));
+									content.courseStudent = data.message;
+								},
+								error: function(xhr, type, errorThrown) {
+
+									if(type == "timeout") {
+										mui.alert("请求超时，请检查网络或重试");
+									} else {
+										mui.alert("未知网络错误");
+									}
+
+								}
+							});
+
+          
 		});
 		
 		

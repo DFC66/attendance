@@ -53,6 +53,9 @@ public class CourseResult  {
     private Integer isDeleted;
 
 
+    @Column(name = "face_img")
+    private String faceImg;
+
 
     @CreatedDate
     @Column(name = "create_time")
@@ -85,5 +88,13 @@ public class CourseResult  {
 
     public void setIsDeleted(Integer isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public String getFaceImg() {
+        return faceImg;
+    }
+
+    public void setFaceImg(String faceImg) {
+        this.faceImg = faceImg;
     }
 }

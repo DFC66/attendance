@@ -249,7 +249,8 @@
 			"bottom-tab/homePage.html": {
 				"resources": [
 					"bottom-tab/course-members.html",
-					"bottom-tab/course.html"
+					"bottom-tab/course.html",
+					"bottom-tab/myCourse.html"
 				],
 				"refer": [
 					"bottom-tab/me.html",
@@ -288,6 +289,15 @@
 				"resources": [],
 				"refer": [
 					"teacher/ManageCourse-main.html"
+				],
+				"priority": 0
+			},
+			"bottom-tab/myCourse.html": {
+				"resources": [
+					"bottom-tab/course.html"
+				],
+				"refer": [
+					"student/joinCourse.html"
 				],
 				"priority": 0
 			}

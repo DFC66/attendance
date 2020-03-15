@@ -12,11 +12,9 @@
 
 		<script src="../js/configurl.js"></script>
 		<script src="../js/mui.min.js"></script>
-		<script type="text/javascript">mui.init({
-//						preloadPages: [{
-//							url: 'compareFace.html',
-//							id: 'compareFace.html'
-//						}]			
+		<script type="text/javascript">
+			mui.init({
+		
 			});
 			var ws = null,
 				wo = null;
@@ -94,7 +92,7 @@
 				setTimeout(function() {
 //					console.log('每次都运行');
 					map = new plus.maps.Map("map");
-					map.showZoomControls( true );
+//					map.showZoomControls( true );
 					map.setZoom(19);
 //					map.centerAndZoom(pcenter, 19);
 					createRoomCircle();

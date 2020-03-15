@@ -2,13 +2,16 @@ package com.dfc.entity;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author: zsh
  * @Date:8:17 2018/5/12
  * @Description:
  */
 @Data
-public class Result<T> {
+public class Result<T>  implements Serializable {
+    private static final long serialVersionUID = -6957361951748382519L;
     private int code;
     private String msg;
     private String url;

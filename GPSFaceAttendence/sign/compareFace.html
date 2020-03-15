@@ -245,6 +245,7 @@
 				var bdata = canvas.toDataURL("image/png");
 				//img.src = canvas.toDataURL("image/png");
 				var base64 = bdata.split(',')[1]; //照片压缩成base位数据
+				console.log('图片格式为'+typeof base64);
                 var token = faceData.face_tokens[0]; //比较单一faceToken
 //              console.log(token);
                 compareFaceNew(base64,token);

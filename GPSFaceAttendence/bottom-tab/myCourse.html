@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../css/iconfont.css" rel="stylesheet" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style>.title {
+	padding: 20px 15px 10px;
+	color: #6d6d72;
+	font-size: 15px;
+	background-color: #fff;
+}
+
+.mui-media-body2 {
+	font-size: 14px;
+	font-weight: 500;
+	/*line-height: 20px;*/
+	margin-bottom: 0;
+	margin-left: 44px;
+	color: #333;
+	display: flex;
+}
+
+.mui-media-object2 {
+	line-height: 42px;
+	max-width: 42px;
+}
+
+.wenzi {
+	float: left;
+	width: 60%;
+}
+
+.mypoint {
+	height: 100%;
+	float: right;
+	/* vertical-align: middle; */
+	/* text-align: right; */
+	display: fixed;
+	font-size: 18px;
+	font-style: italic;
+	margin-right: 15px;
+	align-self: center;
+	max-height: 80px;
+	/* position: absolute; */
+}
+
+.main {
+	width: 100%;
+	display: block;
+	text-align: center;
+}
+
+
+
+
+</style>
+
+	</head>
+
+	<body>
+
+		<header class="mui-bar mui-bar-nav">
+			<button id="joinCourse" class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">加入课程</button>
+		</header>
+		<div class="mui-content"></div>
+		</body>
+		<script src="../js/configurl.js"></script>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		
+		<script type="text/javascript">
+	mui.init({
+		gestureConfig:{
+				doubletap:true
+			},
+	 subpages: [{
+		url: 'course.html', //下拉刷新内容页面地址
+		id: 'course.html', //内容页面标志
+		styles: {
+			top: '48px', //内容页面顶部位置,需根据实际页面布局计算，若使用标准mui导航，顶部默认为48px；
+			bottom: '0px'
+		}
+	}]
+});
+
+			document.getElementById('joinCourse').addEventListener('tap', function() {
+				openJoin();
+
+			});
+
+var detailPage = null;
+mui.plusReady(function() {
+
+	mui.oldBack = mui.back;
+	var backButtonPress = 0;
+	mui.back = function(event) {
+		backButtonPress++;
+		if(backButtonPress > 1) {
+			plus.runtime.quit();
+		} else {
+			plus.nativeUI.toast('再按一次退出应用');
+		}
+		setTimeout(function() {
+			backButtonPress = 0;
+		}, 1000);
+		return false;
+	};
+
+})
+
+//			if(window.plus) {
+//				tapLook()
+//			} else {
+//				document.addEventListener("plusready", tapLook, false);
+//			}
+
+function openJoin() {
+	console.log('点击了');
+
+mui.openWindow({
+	url:'../student/joinCourse.html',
+	id:'joinCourse.html'
+})
+
+
+//	var target = plus.webview.create('../student/joinCourse.html', 'joinCourse.html');
+//	target.addEventListener("loaded", function() {
+//
+//		console.log("New Window loaded!");
+//
+//		target.show("pop-in");
+//
+//	}, false);
+
+	// mui.toast(localStorage.getItem('StuNumber'));
+}</script>
+	
+
+</html>

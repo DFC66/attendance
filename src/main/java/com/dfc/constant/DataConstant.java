@@ -8,4 +8,6 @@ public class DataConstant {
     public static  final long ND = 1000 * 24 * 60 * 60;
     public static  final long NH = 1000 * 60 * 60;
     public static  final long NM = 1000 * 60;
+
+    public static final String PATH_SPLIT = "/";
 }

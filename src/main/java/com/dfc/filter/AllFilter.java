@@ -30,7 +30,7 @@ public class AllFilter implements Filter{
         String requestURI = httpRequest.getRequestURI();
         if (requestURI.equals("/") || requestURI.contains("login") || requestURI.contains("images") ||
                 requestURI.contains("js") || requestURI.contains("signin/to") || requestURI.contains("signin/record")||requestURI.contains("signin/hasTodaySigned")|| requestURI.contains("css")
-                || requestURI.contains("/course/findByTime") || requestURI.contains("/signin/add")||requestURI.contains("/student")||requestURI.contains("/course")){
+                || requestURI.contains("/course/findByTime") || requestURI.contains("/signin/add")||requestURI.contains("/student")||requestURI.contains("/course")||requestURI.contains("/face")){
             filterChain.doFilter(servletRequest,servletResponse);
         }else {
             User user = (User) httpRequest.getSession().getAttribute("user");
