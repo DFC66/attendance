@@ -49,4 +49,7 @@ public interface CourseService {
 
     @Transactional
     Integer updateSignInStatus(Integer status,Integer courseCode);
+
+    @Transactional
+    List<Course>  searchCourses(String text);
 }

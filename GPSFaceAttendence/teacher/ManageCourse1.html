@@ -65,7 +65,9 @@
 	<body>
         <div id="content">
 		<header class="mui-bar mui-bar-nav">
-			<button id="addUser" class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">添加用户</button>
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<!--<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>-->
+			<!--<button id="addUser" class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">添加用户</button>-->
 			<h1 v-if="course.signinStatus==1" class="mui-title">当前可以签到</h1>
 			<h1 v-if="course.signinStatus==1==0" class="mui-title">当前不可以签到</h1>
 			<h1 v-if="course.signinStatus==1==null" class="mui-title">签到状态出错</h1>
@@ -211,11 +213,11 @@
 		});
 
 
-			document.getElementById('addUser').addEventListener('tap', function() {
-				openAddUser();
-				console.log(localStorage.getItem('person'));
-				console.log(content.buttonFlag);
-			});
+//			document.getElementById('addUser').addEventListener('tap', function() {
+//				openAddUser();
+//				console.log(localStorage.getItem('person'));
+//				console.log(content.buttonFlag);
+//			});
 
 			mui.plusReady(function() {
 
@@ -321,24 +323,24 @@
 
 			})
 
-			function openAddUser() {
-				//             mui.plusReady(function(){
-				//             	var target  =  plus.webview.create('../student/joinCourse.html','joinCourse.html');
-				//               target.addEventListener("loaded", function(){
-				//
-				//                   console.log( "New Window loaded!" );
-				//
-				//                   target.show("pop-in");
-				//
-				//                  }, false );			
-				//             })
-
-				mui.openWindow({
-					url: '../student/joinCourse.html',
-					id: 'joinCourse.html'
-				})
-
-			}
+//			function openAddUser() {
+//				//             mui.plusReady(function(){
+//				//             	var target  =  plus.webview.create('../student/joinCourse.html','joinCourse.html');
+//				//               target.addEventListener("loaded", function(){
+//				//
+//				//                   console.log( "New Window loaded!" );
+//				//
+//				//                   target.show("pop-in");
+//				//
+//				//                  }, false );			
+//				//             })
+//
+//				mui.openWindow({
+//					url: '../student/joinCourse.html',
+//					id: 'joinCourse.html'
+//				})
+//
+//			}
 		</script>
 	</body>
 

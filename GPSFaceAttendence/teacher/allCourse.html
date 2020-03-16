@@ -9,6 +9,7 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<link href="../css/iconfont.css" rel="stylesheet" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/preViewImg.css" rel="stylesheet" />
 		<style>
 			.title {
 				padding: 20px 15px 10px;
@@ -56,6 +57,22 @@
 				display: block;
 				text-align: center;
 			}
+			
+			.searchkuang {
+				padding-top: 7.5px;
+				padding-left: 3px;
+				display: -webkit-box;
+				-webkit-box-orient: horizontal;
+			}
+			
+			.searchleft {
+				-webkit-box-flex: 3.2;
+			}
+			
+			.searchbtn {
+				margin-left: 2px;
+				-webkit-box-flex: 0.7;
+			}
 		</style>
 
 	</head>
@@ -63,37 +80,51 @@
 	<body>
 
 		<header class="mui-bar mui-bar-nav">
-			<button id="addUser" class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">添加用户</button>
+			<h1 class="mui-title">所有课程</h1>
+			<a id="addCourse" onclick="openAddCourse()" class="mui-icon mui-icon-bars mui-pull-right"></a>
+			<!--<button id="addCourse" class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">添加课程</button>-->
 		</header>
 		<div id="content" class="mui-content">
 
-			<ul id="table" class="mui-table-view">
+			<div class="searchkuang">
+				<div class="mui-input-row mui-search mui-plus-visible searchleft">
+					<input v-model="searchText" @keypress="searchBoard" id="inputText" type="search" class="mui-input-speech mui-input-clear" placeholder="请输入你的关键词">
+				</div>
+				<div class="searchbtn">
+					<button v-if="searchFlag==0" @click="searchCourses()" id="searchButton" type="button" class="mui-btn mui-btn-primary searchbtn">搜索</button>
+					<button v-if="searchFlag==1" @click="resetSearch()" id="cancel" type="button" class="mui-btn mui-btn-primary searchbtn">取消</button>
+				</div>
+			</div>
 
-				<li v-for="course in myCourses" v-if="myCourses.length>0" v-bind:id="course.courseCode" class="mui-table-view-cell" @click="jump(course)">
-					<img id="imgurl" class="mui-media-object2 mui-pull-left" v-lazy="img">
-					<div class="mui-media-body2">
-						<div class="wenzi">
-							<h4>课程号：{{course.courseCode}}</h4>
-							<span>{{course.name}}</span>
-							<p class="mui-ellipsis">{{course.teacherName}}</p>
-							<span class="mui-ellipsis" class="main">{{course.room}}</span>
+			<div class="mui-scroll-wrapper">
+
+				<ul class="mui-table-view">
+
+					<li v-for="course in myCourses" v-bind:id="course.courseCode" class="mui-table-view-cell">
+						<img id="imgurl" class="mui-media-object2 mui-pull-left" v-lazy="course.imgPath" data-preview-src="">
+						<div class="mui-media-body2" @click="jump(course)">
+							<div class="wenzi">
+								<h4>课程号：{{course.courseCode}}</h4>
+								<span>{{course.name}}</span>
+								<p class="mui-ellipsis">{{course.teacherName}}</p>
+								<span class="mui-ellipsis" class="main">{{course.room}}</span>
+							</div>
+							<div class="mypoint mui-navigate-right ">
+								<!--<span class="main">{{course.startTime}}~{{course.endTime}}</span>-->
+								<p v-if="course.signinStatus==1" class="mui-ellipsis">签到已开启</p>
+								<p v-if="course.signinStatus==0" class="mui-ellipsis">签到已关闭</p>
+							</div>
 						</div>
-						<div class="mypoint mui-navigate-right ">
-							<!--<span class="main">{{course.startTime}}~{{course.endTime}}</span>-->
-							<p v-if="course.signinStatus==1" class="mui-ellipsis">签到已开启</p>
-							<p v-if="course.signinStatus==0" class="mui-ellipsis">签到已关闭</p>
+					</li>
+
+					<li v-if="myCourses.length<1">
+						<div style="text-align: center;margin-top: 20px;">
+							<h3>没有找到课程,下拉可刷新</h3>
+							<!--<button type="button" class="mui-btn" @click="getCourse()">刷新</button>-->
 						</div>
-					</div>
-				</li>
+					</li>
 
-				<li v-if="myCourses.length<1">
-					<div style="text-align: center;margin-top: 20px;">
-						<h3>没有找到课程</h3>
-						<button type="button" class="mui-btn" @click="getCourse()">刷新</button>
-					</div>
-				</li>
-
-				<li class="mui-table-view-cell">
+					<!--<li class="mui-table-view-cell">
 					<img id="imgurl" class="mui-media-object2 mui-pull-left" v-lazy="img">
 					<div class="mui-media-body2">
 						<div class="wenzi">
@@ -105,25 +136,92 @@
 							<p class="mui-ellipsis">{{tip}}</p>
 						</div>
 					</div>
-				</li>
+				</li>-->
 
-			</ul>
+				</ul>
+
+			</div>
 
 		</div>
 
-		</div>
 		<script src="../js/configurl.js"></script>
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/vue.min.js"></script>
 		<script src="../js/vue-lazyload.js"></script>
+		<script src="../js/mui.zoom.js"></script>
+		<script src="../js/mui.previewimage.js"></script>
 
 		<script type="text/javascript">
 			mui.init({
 				preloadPages: [{
 					id: 'ManageCourse-main.html',
 					url: 'ManageCourse-main.html'
-				}]
+				}],
+				pullRefresh: {
+
+					container: "#content", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+
+					down: {
+						style: 'circle', //必选，下拉刷新样式，目前支持原生5+ ‘circle’ 样式
+						color: '#2BD009', //可选，默认“#2BD009” 下拉刷新控件颜色
+						height: '50px', //可选,默认50px.下拉刷新控件的高度,
+						range: '100px', //可选 默认100px,控件可下拉拖拽的范围
+						offset: '0px', //可选 默认0px,下拉刷新控件的起始位置
+						auto: false, //可选,默认false.首次加载自动上拉刷新一次
+						 callback: function() {
+							console.log('进来了吗');
+							setTimeout(function() { //定时器，提升用户体验
+								let url = getport() + '/course/getAllCourse';
+
+								mui.ajax(url, {
+									data: {
+
+									},
+									dataType: 'json', //服务器返回json格式数据
+									type: 'post', //HTTP请求类型
+									timeout: 10000, //超时时间设置为10秒；
+									success: function(data) {
+										console.log(JSON.stringify(data));
+										var newCourse = data.message;
+										var newDataLength = newCourse.length;
+										if(content.myCourses.length != newDataLength) {
+											if(newDataLength > content.myCourses.length) {
+												for(var i = content.myCourses.length; i < newDataLength; i++) {
+													content.myCourses.push(newCourse[i]);
+												}
+											} else {
+												content.myCourses = newCourse;
+											}
+										} else {
+											mui.toast('没有数据刷新');
+										}
+										mui('#content').pullRefresh().endPulldownToRefresh(); //完成刷新
+
+									},
+									error: function(xhr, type, errorThrown) {
+
+										if(type == "timeout") {
+											mui.alert("请求超时，请检查网络或重试");
+										} else {
+											mui.alert("未知网络错误");
+										}
+										mui('#content').pullRefresh().endPulldownToRefresh(); //完成刷新
+									}
+								});
+
+								 
+
+							}, 1000);
+
+						} //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+
+					}
+
+				}
+
 			});
+
+			mui.previewImage();
 
 			Vue.use(VueLazyload, {
 				preLoad: 1.3,
@@ -132,11 +230,85 @@
 				attempt: 1
 			});
 
-			document.getElementById('addUser').addEventListener('tap', function() {
-				openAddUser();
-				console.log(localStorage.getItem('person'));
-				console.log(content.buttonFlag);
-			});
+			//			document.getElementById('addUser').addEventListener('tap', function() {
+			//				openAddUser();
+			//				console.log(localStorage.getItem('person'));
+			//				console.log(content.buttonFlag);
+			//			});
+
+//			document.getElementById("inputText").addEventListener("keypress", function(event) {
+//				console.log(event.keyCode);   
+//				if(event.keyCode == "13") {
+//
+//					       
+//					document.activeElement.blur(); //收起虚拟键盘
+//
+//					       
+//					content.searchCourses(content.searchText);
+//
+//					       
+//					event.preventDefault(); // 阻止默认事件---阻止页面刷新
+//
+//					   
+//				}
+//
+//			});
+
+
+
+			//获取当前页面（在子页面上书写）
+			//			var ws;
+			//			if(window.plus) {
+			//				myPlus();
+			//			} else {
+			//				document.addEventListener("plusready", myPlus, false);
+			//			}
+			//
+			//			function myPlus() {
+			//				ws = plus.webview.currentWebview();
+			//			}
+
+			//			//获取当前页面的input
+			//			var search = document.querySelector('#input');
+			//			search.onfocus = function() {
+			//				var ws = plus.webview.currentWebview();
+			//			//设置父页面的导航栏隐藏
+			//				ws.parent().evalJS("document.getElementById('nav').style.display='none'");
+			//				//当前子Webview窗口的样式（）
+			//				ws.setStyle({
+			//					bottom: '0px'
+			//				});
+			//				
+			//				
+			//			}
+			//			search.onblur = function() {
+			//				var ws = plus.webview.currentWebview();
+			//				//设置父页面的导航栏显示
+			//				ws.parent().evalJS("document.getElementById('nav').style.display='block'");
+			//				//当前子Webview窗口的样式（和子页面在父页面上的bottom保持一致）
+			//				ws.setStyle({
+			//					bottom: '50px'
+			//				});
+			//			}
+			//			
+			//	var originalHeight=document.documentElement.clientHeight ||document.body.clientHeight;
+			//window.οnresize=function(){
+			//  //键盘弹起与隐藏都会引起窗口的高度发生变化
+			//     var resizeHeight=document.documentElement.clientHeight || document.body.clientHeight;
+			//      if(resizeHeight-0<originalHeight-0){
+			//       //当软键盘弹起，在此处操作
+			//       }else{
+			//       //当软键盘收起，在此处操作
+			//       
+			//       //设置父页面的导航栏显示
+			//				ws.parent().evalJS("document.getElementById('nav').style.display='block'");
+			//				//当前子Webview窗口的样式（和子页面在父页面上的bottom保持一致）
+			//				ws.setStyle({
+			//					bottom: '50px'
+			//				});
+			//       
+			//       }
+			//}
 
 			mui.plusReady(function() {
 
@@ -169,80 +341,13 @@
 					img: 'http://thirdqq.qlogo.cn/g?b=oidb&k=Qo7kIdQ1omu8gwGaZFe6IA&s=100&t=1565432648',
 					number: localStorage.getItem('stuNumber'),
 					myCourses: [],
+					oldCoursesData: [],
+					searchFlag: 0,
+					searchText: '',
 					tip: ''
 				},
 				created() {
-					mui.init({
-						//				pullRefresh: {
-						//
-						//					container: "#container", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
-						//
-						//					down: {
-						//
-						//						auto: false, //可选,默认false.首次加载自动下拉刷新一次
-						//
-						//						contentdown: "下拉可以刷新", //可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
-						//
-						//						 contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
-						//
-						//						contentrefresh: "正在刷新...", //可选，正在刷新状态时，下拉刷新控件上显示的标题内容
-						//						offset: '30px', //可选 默认0px,下拉刷新控件的起始位置
-						//						contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容；
-						//
-						//						 callback: function() {
-						//                                console.log('进来了吗');
-						//							setTimeout(function() { //定时器，提升用户体验
-						//								let url = getport() + '/course/getAllCourse';
-						//
-						//								mui.ajax(url, {
-						//									data: {
-						//
-						//									},
-						//									dataType: 'json', //服务器返回json格式数据
-						//									type: 'post', //HTTP请求类型
-						//									timeout: 10000, //超时时间设置为10秒；
-						//									success: function(data) {
-						//										console.log(JSON.stringify(data));
-						//										var newCourse = data.message;
-						//										var newDataLength = newCourse.length;
-						//										if(content.myCourses.length != newDataLength) {
-						//											if(newDataLength > content.myCourses.length) {
-						//												for(var i = content.myCourses.length; i < newDataLength; i++) {
-						//													content.myCourses.push(newCourse[i]);
-						//												}
-						//											} else {
-						//												content.myCourses = newCourse;
-						//											}
-						//										} else {
-						//											mui.toast('没有数据刷新');
-						//										}
-						//										mui('#container').pullRefresh().endPulldownToRefresh(); //完成刷新
-						//
-						//									},
-						//									error: function(xhr, type, errorThrown) {
-						//
-						//										if(type == "timeout") {
-						//											mui.alert("请求超时，请检查网络或重试");
-						//										} else {
-						//											mui.alert("未知网络错误");
-						//										}
-						//										mui('#container').pullRefresh().endPulldownToRefresh(); //完成刷新
-						//									}
-						//								});
-						//
-						//								 
-						//
-						//							}, 1000);
-						//
-						//						} //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
-						//
-						//					}
-						//
-						//				}
 
-					});
-
-					//					console.log('創建了一次');
 					var all = this;
 
 					console.log('所有课程都加载了');
@@ -255,23 +360,19 @@
 
 				},
 				watch: {
-					//					number(newValue) {
-					//						console.log('学号发生了变化');
-					//						if(newValue != '' || newValue != null) {
-					//							this.getCourse(newValue);
-					//						}
-					//					}
+					searchFlag(newVal) {
+                        
+					}
 				},
 				mounted() {
-					
+
 				},
 				methods: {
 					getAllCourse: function() {
 						var all = this;
 						//						console.log('开始获取课程数据')
-
-						var url = getport() + '/course/getAllCourse';
-
+						//						var url = getport() + '/course/getAllCourse';
+						let url = getport() + '/course/getAllCourse';
 						mui.ajax(url, {
 							data: {
 
@@ -281,9 +382,12 @@
 							timeout: 10000, //超时时间设置为10秒；
 							success: function(data) {
 								console.log(JSON.stringify(data));
-								var courseData = data.message;
-								all.myCourses = courseData;
+								if(data.message != null) {
+									all.myCourses = data.message;
+									all.oldCoursesData = data.message;
+									//									console.log('课程总数据'+JSON.stringify(all.myCourses));
 
+								}
 							},
 							error: function(xhr, type, errorThrown) {
 
@@ -301,18 +405,78 @@
 						var all = this;
 
 						//打开详情页面          
-					mui.openWindow({
-						id: 'ManageCourse-main.html',
-						url: 'ManageCourse-main.html',
-						show: {
-							autoShow: false
-						}
-					});
+						mui.openWindow({
+							id: 'ManageCourse-main.html',
+							url: 'ManageCourse-main.html',
+							show: {
+								autoShow: false
+							}
+						});
 						//触发详情页面的newsId事件
 						mui.fire(plus.webview.getWebviewById('ManageCourse-main.html'), 'code', {
 							course: thcourse
 						});
 
+					},
+					searchCourses: function() {
+
+						var all = this;
+						if(all.searchText == ''|| all.searchText == null) {
+							console.log('没有搜索内容');
+							mui.toast('搜索内容不能为空');
+
+						} else {
+
+							var searchUrl = getport() + '/course/searchAllCourses';
+							mui.ajax(searchUrl, {
+								data: {
+									text: all.searchText
+								},
+								dataType: 'json', //服务器返回json格式数据
+								type: 'post', //HTTP请求类型
+								timeout: 10000, //超时时间设置为10秒；
+								success: function(data) {
+									console.log(JSON.stringify(data));
+									if(data.message != null) {
+
+										all.myCourses = data.message;
+										all.searchFlag = 1;
+									} else {
+										mui.toast(data.msg);
+									}
+								},
+								error: function(xhr, type, errorThrown) {
+
+									if(type == "timeout") {
+										mui.alert("请求超时，请检查网络或重试");
+									} else {
+										mui.alert("未知网络错误");
+									}
+
+								}
+							});
+
+						}
+
+					},
+					resetSearch: function() {
+						var all = this;
+						all.searchFlag = 0;
+						all.myCourses = all.oldCoursesData;
+						all.searchText = '';
+					},
+					searchBoard(event) {
+						if(event.keyCode == 13) { //如果按的是enter键 13是enter 
+							event.preventDefault(); //禁止默认事件（默认是换行） 
+							console.log(event.target.value)
+							document.activeElement.blur(); //收起虚拟键盘
+							var search_val = event.target.value;
+							if(search_val == '' || search_val == null) {
+								alert('搜索内容不能为空');
+							} else {
+                               	content.searchCourses(search_val);
+							}
+						}
 
 					}
 
@@ -320,14 +484,19 @@
 
 			})
 
-         function   getAll(){
-         	content.getAllCourse();
-         }
+			function getAll() {
+				content.getAllCourse();
+			}
 
+			function openAddCourse() {
+//				console.log('课程总数据' + JSON.stringify(content.myCourses));
 
-            function  openAddCourse(){}
+				mui.openWindow({
+					url: 'InsertMessage.html',
+					id: 'InsertMessage.html'
+				})
 
-
+			}
 
 			function openAddUser() {
 				//             mui.plusReady(function(){

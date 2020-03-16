@@ -85,7 +85,8 @@
 			
 			.divtimecss {
 				/* padding-top: 20px; */
-				padding: 3px 10px
+				padding: 3px 10px;
+				margin-top: 5px;
 			}
 			
 			.component {
@@ -130,18 +131,144 @@
 			.dataSize {
 				font-size: 16px;
 			}
+			
+			.mui-btn-block2 {
+				font-size: 18px;
+				display: block;
+				width: 100%;
+				margin-bottom: 10px;
+				padding: 10px 0;
+			}
 		</style>
+
 	</head>
 
 	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">添加课程</h1>
+		</header>
+		<div id="form" class="mui-content">
+			<!--<div style="text-align: center;margin-top: 6px;">
+				<span>点击下方添加或更换图片</span>
+			</div>-->
+			<div align="center" class="divimagecss">
+				<img src="../imgs/jiahao.png" id="courseImg" class="imagecss" onclick="choosePhoto(this)" name="file" />
+			</div>
+
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label>课程名</label>
+					<input id='cname' type="text" class="mui-input-clear mui-input" placeholder="请输入课程名称">
+				</div>
+				<div class="mui-input-row">
+					<label>老师名</label>
+					<input id='tname' type="text" class="mui-input-clear mui-input" placeholder="请输入老师姓名">
+				</div>
+				<div class="mui-input-row">
+					<label>课室号</label>
+					<input id='rname' type="text" class="mui-input-clear mui-input" placeholder="请输入课室号">
+				</div>
+				<div class="mui-input-row">
+					<label>选星期</label>
+					<!--'	<input id='weekDay' type="text" class="mui-input-clear mui-input" onfocus="openPicker()" placeholder="请选择周几" readonly>-->
+					<input id='weekDay' v-model="weekDay"  type="text" class="mui-input-clear mui-input" onclick="openPicker()" placeholder="请选择周几" readonly>
+				</div>
+				<div class="mui-input-row">
+					<label>经纬度</label>
+					<div class="location">
+						<div style="float: left;">
+							<span id="longitude" class="dataSize">124.55</span>
+							<span class="dataSize">,</span>
+							<span id="latitude" class="dataSize">124.55</span>
+						</div>
+
+						<div style="padding: 2px;float: right; font-size: small;">
+							<button type="button" onclick="getGeocode()" class="mui-btn2 mui-btn-primary mui-icon mui-icon-location">
+								定位
+							</button>
+						</div>
+					</div>
+				</div>
+			</form>
+			<div class="divtimecss" align="center">
+				<button id='result0' data-options='{"type":"time"}' type="button" class="mui-btn mui-btn-primary mui-btn-outlined">上课时间</button>
+				<label>~</label>
+				<button id='result1' data-options='{"type":"time"}' type="button" class="mui-btn mui-btn-primary mui-btn-outlined " style="">下课时间</button>
+			</div>
+
+			<div class="mui-content-padded">
+				<button id='submit' onclick="submit()" class="mui-btn mui-btn-block2 mui-btn-primary">提交</button>
+			</div>
+		</div>
 
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/jquery-3.3.1.min.js"></script>
 		<script src="../js/configurl.js"></script>
+		<script src="../js/vue.min.js"></script>
 		<script src="../js/mui.picker.min.js"></script>
 		<script type="text/javascript">
 			mui.init();
+
+ function getWeekDate() {
+						var now = new Date();
+						var day = now.getDay();
+						var weeks = new Array("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六");
+						var week = weeks[day];
+						return week;
+					}
+			var content = new Vue({
+				el: '#form',
+				data: {
+					//					number: localStorage.getItem('stuNumber'),
+					//					myCourses: [],
+					weekDay:window.getWeekDate()
+				},
+				methods: {
+					getWeekDate: function() {
+						var now = new Date();
+						var day = now.getDay();
+						var weeks = new Array("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六");
+						var week = weeks[day];
+						return week;
+					}
+				}
+			})
+
 			var mask = mui.createMask(); //遮罩层
+
+			function openPicker() {
+//				mui.alert('开始打开');
+//				document.getElementById('weekDay').value = '123';
+  var picker = new mui.PopPicker();//获取弹出列表组建，假如是二联则在括号里面加入{layer:2}
+       picker.setData([{//设置弹出列表的信息，假如是二联，还需要一个children属性
+                 value: "1",
+                 text: "星期一"
+       }, {
+                 value: "2",
+                 text: "星期二"
+      },{
+                 value: "3",
+                 text: "星期三"
+      },{
+                 value: "4",
+                 text: "星期四"
+      },{
+                 value: "5",
+                 text: "星期五"
+      },{
+                 value: "6",
+                 text: "星期六"
+      },{
+                 value: "7",
+                 text: "星期日"
+      }]);
+       picker.show(function(item) {//弹出列表并在里面写业务代码
+              var itemCallback=picker.getSelectedItems();
+              content.weekDay = itemCallback[0].text;
+     });
+
+			}
 
 			function submit() {
 				var btnArray = ['确认', '取消'];
@@ -173,16 +300,18 @@
 					mui.alert('信息不能为空');
 				} else if(CompareDate(start_time, end_time)) {
 					mui.alert('结束时间不能大于等于开始时间');
+				}else if(content.weekDay==null||content.weekDay==''){
+					mui.alert('日期选择不能为空');
 				}
-				// else if (imgPath == '') {
+				 else if (imgPath == '') {
 
-				// 	mui.alert('上传图片不能为空');
+				 	mui.alert('上传图片不能为空');
 
-				// } 
+				 } 
 				else {
 
-					// uploadMessage(imgPath, c_name, t_name, r_name, longitude, latitude, startTime, endTime);
-					uploadBaseMessage(c_name, t_name, r_name, longitude, latitude, start_time, end_time);
+					uploadMessage(imgPath, c_name, t_name, r_name,content.weekDay,longitude, latitude,start_time,start_time);
+//					uploadBaseMessage(c_name, t_name, r_name, longitude, latitude, start_time, end_time);
 
 				}
 			}
@@ -397,36 +526,35 @@
 
 			// }
 
-			function uploadMessage(file, c_name, t_name, r_name, longitude, latitude, start_time, end_time) {
+			function uploadMessage(file, c_name, t_name, r_name, today,longitude, latitude, start_time, end_time) {
 
 				mui.plusReady(function() {
-					// var wait = plus.nativeUI.showWaiting("正在上传");
-
-					var url = getport() + '/course/addCourse';
+					 var wait = plus.nativeUI.showWaiting("正在上传,请稍候");
+                     mask.show();
+					var url = getport() + '/course/addCourseMessage';
 					var task = plus.uploader.createUpload(url, {
 						method: "POST"
 					}, function(t, status) {
 						if(status == 200) {
 							console.log(t.responseText);
-							// if (t.responseText == "success") {
-							// 	console.log("上传成功：" + t.responseText);
-							// 	mui.alert('上传成功');
-							// 	wait.close();
-							// 	mui.back();
-							// } else if (t.responseText == "failed") {
-
-							// 	mui.alert('上传失败');
-							// 	wait.close();
-							// } else {
-
-							// 	mui.alert('未知原因');
-							// 	wait.close();
-							// }
-
+						var data =	JSON.parse(t.responseText);
+						mui.toast(data.msg);
+						wait.close();
+//                        plus.nativeUI.closeWaiting();
+                          mask.close();
+						if(data.code==200){
+							mui.back();
+						}else{
+							
+						}
+							
 						} else {
 							console.log("上传失败：" + status);
 							// wait.close();
 							mui.alert('服务器连接失败');
+//							plus.nativeUI.closeWaiting();
+                           wait.close();
+                          mask.close();
 						}
 
 					});
@@ -434,10 +562,11 @@
 						"name": c_name,
 						"teacherName": t_name,
 						"room": r_name,
+						 "today":today,
 						"longitude": longitude,
 						"latitude": latitude,
-						"start_name": start_time,
-						"end_name": end_time
+						"startTime": start_time,
+						"endTime": end_time
 					}
 
 					var code = getRandomCode(10);
@@ -448,7 +577,7 @@
 					// task.addData("rname", r_name);
 
 					task.addFile(file, {
-						key: "file",
+						key: "img",
 						name: code,
 						mime: "image/png"
 					});
@@ -476,59 +605,6 @@
 
 			window.onload = getGeocode();
 		</script>
-
-		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">添加课程</h1>
-		</header>
-		<div class="mui-content">
-			<div style="text-align: center;margin-top: 6px;">
-				<span>点击下方添加或更换图片</span>
-			</div>
-			<div align="center" class="divimagecss">
-				<img src="" id="courseImg" class="imagecss" onclick="choosePhoto(this)" name="file" />
-			</div>
-
-			<form class="mui-input-group" style="margin: 10px;">
-				<div class="mui-input-row">
-					<label>课程名</label>
-					<input id='cname' type="text" class="mui-input-clear mui-input" placeholder="请输入课程名称">
-				</div>
-				<div class="mui-input-row">
-					<label>老师名</label>
-					<input id='tname' type="text" class="mui-input-clear mui-input" placeholder="请输入老师姓名">
-				</div>
-				<div class="mui-input-row">
-					<label>课室号</label>
-					<input id='rname' type="text" class="mui-input-clear mui-input" placeholder="请输入课室号">
-				</div>
-				<div class="mui-input-row">
-					<label>经纬度</label>
-					<div class="location">
-						<div style="float: left;">
-							<span id="longitude" class="dataSize">124.55</span>
-							<span class="dataSize">,</span>
-							<span id="latitude" class="dataSize">124.55</span>
-						</div>
-
-						<div style="padding: 2px;float: right; font-size: small;">
-							<button type="button" onclick="getGeocode()" class="mui-btn2 mui-btn-primary mui-icon mui-icon-location">
-								定位
-							</button>
-						</div>
-					</div>
-				</div>
-			</form>
-			<div class="divtimecss" align="center">
-				<button id='result0' data-options='{"type":"time"}' type="button" class="mui-btn mui-btn-primary mui-btn-outlined">上课时间</button>
-				<label>~</label>
-				<button id='result1' data-options='{"type":"time"}' type="button" class="mui-btn mui-btn-primary mui-btn-outlined " style="">下课时间</button>
-			</div>
-
-			<div class="mui-content-padded">
-				<button id='submit' onclick="submit()" class="mui-btn mui-btn-block mui-btn-primary">提交</button>
-			</div>
-		</div>
 
 		<script>
 			(function($) {

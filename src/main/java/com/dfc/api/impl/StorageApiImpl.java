@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
@@ -288,6 +289,33 @@ public class StorageApiImpl implements StorageApi, ApplicationContextAware {
             return null;
         }
 
+    }
+
+    @Override
+    public String uploadCourseImage(Integer courseCode, String objectName, MultipartFile multipartFile) throws IOException {
+        String netCoursePath = null;
+
+        if (multipartFile != null && !multipartFile.isEmpty()) {
+            String dictoryPath = WebConfig.getFilePath(courseCode, objectName);
+            makeSureFolderExists2(dictoryPath);
+            String filename = multipartFile.getOriginalFilename() + ".png";
+            try {
+                File trueFile = new File(dictoryPath,filename);
+                multipartFile.transferTo(trueFile);
+                netCoursePath  = this.netFilesPath +PATH_SPLIT+ WebConfig.getModulePath(courseCode,objectName)+PATH_SPLIT+filename;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+
+            }
+        }else
+        {
+            return  null;
+        }
+
+
+        return netCoursePath;
     }
 
     private static void makeSureFolderExists(String filePath) {

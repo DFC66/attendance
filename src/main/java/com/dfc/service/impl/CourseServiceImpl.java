@@ -93,4 +93,9 @@ public class CourseServiceImpl implements CourseService {
     public Integer updateSignInStatus(Integer status, Integer courseCode) {
         return courseDao.updateSignInStatus(status,courseCode);
     }
+
+    @Override
+    public List<Course> searchCourses(String text) {
+        return courseDao.searchCourses(text);
+    }
 }

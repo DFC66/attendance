@@ -55,10 +55,10 @@
 	</head>
 
 	<body>
-		<!--<header class="mui-bar mui-bar-nav">
+		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">课程成员</h1>
-		</header>-->
+		</header>
 		
 		<div id="content" class="mui-content mui-scroll-wrapper">
 		   <div class="mui-scroll">
@@ -82,11 +82,10 @@
 					</div>
 				</li>
 				
-				<li v-for="oneStudent in courseStudent" v-if="courseStudent.length<1"   class="mui-table-view-cell" >
-					<div class="mui-slider-cell">
-						<div class="oa-contact-cell mui-table">
-							该课程还没有学生
-						</div>
+				<li  v-if="courseStudent.length<1"   class="mui-table-view-cell" >
+					<div style="text-align: center;margin-top: 20px;">
+						<h3>该课程还没有成员</h3>
+						<button type="button" class="mui-btn" @click="getCourse()">刷新</button>
 					</div>
 				</li>
 				
@@ -109,16 +108,12 @@
 					container: "#content", //下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
 
 					down: {
-//                      style:'circle',//必选，下拉刷新样式，目前支持原生5+ ‘circle’ 样式
-						auto: false, //可选,默认false.首次加载自动下拉刷新一次
-                        color:'#2BD009', //可选，默认“#2BD009” 下拉刷新控件颜色
-						contentdown: "下拉可以刷新", //可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
-
-						contentover: "释放立即刷新", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
-
-						contentrefresh: "正在刷新...", //可选，正在刷新状态时，下拉刷新控件上显示的标题内容
-//						offset: '300px', //可选 默认0px,下拉刷新控件的起始位置
-						contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容；
+                        style: 'circle', //必选，下拉刷新样式，目前支持原生5+ ‘circle’ 样式
+						color: '#2BD009', //可选，默认“#2BD009” 下拉刷新控件颜色
+						height: '50px', //可选,默认50px.下拉刷新控件的高度,
+						range: '100px', //可选 默认100px,控件可下拉拖拽的范围
+						offset: '0px', //可选 默认0px,下拉刷新控件的起始位置
+						auto: false, //可选,默认false.首次加载自动上拉刷新一次
 
 						 callback: function() {
 
@@ -135,7 +130,8 @@
 									success: function(data) {
 										console.log(JSON.stringify(data));
 										var newCourse = data.message;
-										var newDataLength = newCourse.length;
+										if(newCourse!=null){
+											var newDataLength = newCourse.length;
 										if(content.courseStudent.length != newDataLength) {
 											if(newDataLength > content.courseStudent.length) {
 												for(var i = content.courseStudent.length; i < newDataLength; i++) {
@@ -147,6 +143,10 @@
 										} else {
 											mui.toast('没有数据刷新');
 										}
+										}else{
+											mui.toast(data.msg);
+										}
+										
 										mui('#content').pullRefresh().endPulldownToRefresh(); //完成刷新
 
 									},

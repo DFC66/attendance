@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="../css/app.css" />
+		<style>
+			.title {
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+			
+			.oa-contact-cell.mui-table .mui-table-cell {
+				padding: 11px 0;
+				vertical-align: middle;
+			}
+			
+			.oa-contact-cell {
+				position: relative;
+				margin: -11px 0;
+			}
+			
+			.oa-contact-avatar {
+				width: 75px;
+			}
+			
+			.oa-contact-avatar img {
+				border-radius: 50%;
+			}
+			
+			.oa-contact-content {
+				width: 100%;
+			}
+			
+			.oa-contact-name {
+				margin-right: 20px;
+			}
+			
+			.oa-contact-name,
+			oa-contact-position {
+				float: left;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="all">
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			</header>
+			<div id="courseBottom" class="mui-content">
+				<nav id="nav" class="mui-bar mui-bar-tab">
+					<a id="defaultTab" class="mui-tab-item mui-active" href="AllCourse.html">
+						<span class="mui-icon mui-icon-home"></span>
+						<span class="mui-tab-label">所有课程</span>
+					</a>
+
+					<a class="mui-tab-item">
+						<span class="mui-icon mui-icon-extra-card"></span>
+					</a>
+
+					<a class="mui-tab-item" href="InsertMessage.html">
+						<span class="mui-icon mui-icon-contact"></span>
+						<span class="mui-tab-label">添加课程</span>
+					</a>
+				</nav>
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/configurl.js"></script>
+	<script src="../js/vue.min.js"></script>
+	<script src="../js/common.js"></script>
+	<script src="../js/draw.js"></script>
+	<script>
+		mui.init({
+			swipeBack: true //启用右滑关闭功能
+		});
+		var clickButton = null;
+		var subpages = ['AllCourse.html', 'InsertMessage.html'];
+		var subpage_style = {
+			top: '0px',
+			bottom: '50px'
+		};
+
+		var detailPage = null;
+		
+		
+		var courseMain = new Vue({
+			el: '#all',
+			data: {
+				id: null,
+				number: localStorage.getItem('stuNumber'),
+				course: {
+
+				},
+				code: '',
+				faceData: {
+
+				},
+				signFlag: false,
+				canSignFlag: null
+			},
+			created() {
+				console.log('created加载完成');
+				var all = this;
+				//				this.queryFaceSet(all.number);
+			},
+			mounted() {
+				//			console.log("mounted加载")
+			},
+			watch: {
+				
+			},
+			methods: {
+
+			}
+		});
+
+		function updateSignStatus(flag, tcode) {
+			let canSignUrl = getport() + '/course/updateSignStatus';
+			mui.ajax(canSignUrl, {
+				data: {
+					status: flag,
+					courseCode: tcode
+				},
+				dataType: 'json', //服务器返回json格式数据
+				type: 'post', //HTTP请求类型
+				timeout: 10000, //超时时间设置为10秒；
+				success: function(data) {
+					console.log(JSON.stringify(data));
+					var courseData = data.message;
+					courseMain.canSignFlag = courseData.signinStatus;
+					plus.webview.currentWebview().opener().evalJS('getAll()');
+				},
+				error: function(xhr, type, errorThrown) {
+
+					if(type == "timeout") {
+						mui.alert("请求超时，请检查网络或重试");
+					} else {
+						mui.alert("未知网络错误");
+					}
+
+				}
+			});
+		}
+
+
+		var aniShow = {};
+	
+	
+	
+
+			
+		
+
+		//创建子页面，首个选项卡页面显示，其它均隐藏；
+		mui.plusReady(function() {
+			console.log('plus加载完成');
+			var self = plus.webview.currentWebview();
+			for(var i = 0; i < 2; i++) {
+				var temp = {};
+				var sub = plus.webview.create(subpages[i], subpages[i], subpage_style);
+				console.log('每次都建页面');
+				if(i > 0) {
+					sub.hide();
+				} else {
+					temp[subpages[i]] = "true";
+					mui.extend(aniShow, temp);
+				}
+				self.append(sub);
+			}
+
+			
+		});
+
+		//当前激活选项
+		var activeTab = subpages[0];
+		var title = document.getElementById("title");
+		//选项卡点击事件
+		mui('.mui-bar-tab').on('tap', 'a', function(e) {
+			let ee = e.detail;
+			//			console.log(JSON.stringify(ee.center.x));
+
+			var targetTab = this.getAttribute('href');
+			if(targetTab == activeTab) {
+				return;
+			}
+			//更换标题
+			// title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
+			//显示目标选项卡
+			//若为iOS平台或非首次显示，则直接显示
+			if(mui.os.ios || aniShow[targetTab]) {
+				plus.webview.show(targetTab);
+			} else {
+				//否则，使用fade-in动画，且保存变量
+				var temp = {};
+				temp[targetTab] = "true";
+				mui.extend(aniShow, temp);
+				plus.webview.show(targetTab, "fade-in", 300);
+			}
+			//隐藏当前;
+			plus.webview.hide(activeTab);
+			//更改当前活跃的选项卡
+			activeTab = targetTab;
+		});
+		//自定义事件，模拟点击“首页选项卡”
+		document.addEventListener('gohome', function() {
+			var defaultTab = document.getElementById("defaultTab");
+			//			console.log('这个加载了');
+
+			//模拟首页点击
+			mui.trigger(defaultTab, 'tap');
+			//切换选项卡高亮
+			var current = document.querySelector(".mui-bar-tab>.mui-tab-item.mui-active");
+			if(defaultTab !== current) {
+				current.classList.remove('mui-active');
+				defaultTab.classList.add('mui-active');
+			}
+		});
+
+		window.addEventListener('code', function(event) {
+
+//			var tc = event.detail.course;
+//			console.log('输出看看' + JSON.stringify(tc));
+//			
+//			courseMain.course = tc;
+//			mui.fire(plus.webview.getWebviewById('ManageCourse1.html'), 'manage1', {
+//				course: tc
+//			});
+//			mui.fire(plus.webview.getWebviewById('ManageCourse2.html'), 'manage2', {
+//				course: tc
+//			});
+//
+//			courseMain.canSignFlag = tc.signinStatus;
+//			//关闭等待框
+//			plus.nativeUI.closeWaiting();
+//			//显示当前页面
+//			plus.webview.currentWebview().show('pop-in');
+
+			//						mui.currentWebview.show();
+		});
+	</script>
+
+</html>

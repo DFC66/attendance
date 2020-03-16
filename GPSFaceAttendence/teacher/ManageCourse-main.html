@@ -68,8 +68,8 @@
 				</a>
 
 				<a class="mui-tab-item" href="ManageCourse2.html">
-					<span class="mui-icon mui-icon-gear"></span>
-					<span class="mui-tab-label">详细信息</span>
+					<span class="mui-icon mui-icon-contact"></span>
+					<span class="mui-tab-label">课程成员</span>
 				</a>
 			</nav>
 		</div>
@@ -126,13 +126,13 @@
 				canSignFlag(newVal, oldVal) {
 			
 					let clickButton =plus.nativeObj.View.getViewById('icon');
-//					if(clickButton){
+					if(clickButton){
 //		console.log("查找到id为'test'的View控件对象");
-////		alert("查找到id为'test'的View控件对象");
-//	}else{
-//		console.log("未查找到id为'test'的View控件对象，请先创建");
-//		alert("未查找到id为'test'的View控件对象，请先创建");
-//	}
+//		alert("查找到id为'test'的View控件对象");
+	}else{
+		console.log("未查找到id为'test'的View控件对象，请先创建");
+		alert("未查找到id为'test'的View控件对象，请先创建");
+	}
 						if(newVal == 1) {
 							if(oldVal != null) {
 								mui.toast('签到已开启');
@@ -197,20 +197,30 @@
 		var aniShow = {};
 //		var drawNativeIcon = null;
 
-//		if(window.plus) {
-//			testPlus();
-//		} else {
-//			document.addEventListener("plusready", testPlus, false);
-//		}
+		if(window.plus) {
+			testPlus();
+		} else {
+			document.addEventListener("plusready", testPlus, false);
+		}
 
 
 		function testPlus() {
 			var self = plus.webview.currentWebview();
+			for(var i = 0; i < 2; i++) {
+				var temp = {};
+				var sub = plus.webview.create(subpages[i], subpages[i], subpage_style);
+				console.log('每次都建页面');
+				if(i > 0) {
+					sub.hide();
+				} else {
+					temp[subpages[i]] = "true";
+					mui.extend(aniShow, temp);
+				}
+				self.append(sub);
+			}
 
-			//			var old_back = mui.back;
-			//			mui.back = function() {
-			//				plus.webview.currentWebview().hide("auto", 300); //隐藏当前页面，这里300是隐藏页面的动画时间，单位毫秒，可自定义
-			//			}
+
+
 			leftPos = Math.ceil((window.innerWidth - 70) / 2); // 设置凸起大图标为水平居中
 			console.log('开始画');
 			/**	
@@ -286,6 +296,7 @@
 			// append 到父webview中
 			self.append(drawNativeIcon);
 
+            console.log('控件建好了');
 			drawNativeIcon.addEventListener('click', function(e) {
 				//				alert('按钮点击了');
 				if(courseMain.canSignFlag != null) {
@@ -307,121 +318,122 @@
 
 		}
 
-		//创建子页面，首个选项卡页面显示，其它均隐藏；
-		mui.plusReady(function() {
-			var self = plus.webview.currentWebview();
-			for(var i = 0; i < 2; i++) {
-				var temp = {};
-				var sub = plus.webview.create(subpages[i], subpages[i], subpage_style);
-				console.log('每次都建页面');
-				if(i > 0) {
-					sub.hide();
-				} else {
-					temp[subpages[i]] = "true";
-					mui.extend(aniShow, temp);
-				}
-				self.append(sub);
-			}
 
-leftPos = Math.ceil((window.innerWidth - 70) / 2); // 设置凸起大图标为水平居中
-			console.log('开始画');
-			/**	
-			 * drawNativeIcon 绘制带边框的半圆，
-			 * 实现原理：
-			 *   id为bg的tag 创建带边框的圆
-			 *   id为bg2的tag 创建白色矩形遮住圆下半部分，只显示凸起带边框部分
-			 * 	 id为iconBg的红色背景图
-			 *   id为icon的字体图标
-			 *   注意创建先后顺序，创建越晚的层级越高
-			 */
-		var	drawNativeIcon = draw.drawNative('icon', {
-				bottom: '5px',
-				left: leftPos + 'px',
-				width: '75px',
-				height: '75px'
-			}, [{
-				tag: 'rect',
-				id: 'bg',
-				position: {
-					left: '0px',
-					width: '100%',
-					height: '100%'
-				},
-				rectStyles: {
-					color: '#f7f7f7',
-					radius: '50%',
-					borderColor: '#ccc',
-					borderWidth: '1px'
-				}
-			}, {
-				tag: 'rect',
-				id: 'bg2',
-				position: {
-					bottom: '-0.5px',
-					left: '0px',
-					width: '100%',
-					height: '45px'
-				},
-				rectStyles: {
-					color: '#f7f7f7'
-				}
-			}, {
-				tag: 'rect',
-				id: 'iconBg',
-				position: {
-					top: '5px',
-					left: '5px',
-					width: '62.5px',
-					height: '62.5px'
-				},
-				rectStyles: {
-					color: '#d74b28',
-					radius: '50%'
-				}
-			}, {
-				tag: 'font',
-				id: 'text1',
-				text: '开启签到',
-				position: {
-					top: '0px',
-					left: '5px',
-					width: '62.5px',
-					height: '100%'
-				},
-				textStyles: {
-					fontSrc: '_www/fonts/iconfont.ttf',
-					align: 'center',
-					color: '#fff',
-					size: '14px'
-				}
-			}]);
-			// append 到父webview中
-			self.append(drawNativeIcon);
 
-			drawNativeIcon.addEventListener('click', function(e) {
-				//				alert('按钮点击了');
-				if(courseMain.canSignFlag != null) {
-					let selectText = showText[courseMain.canSignFlag];
-					mui.confirm('hahaha', selectText, btnArray, function(e) {
-						if(e.index == 0) {
-							//ajax网络请求 
-							let detail = courseMain.course;
-							updateSignStatus(courseMain.canSignFlag, parseInt(detail.courseCode));
-						} else {
-							// mui.toast('取消');
-						}
-					})
-				} else {
-					mui.toast('获取课程签到状态失败');
-				}
-
-			});
-
-         clickButton =plus.nativeObj.View.getViewById('icon');
-
-		});
-		
-		
+//		//创建子页面，首个选项卡页面显示，其它均隐藏；
+//		mui.plusReady(function() {
+//			var self = plus.webview.currentWebview();
+//			for(var i = 0; i < 2; i++) {
+//				var temp = {};
+//				var sub = plus.webview.create(subpages[i], subpages[i], subpage_style);
+//				console.log('每次都建页面');
+//				if(i > 0) {
+//					sub.hide();
+//				} else {
+//					temp[subpages[i]] = "true";
+//					mui.extend(aniShow, temp);
+//				}
+//				self.append(sub);
+//			}
+//
+//leftPos = Math.ceil((window.innerWidth - 70) / 2); // 设置凸起大图标为水平居中
+//			console.log('开始画');
+//			/**	
+//			 * drawNativeIcon 绘制带边框的半圆，
+//			 * 实现原理：
+//			 *   id为bg的tag 创建带边框的圆
+//			 *   id为bg2的tag 创建白色矩形遮住圆下半部分，只显示凸起带边框部分
+//			 * 	 id为iconBg的红色背景图
+//			 *   id为icon的字体图标
+//			 *   注意创建先后顺序，创建越晚的层级越高
+//			 */
+//		var	drawNativeIcon = draw.drawNative('icon', {
+//				bottom: '5px',
+//				left: leftPos + 'px',
+//				width: '75px',
+//				height: '75px'
+//			}, [{
+//				tag: 'rect',
+//				id: 'bg',
+//				position: {
+//					left: '0px',
+//					width: '100%',
+//					height: '100%'
+//				},
+//				rectStyles: {
+//					color: '#f7f7f7',
+//					radius: '50%',
+//					borderColor: '#ccc',
+//					borderWidth: '1px'
+//				}
+//			}, {
+//				tag: 'rect',
+//				id: 'bg2',
+//				position: {
+//					bottom: '-0.5px',
+//					left: '0px',
+//					width: '100%',
+//					height: '45px'
+//				},
+//				rectStyles: {
+//					color: '#f7f7f7'
+//				}
+//			}, {
+//				tag: 'rect',
+//				id: 'iconBg',
+//				position: {
+//					top: '5px',
+//					left: '5px',
+//					width: '62.5px',
+//					height: '62.5px'
+//				},
+//				rectStyles: {
+//					color: '#d74b28',
+//					radius: '50%'
+//				}
+//			}, {
+//				tag: 'font',
+//				id: 'text1',
+//				text: '开启签到',
+//				position: {
+//					top: '0px',
+//					left: '5px',
+//					width: '62.5px',
+//					height: '100%'
+//				},
+//				textStyles: {
+//					fontSrc: '_www/fonts/iconfont.ttf',
+//					align: 'center',
+//					color: '#fff',
+//					size: '14px'
+//				}
+//			}]);
+//			// append 到父webview中
+//			self.append(drawNativeIcon);
+//          console.log('图标画完了');
+//			drawNativeIcon.addEventListener('click', function(e) {
+//				//				alert('按钮点击了');
+//				if(courseMain.canSignFlag != null) {
+//					let selectText = showText[courseMain.canSignFlag];
+//					mui.confirm('hahaha', selectText, btnArray, function(e) {
+//						if(e.index == 0) {
+//							//ajax网络请求 
+//							let detail = courseMain.course;
+//							updateSignStatus(courseMain.canSignFlag, parseInt(detail.courseCode));
+//						} else {
+//							// mui.toast('取消');
+//						}
+//					})
+//				} else {
+//					mui.toast('获取课程签到状态失败');
+//				}
+//
+//			});
+//
+//
+//		});
+//		
+//		
 		
 		
 		//当前激活选项
@@ -481,14 +493,15 @@ leftPos = Math.ceil((window.innerWidth - 70) / 2); // 设置凸起大图标为�
 			mui.fire(plus.webview.getWebviewById('ManageCourse2.html'), 'manage2', {
 				course: tc
 			});
-			//			if(tc.signinStatus == 1) {
-			//				drawNativeIcon.drawText('关闭签到', {}, {
-			//					fontSrc: '_www/fonts/iconfont.ttf',
-			//					align: 'center',
-			//					color: '#fff',
-			//					size: '14px'
-			//				}, 'text1');
-			//			}
+						if(tc.signinStatus == 1) {
+							let clickButton =plus.nativeObj.View.getViewById('icon');
+							clickButton.drawText('关闭签到', {}, {
+								fontSrc: '_www/fonts/iconfont.ttf',
+								align: 'center',
+								color: '#fff',
+								size: '14px'
+							}, 'text1');
+						}
 
 			//			else if(tc.signinStatus==0){
 			//				

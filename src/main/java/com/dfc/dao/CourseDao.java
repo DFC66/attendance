@@ -35,5 +35,7 @@ public interface CourseDao extends JpaRepository<Course,Integer>
     @Query(value = "update course set signin_status = ?1 where course_code = ?2",nativeQuery = true)
     Integer updateSignInStatus(Integer status,Integer courseCode);
 
+    @Query(value = "select * from course c where CONCAT(c.course_code,c.name,c.teacher_name,c.room) LIKE CONCAT('%',?1,'%')",nativeQuery = true)
+    List<Course>  searchCourses(String text);
 
 }

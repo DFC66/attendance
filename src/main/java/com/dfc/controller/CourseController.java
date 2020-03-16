@@ -86,10 +86,43 @@ public class CourseController {
             result.setMsg("添加课程成功!");
         }
 
-
         return result;
     }
 
+    @Transactional
+    @RequestMapping(value = "/addCourseMessage")
+    public String addCourseMessage(HttpServletRequest request,@RequestParam("img") MultipartFile multipartFile,@RequestParam("course") String course) throws Exception {
+        Result result = new Result<Course>();
+        Course transCourse = JSON.parseObject(course, Course.class);
+        Course existCourse = courseService.findByNameAndTeacherName(transCourse);
+        if (existCourse != null) {
+            result.setCode(000);
+            result.setMsg("课程已存在,无法添加");
+            return  JSON.toJSONString(result);
+        } else {
+            Integer courseCode = getCourseCode(courseService);
+            transCourse.setCourseCode(courseCode);
+            transCourse.setSigninStatus(1);
+            String courseImg = storageApi.uploadCourseImage(courseCode, "courseImg", multipartFile);
+            if (courseImg!=null){
+                transCourse.setImgPath(courseImg);
+            }
+            courseService.save(transCourse);
+
+            Course byCourseCode = courseService.findByCourseCode(courseCode);
+            if (byCourseCode!=null){
+                result.setCode(200);
+                result.setMsg("添加课程成功!");
+                result.setMessage(byCourseCode);
+            }else{
+                result.setCode(0);
+                result.setMsg("添加课程失败!");
+            }
+
+        }
+
+        return JSON.toJSONString(result);
+    }
 
 
 
@@ -246,7 +279,7 @@ public class CourseController {
         }else if (status==0){
             isSuccess = courseService.updateSignInStatus(1, courseCode);
         }
-        result.setCode(2000000);
+        result.setCode(200);
         result.setMsg(String.valueOf(isSuccess));
         Course course = courseService.findByCourseCode(courseCode);
         if (course!=null){
@@ -283,6 +316,24 @@ public class CourseController {
         }
 
     }
+
+    @RequestMapping(value = "/searchAllCourses", method = RequestMethod.POST)
+    public Result searchCourses(String text) {
+        Result result = new Result<Course>();
+        List<Course> courses = courseService.searchCourses(text);
+        if (courses.size()>0){
+            result.setCode(200);
+            result.setMsg("找到搜索的内容了");
+            result.setMessage(courses);
+
+        }else{
+            result.setCode(199);
+            result.setMsg("没有找到搜索的内容");
+        }
+
+        return result;
+    }
+
 
 
 

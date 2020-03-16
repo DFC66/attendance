@@ -59,10 +59,10 @@ public class WebConfig {
             throw new BizException("objectName 不能以 / 开头");
         }
         String courseDictory = "courseCode"+courseCode;
-        if (objectName!=null){
-            return courseDictory +PATH_SPLIT+ objectName;
-        }else{
+        if (objectName==null){
             return courseDictory;
+        }else{
+            return courseDictory +PATH_SPLIT+ objectName;
         }
     }
 

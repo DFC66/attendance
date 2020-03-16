@@ -1,6 +1,7 @@
 package com.dfc.api;
 
 import com.dfc.api.entity.UploadResult;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,5 +41,7 @@ public interface StorageApi {
 
 	String uploadFaceImage(Integer courseCode, String stuNumber,String folder,String base64) throws IOException;
 
+
+	String uploadCourseImage(Integer courseCode,String objectName,MultipartFile multipartFile) throws IOException;
 
 }
